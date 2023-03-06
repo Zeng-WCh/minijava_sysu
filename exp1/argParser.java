@@ -1,5 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 enum argType {
     typeInt,
@@ -8,42 +10,59 @@ enum argType {
     typeDouble,
 }
 
-class argException extends Exception {
-    public argException(String info) {
-        super(info);
+class ArgException extends Exception {
+    private final String info;
+
+    public ArgException(String info) {
+        super();
+        this.info = info;
+    }
+
+    public String getInfo() {
+        return info;
     }
 }
-
 
 /**
  * Current Support Mode: --[trigger] [value], like --debug true
  * TODO: -[shortTrigger] [value], like -d true
  */
 class Args {
-    argType type;
-    String trigger, description, defaultVal;
-    boolean isDefault;
+    private final argType type;
+    private final String trigger, description, defaultVal;
+    private final boolean isDefault;
+    private String value;
 
     public Args(String trigger, argType type) {
         this.type = type;
         this.trigger = trigger;
         this.isDefault = false;
+        this.value = null;
         switch (this.type) {
-            case typeInt : {
+            case typeInt: {
                 this.defaultVal = "0";
                 this.description = "An Interger Instance";
+                break;
             }
-            case typeBoolean : {
+            case typeBoolean: {
                 this.defaultVal = "true";
                 this.description = "A Boolean Instance";
+                break;
             }
-            case typeDouble : {
+            case typeDouble: {
                 this.defaultVal = "0.0";
                 this.description = "A Double Instance";
+                break;
             }
-            case typeString : {
+            case typeString: {
                 this.defaultVal = "";
                 this.description = "A String Instance";
+                break;
+            }
+            default: {
+                this.defaultVal = null;
+                this.description = null;
+                break;
             }
         }
     }
@@ -53,15 +72,28 @@ class Args {
         this.trigger = trigger;
         this.type = type;
         this.isDefault = false;
+        this.value = null;
         switch (this.type) {
-            case typeInt :
+            case typeInt: {
                 this.defaultVal = "0";
-            case typeBoolean :
+                break;
+            }
+            case typeBoolean: {
                 this.defaultVal = "true";
-            case typeDouble :
+                break;
+            }
+            case typeDouble: {
                 this.defaultVal = "0.0";
-            case typeString :
+                break;
+            }
+            case typeString: {
                 this.defaultVal = "";
+                break;
+            }
+            default: {
+                this.defaultVal = null;
+                break;
+            }
         }
     }
 
@@ -71,46 +103,106 @@ class Args {
         this.type = type;
         this.trigger = trigger;
         this.isDefault = true;
+        this.value = null;
     }
 
     /**
-     * @return a formatted string, looks like "--[trigger]: [type], default=[defaultVal], [description]
+     * @return a formatted string, looks like "--[trigger]: [type], default=[defaultVal], [description], for example --interactive: boolean, default=true, Whather to enable interactive mode
      */
     public String helpInfo() {
-        String tp = "";
-        switch (this.type) {
-            case typeInt :
-                tp = "int";
-            case typeBoolean :
-                tp = "boolean";
-            case typeDouble :
-                tp = "double";
-            case typeString :
-                tp = "string";
-        }
         if (this.isDefault)
-            return String.format("--%-10s: %7s instance, default=%-10s, %s", this.trigger, tp, this.defaultVal, this.description);
+            return String.format("--%-13s: %7s instance, default=%s, %s", this.trigger, this.getType(), this.defaultVal, this.description);
         else
-            return String.format("--%-10s: %7s instance, %s", this.trigger, tp, this.description);
+            return String.format("--%-13s: %7s instance, %s", this.trigger, this.getType(), this.description);
+    }
+
+    public boolean checkValid(String value) {
+        switch (this.type) {
+            case typeInt: {
+                Pattern p = Pattern.compile("^(-?)[0-9]*$");
+                Matcher m = p.matcher(value);
+                return m.find();
+            }
+            case typeBoolean: {
+                Pattern p = Pattern.compile("^(?!)(true|false)$");
+                Matcher m = p.matcher(value);
+                return m.find();
+            }
+            case typeDouble: {
+                Pattern p = Pattern.compile("^(-?\\d+)(\\.\\d+)?$");
+                Matcher m = p.matcher(value);
+                return m.find();
+            }
+            case typeString: {
+                Pattern p = Pattern.compile("^(\\w|.)+$");
+                Matcher m = p.matcher(value);
+                return m.find();
+            }
+            default: {
+                return false;
+            }
+        }
+    }
+
+    public String getType() {
+        switch (this.type) {
+            case typeInt: {
+                return "int";
+            }
+            case typeString: {
+                return "string";
+            }
+            case typeDouble: {
+                return "double";
+            }
+            case typeBoolean: {
+                return "boolean";
+            }
+            default: {
+                return "";
+            }
+        }
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getValue() throws ArgException {
+        if (!this.isDefault && this.value == null) {
+            String rs = String.format("No Value is assigned to %s", this.trigger);
+            throw new ArgException(rs);
+        }
+        if (this.value == null) {
+            return this.defaultVal;
+        } else {
+            return this.value;
+        }
     }
 }
 
 public class argParser {
-    public static String getTrigger(String arg) {
+    /**
+     * @param arg, the argument passed by command line, looks like "--debug"
+     * @return a string that throw away "--", for example "--debug" and return "debug"
+     */
+    private String getTrigger(String arg) {
+        if (arg.length() == 0) {
+            return "";
+        }
         String[] info = arg.split("--");
         if (info.length == 0) {
             return "";
-        }
-        else {
-            return info[0];
+        } else {
+            return info[1];
         }
     }
 
-    private Map<String, Args> pattern, mp;
+    private Map<String, Args> pattern;
     private String info;
+
     public argParser() {
         this.pattern = new HashMap<>();
-        this.mp = new HashMap<>();
         this.info = "";
     }
 
@@ -127,7 +219,8 @@ public class argParser {
     }
 
     public void helpInfo() {
-        System.out.println(this.info);
+        if (this.info.length() != 0)
+            System.out.println(this.info);
         if (!this.pattern.isEmpty()) {
             System.out.println("Support Arguments:");
         }
@@ -141,9 +234,47 @@ public class argParser {
         this.info = info;
     }
 
-    public void parseArgs(String[] args) throws Exception {
+    public void parseArgs(String[] args) throws ArgException {
         if (args == null || args.length == 0) {
-            throw new Exception();
+            throw new ArgException("No Args Passed Through");
+        } else {
+            for (int i = 0; i < args.length; ++i) {
+                String arg = getTrigger(args[i]);
+                Args a = this.pattern.get(arg);
+                if (a == null) {
+                    String rs = String.format("No Argument %s can be found", arg);
+                    throw new ArgException(rs);
+                }
+                ++i;
+                String val = args[i];
+                boolean f = a.checkValid(val);
+                if (!f) {
+                    String rs = String.format("Argument: --%s require type: %s, but get: %s", arg, a.getType(), val);
+                    throw new ArgException(rs);
+                } else {
+                    this.pattern.get(arg).setValue(val);
+                }
+            }
         }
+    }
+
+    public String get(String trigger) throws ArgException {
+        String e = null;
+        String val = null;
+        Args a = this.pattern.get(trigger);
+        if (a == null) {
+            String rs = String.format("%s is not set", trigger);
+            throw new ArgException(rs);
+        }
+        try {
+            val = a.getValue();
+        } catch (ArgException ae) {
+            e = ae.getInfo();
+            val = null;
+        }
+        if (e != null) {
+            throw new ArgException(e);
+        }
+        return val;
     }
 }
