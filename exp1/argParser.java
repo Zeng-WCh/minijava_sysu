@@ -170,8 +170,7 @@ class Args {
 
     public String getValue() throws ArgException {
         if (!this.isDefault && this.value == null) {
-            String rs = String.format("No Value is assigned to %s", this.trigger);
-            throw new ArgException(rs);
+            throw new ArgException(String.format("No Value is assigned to %s", this.trigger));
         }
         if (this.value == null) {
             return this.defaultVal;
@@ -242,15 +241,13 @@ public class argParser {
                 String arg = getTrigger(args[i]);
                 Args a = this.pattern.get(arg);
                 if (a == null) {
-                    String rs = String.format("No Argument %s can be found", arg);
-                    throw new ArgException(rs);
+                    throw new ArgException(String.format("No Argument %s can be found", arg));
                 }
                 ++i;
                 String val = args[i];
                 boolean f = a.checkValid(val);
                 if (!f) {
-                    String rs = String.format("Argument: --%s require type: %s, but get: %s", arg, a.getType(), val);
-                    throw new ArgException(rs);
+                    throw new ArgException(String.format("Argument: --%s require type: %s, but get: %s", arg, a.getType(), val));
                 } else {
                     this.pattern.get(arg).setValue(val);
                 }
@@ -263,17 +260,14 @@ public class argParser {
         String val = null;
         Args a = this.pattern.get(trigger);
         if (a == null) {
-            String rs = String.format("%s is not set", trigger);
-            throw new ArgException(rs);
+            throw new ArgException(String.format("%s is not set", trigger));
         }
         try {
             val = a.getValue();
         } catch (ArgException ae) {
             e = ae.getInfo();
             val = null;
-        }
-        if (e != null) {
-            throw new ArgException(e);
+            throw ae;
         }
         return val;
     }
