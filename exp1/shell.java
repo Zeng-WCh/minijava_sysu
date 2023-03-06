@@ -18,7 +18,7 @@ class RuleException extends Exception {
 }
 
 public class shell {
-    private ArrayList<tax> taxList;
+    private final ArrayList<tax> taxList;
     private boolean existOthers;
     private double salary;
     private int start;
@@ -31,9 +31,6 @@ public class shell {
         this.salary = 0.0;
         this.start = 0;
         this.detail = false;
-    }
-
-    public void init() {
     }
 
     public void addRule(tax t) throws RuleException {

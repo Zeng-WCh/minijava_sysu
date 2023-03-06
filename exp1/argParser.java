@@ -228,9 +228,10 @@ public class argParser {
     public void helpInfo() {
         if (this.info.length() != 0)
             System.out.println(this.info);
-        if (!this.pattern.isEmpty()) {
-            System.out.println("Support Arguments:");
+        if (this.pattern.isEmpty()) {
+            return;
         }
+        System.out.println("Support Arguments:");
         for (String key : this.pattern.keySet()) {
             Args a = this.pattern.get(key);
             System.out.println("\t" + a.helpInfo());
@@ -257,6 +258,10 @@ public class argParser {
         } else {
             for (int i = 0; i < args.length; ++i) {
                 String arg = getTrigger(args[i]);
+                if (arg.equals("help")) {
+                    this.helpInfo();
+                    System.exit(1);
+                }
                 Args a = this.pattern.get(arg);
                 if (a == null) {
                     throw new ArgException(String.format("No Argument %s can be found", arg));
