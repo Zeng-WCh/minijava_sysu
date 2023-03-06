@@ -144,6 +144,10 @@ class Args {
         }
     }
 
+    public argType typeInfo() {
+        return this.type;
+    }
+
     public String getType() {
         switch (this.type) {
             case typeInt: {
@@ -177,6 +181,10 @@ class Args {
         } else {
             return this.value;
         }
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 }
 
@@ -233,8 +241,18 @@ public class argParser {
         this.info = info;
     }
 
+    public boolean hasArgs() {
+        for (String key : this.pattern.keySet()) {
+            Args a = this.pattern.get(key);
+            if (!a.isDefault()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void parseArgs(String[] args) throws ArgException {
-        if (args == null || args.length == 0) {
+        if ((args == null || args.length == 0) && !hasArgs()) {
             throw new ArgException("No Args Passed Through");
         } else {
             for (int i = 0; i < args.length; ++i) {
@@ -266,9 +284,16 @@ public class argParser {
             val = a.getValue();
         } catch (ArgException ae) {
             e = ae.getInfo();
-            val = null;
             throw ae;
         }
         return val;
+    }
+
+    public argType getType(String trigger) throws ArgException {
+        Args a = this.pattern.get(trigger);
+        if (a == null) {
+            throw new ArgException(String.format("%s is not set", trigger));
+        }
+        return a.typeInfo();
     }
 }

@@ -43,13 +43,13 @@ class range {
     }
 
     public boolean isOverlap(range r) {
-        return (!(this.low > r.high || this.high < r.low));
+        return (!(this.low >= r.high || this.high <= r.low));
     }
 }
 
 public class tax extends range {
-    private double point;
-    private double maxVal;
+    double point;
+    private final double maxVal;
     public tax(int low, int high, double point) throws RangeException {
         super(low, high);
         this.point = point;
