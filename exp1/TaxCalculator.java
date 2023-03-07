@@ -2,11 +2,11 @@ public class TaxCalculator {
     public static void main(String[] args) throws Exception {
         argParser ap = new argParser();
         ap.setInfo("TaxCalculator");
-        ap.addArgs("config", argType.typeString, "A CSV file that contain tax rules", "config.csv");
-        // ap.addArgs("interactive", argType.typeBoolean, "Whather to enable interactive mode", "false");
-        ap.addArgs("salary", argType.typeDouble, "Salary someone get", "50000.0");
-        ap.addArgs("start", argType.typeInt, "At how much should someone start to pay taxes", "5000");
-        ap.addArgs("detail", argType.typeBoolean, "To display detail info", "true");
+        ap.addArgs("config", argType.typeString, "A CSV file that contain tax rules");
+        ap.addArgs("interactive", argType.typeBoolean, "Whather to enable interactive mode", "false");
+        ap.addArgs("salary", argType.typeDouble, "Salary someone get");
+        ap.addArgs("start", argType.typeInt, "At how much should someone start to pay taxes");
+        ap.addArgs("detail", argType.typeBoolean, "To display detail info");
 
         try {
             ap.parseArgs(args);
@@ -15,15 +15,51 @@ public class TaxCalculator {
             ap.helpInfo();
             System.exit(1);
         }
+
+        String interactiveS = ap.get("interactive");
+        boolean interactive = Boolean.parseBoolean(interactiveS);
+
         String fileName = "", startValS = "", salaryS = "", detailS = "";
         try {
             fileName = ap.get("config");
+        } catch (ArgException a) {
+            if (!interactive) {
+                System.out.println(a.getInfo());
+                System.exit(1);
+            } else {
+                fileName = null;
+            }
+        }
+        try {
             startValS = ap.get("start");
+
+        } catch (ArgException a) {
+            if (!interactive) {
+                System.out.println(a.getInfo());
+                System.exit(1);
+            } else {
+                startValS = null;
+            }
+        }
+        try {
             salaryS = ap.get("salary");
+        } catch (ArgException a) {
+            if (!interactive) {
+                System.out.println(a.getInfo());
+                System.exit(1);
+            } else {
+                salaryS = null;
+            }
+        }
+        try {
             detailS = ap.get("detail");
         } catch (ArgException a) {
-            System.out.println(a.getInfo());
-            System.exit(1);
+            if (!interactive) {
+                System.out.println(a.getInfo());
+                System.exit(1);
+            } else {
+                detailS = null;
+            }
         }
 
         int start = 0;
@@ -31,20 +67,28 @@ public class TaxCalculator {
         boolean detail = true;
 
         try {
-            start = Integer.parseInt(startValS);
-            salary = Double.parseDouble(salaryS);
-            detail = Boolean.parseBoolean(detailS);
+            if (startValS != null)
+                start = Integer.parseInt(startValS);
+            if (salaryS != null)
+                salary = Double.parseDouble(salaryS);
+            if (detailS != null)
+                detail = Boolean.parseBoolean(detailS);
         } catch (Exception e) {
             ap.helpInfo();
             System.exit(1);
         }
 
         shell sh = new shell();
-        sh.loadFile(fileName);
+        if (fileName != null)
+            sh.loadFile(fileName);
         sh.setStart(start);
         sh.setSalary(salary);
         sh.setDetail(detail);
-        sh.run();
 
+        if (!interactive) {
+            sh.run();
+        } else {
+            sh.start();
+        }
     }
 }

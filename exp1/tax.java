@@ -1,5 +1,6 @@
 class RangeException extends Exception {
     private final String info;
+
     public RangeException(String info) {
         super();
         this.info = info;
@@ -21,8 +22,7 @@ class range {
     public range(int low, int high) throws RangeException {
         if (low > high) {
             throw new RangeException("Low range value is bigger than high range value");
-        }
-        else {
+        } else {
             this.low = low;
             this.high = high;
         }
@@ -45,18 +45,23 @@ class range {
     public boolean isOverlap(range r) {
         return (!(this.low >= r.high || this.high <= r.low));
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d)", this.low, this.high);
+    }
 }
 
 public class tax extends range {
     double point;
     private final double maxVal;
+
     public tax(int low, int high, double point) throws RangeException {
         super(low, high);
         this.point = point;
         if (this.low == -1 && this.high == -1) {
             this.maxVal = 0;
-        }
-        else {
+        } else {
             this.maxVal = (this.high - this.low) * this.point;
         }
     }
@@ -75,5 +80,10 @@ public class tax extends range {
             return this.maxVal;
         }
         return (salary - this.low) * this.point;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s, %.2f%%", super.toString(), this.point*100);
     }
 }

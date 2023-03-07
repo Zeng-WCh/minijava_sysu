@@ -124,7 +124,7 @@ class Args {
                 return m.find();
             }
             case typeBoolean: {
-                Pattern p = Pattern.compile("^(?!)(true|false)$");
+                Pattern p = Pattern.compile("^(true|false)$");
                 Matcher m = p.matcher(value);
                 return m.find();
             }
