@@ -11,15 +11,8 @@ enum argType {
 }
 
 class ArgException extends Exception {
-    private final String info;
-
     public ArgException(String info) {
-        super();
-        this.info = info;
-    }
-
-    public String getInfo() {
-        return info;
+        super(info);
     }
 }
 
@@ -288,7 +281,6 @@ public class argParser {
         try {
             val = a.getValue();
         } catch (ArgException ae) {
-            e = ae.getInfo();
             throw ae;
         }
         return val;

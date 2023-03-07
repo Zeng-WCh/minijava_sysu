@@ -1,13 +1,6 @@
 class RangeException extends Exception {
-    private final String info;
-
     public RangeException(String info) {
-        super();
-        this.info = info;
-    }
-
-    public String getInfo() {
-        return this.info;
+        super(info);
     }
 }
 

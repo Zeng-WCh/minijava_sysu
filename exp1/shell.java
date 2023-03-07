@@ -8,15 +8,8 @@ import java.util.regex.Matcher;
 import java.util.Scanner;
 
 class RuleException extends Exception {
-    private String info;
-
     public RuleException(String info) {
-        super();
-        this.info = info;
-    }
-
-    public String getInfo() {
-        return this.info;
+        super(info);
     }
 }
 
@@ -39,11 +32,10 @@ enum token {
 }
 
 class lexer {
-    private Map<token, String> ts;
-    private Map<token, Pattern> tp;
+    private final Map<token, Pattern> tp;
 
     public lexer() {
-        this.ts = new HashMap<>();
+        Map<token, String> ts = new HashMap<>();
         this.tp = new HashMap<>();
         ts.put(token.tok_set, "^set$");
         ts.put(token.tok_calc, "^calc$");
@@ -60,7 +52,7 @@ class lexer {
         ts.put(token.tok_double, "^(-?\\d+)(\\.\\d+)?$");
         ts.put(token.tok_file, "^(\\w|.)+.csv$");
         for (token t : ts.keySet()) {
-            this.tp.put(t, Pattern.compile(this.ts.get(t)));
+            this.tp.put(t, Pattern.compile(ts.get(t)));
         }
     }
 
@@ -134,11 +126,8 @@ public class shell {
                     tax t;
                     try {
                         t = parseString(s);
-                    } catch (RuleException r) {
-                        System.out.println(r.getInfo());
-                        throw r;
-                    } catch (RangeException r) {
-                        System.out.println(r.getInfo());
+                    } catch (RuleException | RangeException r) {
+                        System.out.println(r.getMessage());
                         throw r;
                     }
                     this.addRule(t);
@@ -264,7 +253,7 @@ public class shell {
             try {
                 this.addRule(nt);
             } catch (RuleException e) {
-                System.out.println(e.getInfo());
+                System.out.println(e.getMessage());
             }
         } else if (t == token.tok_salary) {
             next = sc.next();

@@ -11,7 +11,7 @@ public class TaxCalculator {
         try {
             ap.parseArgs(args);
         } catch (ArgException e) {
-            System.out.println(e.getInfo());
+            System.out.println(e.getMessage());
             ap.helpInfo();
             System.exit(1);
         }
@@ -24,7 +24,7 @@ public class TaxCalculator {
             fileName = ap.get("config");
         } catch (ArgException a) {
             if (!interactive) {
-                System.out.println(a.getInfo());
+                System.out.println(a.getMessage());
                 System.exit(1);
             } else {
                 fileName = null;
@@ -35,7 +35,7 @@ public class TaxCalculator {
 
         } catch (ArgException a) {
             if (!interactive) {
-                System.out.println(a.getInfo());
+                System.out.println(a.getMessage());
                 System.exit(1);
             } else {
                 startValS = null;
@@ -45,7 +45,7 @@ public class TaxCalculator {
             salaryS = ap.get("salary");
         } catch (ArgException a) {
             if (!interactive) {
-                System.out.println(a.getInfo());
+                System.out.println(a.getMessage());
                 System.exit(1);
             } else {
                 salaryS = null;
@@ -55,7 +55,7 @@ public class TaxCalculator {
             detailS = ap.get("detail");
         } catch (ArgException a) {
             if (!interactive) {
-                System.out.println(a.getInfo());
+                System.out.println(a.getMessage());
                 System.exit(1);
             } else {
                 detailS = null;
