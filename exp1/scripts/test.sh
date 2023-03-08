@@ -11,8 +11,9 @@ then
     echo "Unable to find test dir, exiting..."
     exit 1
 fi
-[ -d ${RESULTDIR} ] || mkdir ${ RESULTDIR }
+[ -d ${RESULTDIR} ] || mkdir ${RESULTDIR}
 LOG=${RESULTDIR}/test_$(date +%s).log
+echo "Result will be written to: "${LOG}
 for file in `ls ${TESTDIR}`;
 do
     echo "Now testing file: "${file}
@@ -32,3 +33,4 @@ do
         ${JAVA} --class-path ${CLASSPATH} ${MAINCLASS} --start ${START} --salary ${SALARY} --config ${TESTDIR}/${file} --detail true >> ${LOG}
     done
 done
+
