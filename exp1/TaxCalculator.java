@@ -6,7 +6,7 @@ public class TaxCalculator {
         ap.addArgs("interactive", argType.typeBoolean, "Whather to enable interactive mode", "false");
         ap.addArgs("salary", argType.typeDouble, "Salary someone get");
         ap.addArgs("start", argType.typeInt, "At how much should someone start to pay taxes");
-        ap.addArgs("detail", argType.typeBoolean, "To display detail info");
+        ap.addArgs("detail", argType.typeBoolean, "To display detail info", "true");
 
         try {
             ap.parseArgs(args);

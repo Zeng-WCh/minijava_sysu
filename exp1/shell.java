@@ -21,6 +21,7 @@ enum token {
     tok_start,
     tok_salary,
     tok_clean,
+    tok_others,
     tok_range,
     tok_percentage,
     tok_int,
@@ -45,6 +46,7 @@ class lexer {
         ts.put(token.tok_start, "^start$");
         ts.put(token.tok_salary, "^salary$");
         ts.put(token.tok_clean, "^clean$");
+        ts.put(token.tok_others, "^others$");
         ts.put(token.tok_range, "^(\\d+)-(\\d+)$");
         ts.put(token.tok_percentage, "(\\d+)%");
         ts.put(token.tok_int, "^(-?)(\\d)+$");
@@ -75,7 +77,7 @@ class buffer {
     private int idx;
 
     public buffer(String[] buf, int idx) {
-        assert(buf != null);
+        assert (buf != null);
         this.buf = buf;
         this.idx = idx;
         for (; this.idx < this.buf.length; ++this.idx) {
@@ -124,10 +126,6 @@ public class shell {
     }
 
     public void addRule(tax t) throws RuleException {
-        if (this.taxList.isEmpty()) {
-            this.taxList.add(t);
-            return;
-        }
         if (t.high == -1 && t.low == -1 && this.existOthers) {
             throw new RuleException("Duplicate others range");
         }
@@ -148,12 +146,17 @@ public class shell {
         if (index > this.taxList.size()) {
             System.out.printf("Warning: index %d is out of range, this will not be used\n", index);
         } else {
+            if (this.taxList.get(index).low == -1) {
+                this.existOthers = false;
+            }
             this.taxList.remove(index);
         }
     }
 
     public void clean() {
         this.existOthers = false;
+        this.salary = 0;
+        this.start = 0;
         this.taxList.clear();
     }
 
@@ -245,7 +248,7 @@ public class shell {
             System.out.println("No tax rule can be found, please add them first");
             return;
         }
-        this.setOthers();
+        setOthers();
         double result = 0.0;
         for (int i = 0; i < this.taxList.size(); ++i) {
             double res = this.taxList.get(i).getTax(this.salary - this.start);
@@ -272,13 +275,13 @@ public class shell {
         int idx = 1;
         String next = sc.next();
         if (next == null) {
-            System.out.println("Syntax Error: require more token to work, should be like set [salary|range|start] [val]");
+            System.out.println("Syntax Error: require more token to work, should be like set [salary|range|others|start] [val]");
             return;
         }
         token t = this.l.match(next);
-        if (t != token.tok_range && t != token.tok_salary && t != token.tok_start) {
+        if (t != token.tok_range && t != token.tok_salary && t != token.tok_start && t != token.tok_others) {
             System.out.println("Syntax Error: Should be like set [salary|range|start] [val]");
-        } else if (t == token.tok_range) {
+        } else if (t == token.tok_range || t == token.tok_others) {
             String range = next;
             next = sc.next();
             if (next == null || this.l.match(next) != token.tok_percentage) {
@@ -334,7 +337,19 @@ public class shell {
     }
 
     private void helpInfo() {
-
+        System.out.println("TaxCalculator Interactive Mode");
+        System.out.println("Supported commands: help, set, load, show, remove, clean, calc, exit");
+        System.out.printf("\t%-6s: to display this info\n", "help");
+        System.out.printf("\t%-6s: to set salary, rules, startpoint, use like:\n", "set");
+        System.out.println("\t\tset [range] [percentage], like set 0-3000 3%");
+        System.out.println("\t\tset salary [val], like set salary 50000");
+        System.out.println("\t\tset start [startVal], like set start 5000");
+        System.out.printf("\t%-6s: to load tax rule from csv file\n", "load");
+        System.out.printf("\t%-6s: to load tax rule from csv file\n", "show");
+        System.out.printf("\t%-6s: to remove one rule, like remove 1, it will remove the rule NO.1\n", "remove");
+        System.out.printf("\t%-6s: to remove all rules and other sets\n", "clean");
+        System.out.printf("\t%-6s: to calc how much tax someone should pay\n", "calc");
+        System.out.printf("\t%-6s: to exit this program\n", "exit");
     }
 
     private void parseRemove(buffer sc) {
@@ -350,12 +365,11 @@ public class shell {
         int idx = 0;
         try {
             idx = Integer.parseInt(num);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
         }
-        removeRule(idx-1);
+        removeRule(idx - 1);
     }
 
     private void parseLoad(buffer sc) {
@@ -407,12 +421,10 @@ public class shell {
                     break;
                 }
                 case tok_help: {
-                    // TODO
                     helpInfo();
                     break;
                 }
                 case tok_remove: {
-                    // TODO
                     parseRemove(buf);
                     break;
                 }
@@ -432,7 +444,7 @@ public class shell {
             do {
                 System.out.print(">>> ");
                 buf.resetBuf(sc.nextLine().split("\\s+"));
-            } while(buf.isEmpty());
+            } while (buf.isEmpty());
             head = buf.next();
             t = this.l.match(head);
         }
