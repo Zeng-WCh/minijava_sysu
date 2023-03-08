@@ -264,11 +264,17 @@ public class shell {
         return new tax(low, high, point);
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(double salary) throws RuleException {
+        if (salary < 0) {
+            throw new RuleException("Salary is lower than 0");
+        }
         this.salary = salary;
     }
 
-    public void setStart(int start) {
+    public void setStart(int start) throws RuleException {
+        if (start < 0) {
+            throw new RuleException("Start Val is lower than 0");
+        }
         this.start = start;
     }
 
@@ -350,7 +356,12 @@ public class shell {
                 System.out.println(e.getMessage());
                 return;
             }
-            this.setSalary(val);
+            try {
+                this.setSalary(val);
+            }
+            catch (RuleException e) {
+                System.out.println(e.getMessage());
+            }
         } else {
             next = sc.next();
             if (next == null || this.l.match(next) != token.tok_int) {
@@ -365,7 +376,12 @@ public class shell {
                 System.out.println(e.getMessage());
                 return;
             }
-            this.setStart(start);
+            try {
+                this.setStart(start);
+            }
+            catch (RuleException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

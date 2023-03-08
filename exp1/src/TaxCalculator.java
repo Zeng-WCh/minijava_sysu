@@ -81,8 +81,15 @@ public class TaxCalculator {
         shell sh = new shell();
         if (fileName != null)
             sh.loadFile(fileName);
-        sh.setStart(start);
-        sh.setSalary(salary);
+        try {
+            sh.setStart(start);
+            sh.setSalary(salary);
+        }
+        catch (RuleException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+
         sh.setDetail(detail);
 
         if (!interactive) {
