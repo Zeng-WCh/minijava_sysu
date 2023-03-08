@@ -2,9 +2,7 @@
 MAIN='TaxCalculator.java'
 SRCPATH='../src'
 CLASSPATH='../class'
-OUTPUTPATH='../output'
 JAVACOMPILER='javac'
-JARCOMPILER='jar'
 [ -d ${SRCPATH} ]
 if [ $? -ne 0 ];
 then
@@ -13,12 +11,11 @@ then
 fi
 # Make sure class path exist
 [ -d ${CLASSPATH} ] || mkdir ${CLASSPATH}
-[ -d ${OUTPUTPATH} ] || mkdir ${OUTPUTPATH}
 echo y | rm ${CLASSPATH}/*.class
 ${JAVACOMPILER} -d ${CLASSPATH} --source-path ${SRCPATH} ${SRCPATH}/${MAIN}
 if [ $? -eq 0 ];
 then
-    echo "Successfully to compile to .class file"
+    echo "Successfully to compile to .class file\nTry to run it by run.sh"
 else
     echo "Failed"
     exit 1
