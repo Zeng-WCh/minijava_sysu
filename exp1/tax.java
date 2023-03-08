@@ -35,6 +35,10 @@ class range {
         this.low = low;
     }
 
+    /**
+     * @param r: a range instance
+     * @return true if two ranges have a range overlap, else false
+     */
     public boolean isOverlap(range r) {
         return (!(this.low >= r.high || this.high <= r.low));
     }
@@ -62,6 +66,10 @@ public class tax extends range {
         }
     }
 
+    /**
+     * @param salary: salary minus the baseline
+     * @return how much taxes should someone pay at this level
+     */
     public double getTax(double salary) {
         if (this.low == -1) {
             if (salary < this.high) {
@@ -80,6 +88,6 @@ public class tax extends range {
 
     @Override
     public String toString() {
-        return String.format("%s, %.2f%%", super.toString(), this.point*100);
+        return String.format("%s, %.2f%%", super.toString(), this.point * 100);
     }
 }

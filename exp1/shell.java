@@ -72,10 +72,17 @@ class lexer {
     }
 }
 
+/**
+ * A buffer to store one line command spilt by whitespaces
+ */
 class buffer {
     private String[] buf;
     private int idx;
 
+    /**
+     * @param buf, command spilt by whitespaces, must not be null
+     * @param idx, current index, can be set by user
+     */
     public buffer(String[] buf, int idx) {
         assert (buf != null);
         this.buf = buf;
@@ -87,6 +94,9 @@ class buffer {
         }
     }
 
+    /**
+     * @return next word if available, else null
+     */
     public String next() {
         if (this.idx < this.buf.length) {
             return this.buf[this.idx++];
@@ -94,6 +104,9 @@ class buffer {
         return null;
     }
 
+    /**
+     * @param buf, command spilt by whitespaces, must not be null
+     */
     public void resetBuf(String[] buf) {
         this.buf = buf;
         for (this.idx = 0; this.idx < this.buf.length; ++this.idx) {
@@ -103,6 +116,9 @@ class buffer {
         }
     }
 
+    /**
+     * @return true if still can get key, else false
+     */
     public boolean isEmpty() {
         return this.buf == null || this.buf.length == 0 || this.idx >= this.buf.length;
     }
@@ -125,11 +141,15 @@ public class shell {
         this.l = null;
     }
 
+    /**
+     * @param t: a tax instance that will be add to rules list
+     * @throws RuleException if duplicate others range
+     */
     public void addRule(tax t) throws RuleException {
-        if (t.high == -1 && t.low == -1 && this.existOthers) {
+        if (t.low == -1 && this.existOthers) {
             throw new RuleException("Duplicate others range");
         }
-        if (t.high == -1 && t.low == -1) {
+        if (t.low == -1) {
             this.existOthers = true;
             this.taxList.add(t);
             return;
@@ -142,6 +162,9 @@ public class shell {
         this.taxList.add(t);
     }
 
+    /**
+     * @param index: NO.index rule will be removed (start from 1)
+     */
     private void removeRule(int index) {
         if (index > this.taxList.size()) {
             System.out.printf("Warning: index %d is out of range, this will not be used\n", index);
@@ -153,13 +176,20 @@ public class shell {
         }
     }
 
-    public void clean() {
+    /**
+     * clean all the rules and user sets
+     */
+    private void clean() {
         this.existOthers = false;
         this.salary = 0;
         this.start = 0;
         this.taxList.clear();
     }
 
+    /**
+     * @param fileName: must be a csv file that contains several tax rules
+     * @throws Exception if file is not exist
+     */
     public void loadFile(String fileName) throws Exception {
         try (FileReader file = new FileReader(fileName)) {
             try (BufferedReader reader = new BufferedReader(file)) {
@@ -179,6 +209,9 @@ public class shell {
         }
     }
 
+    /**
+     * trans range (others) to actual usable rules
+     */
     private void setOthers() throws RangeException {
         if (!this.existOthers) {
             return;
@@ -186,7 +219,7 @@ public class shell {
         int max = 0, index = -1;
         for (int i = 0; i < this.taxList.size(); ++i) {
             tax t = this.taxList.get(i);
-            if (t.high == -1 && t.low == -1) {
+            if (t.low == -1) {
                 index = i;
             } else {
                 if (t.high > max) {

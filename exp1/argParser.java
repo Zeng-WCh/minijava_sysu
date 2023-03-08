@@ -21,6 +21,13 @@ class ArgException extends Exception {
  * TODO: -[shortTrigger] [value], like -d true
  */
 class Args {
+    /**
+     * argType: type of argument, current support string, boolean, double, int
+     * trigger: string, for example, --interactive will be interactive
+     * description: description info
+     * defaultVal: default value if not passed through by command line
+     * value: actual value passed by command line
+     */
     private final argType type;
     private final String trigger, description, defaultVal;
     private final boolean isDefault;
@@ -109,6 +116,10 @@ class Args {
             return String.format("--%-13s: %7s instance, %s", this.trigger, this.getType(), this.description);
     }
 
+    /**
+     * @param value: value passed by command
+     * @return boolean, if it acceptable
+     */
     public boolean checkValid(String value) {
         switch (this.type) {
             case typeInt: {
@@ -165,6 +176,10 @@ class Args {
         this.value = value;
     }
 
+    /**
+     * @return return set value if given, otherwise default value
+     * @throws ArgException if can not return any usable value
+     */
     public String getValue() throws ArgException {
         if (!this.isDefault && this.value == null) {
             throw new ArgException(String.format("No Value is assigned to %s", this.trigger));
@@ -198,7 +213,7 @@ public class argParser {
         }
     }
 
-    private Map<String, Args> pattern;
+    private final Map<String, Args> pattern;
     private String info;
 
     public argParser() {
@@ -231,11 +246,14 @@ public class argParser {
         }
     }
 
+    /**
+     * @param info: a string that will used to print helpInfo
+     */
     public void setInfo(String info) {
         this.info = info;
     }
 
-    public boolean hasArgs() {
+    private boolean hasArgs() {
         for (String key : this.pattern.keySet()) {
             Args a = this.pattern.get(key);
             if (!a.isDefault()) {
@@ -245,10 +263,15 @@ public class argParser {
         return true;
     }
 
+    /**
+     * @param args: arguments passed through by command line
+     * @throws ArgException if format is not correct or a nessary argument can not be found
+     */
     public void parseArgs(String[] args) throws ArgException {
         if ((args == null || args.length == 0) && !hasArgs()) {
             throw new ArgException("No Args Passed Through");
         } else {
+            assert (args != null);
             for (int i = 0; i < args.length; ++i) {
                 String arg = getTrigger(args[i]);
                 if (arg.equals("help")) {
@@ -271,6 +294,11 @@ public class argParser {
         }
     }
 
+    /**
+     * @param trigger: which argument to get
+     * @return the argument require
+     * @throws ArgException if can not get
+     */
     public String get(String trigger) throws ArgException {
         String e = null;
         String val = null;
@@ -284,13 +312,5 @@ public class argParser {
             throw ae;
         }
         return val;
-    }
-
-    public argType getType(String trigger) throws ArgException {
-        Args a = this.pattern.get(trigger);
-        if (a == null) {
-            throw new ArgException(String.format("%s is not set", trigger));
-        }
-        return a.typeInfo();
     }
 }
