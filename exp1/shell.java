@@ -1,11 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.Scanner;
 
 class RuleException extends Exception {
     public RuleException(String info) {
@@ -23,6 +20,7 @@ enum token {
     tok_remove,
     tok_start,
     tok_salary,
+    tok_clean,
     tok_range,
     tok_percentage,
     tok_int,
@@ -46,16 +44,21 @@ class lexer {
         ts.put(token.tok_remove, "^remove$");
         ts.put(token.tok_start, "^start$");
         ts.put(token.tok_salary, "^salary$");
+        ts.put(token.tok_clean, "^clean$");
         ts.put(token.tok_range, "^(\\d+)-(\\d+)$");
         ts.put(token.tok_percentage, "(\\d+)%");
         ts.put(token.tok_int, "^(-?)(\\d)+$");
-        ts.put(token.tok_double, "^(-?\\d+)(\\.\\d+)?$");
+        ts.put(token.tok_double, "^(-?\\d+)(\\.\\d+)$");
         ts.put(token.tok_file, "^(\\w|.)+.csv$");
         for (token t : ts.keySet()) {
             this.tp.put(t, Pattern.compile(ts.get(t)));
         }
     }
 
+    /**
+     * @param s, a string waited to be transtormed to a token
+     * @return token, a token lable, return tok_unknow if it can not be accepted
+     */
     public token match(String s) {
         for (token t : this.tp.keySet()) {
             Matcher m = this.tp.get(t).matcher(s);
@@ -64,6 +67,42 @@ class lexer {
             }
         }
         return token.tok_unknown;
+    }
+}
+
+class buffer {
+    private String[] buf;
+    private int idx;
+
+    public buffer(String[] buf, int idx) {
+        assert(buf != null);
+        this.buf = buf;
+        this.idx = idx;
+        for (; this.idx < this.buf.length; ++this.idx) {
+            if (!this.buf[this.idx].isBlank()) {
+                break;
+            }
+        }
+    }
+
+    public String next() {
+        if (this.idx < this.buf.length) {
+            return this.buf[this.idx++];
+        }
+        return null;
+    }
+
+    public void resetBuf(String[] buf) {
+        this.buf = buf;
+        for (this.idx = 0; this.idx < this.buf.length; ++this.idx) {
+            if (!this.buf[this.idx].isBlank()) {
+                break;
+            }
+        }
+    }
+
+    public boolean isEmpty() {
+        return this.buf == null || this.buf.length == 0 || this.idx >= this.buf.length;
     }
 }
 
@@ -105,9 +144,9 @@ public class shell {
         this.taxList.add(t);
     }
 
-    public void removeRule(int index) {
+    private void removeRule(int index) {
         if (index > this.taxList.size()) {
-            System.out.printf("Warning: index %d is out of range\n", index);
+            System.out.printf("Warning: index %d is out of range, this will not be used\n", index);
         } else {
             this.taxList.remove(index);
         }
@@ -229,15 +268,20 @@ public class shell {
         }
     }
 
-    private void parseSet(Scanner sc) {
+    private void parseSet(buffer sc) {
+        int idx = 1;
         String next = sc.next();
+        if (next == null) {
+            System.out.println("Syntax Error: require more token to work, should be like set [salary|range|start] [val]");
+            return;
+        }
         token t = this.l.match(next);
         if (t != token.tok_range && t != token.tok_salary && t != token.tok_start) {
             System.out.println("Syntax Error: Should be like set [salary|range|start] [val]");
         } else if (t == token.tok_range) {
             String range = next;
             next = sc.next();
-            if (this.l.match(next) != token.tok_percentage) {
+            if (next == null || this.l.match(next) != token.tok_percentage) {
                 System.out.println("Syntax Error: Should be like set [range] [percentage]");
                 return;
             }
@@ -248,6 +292,7 @@ public class shell {
                 nt = parseString(formatS);
             } catch (Exception e) {
                 System.out.println("Syntax Error: Please check range or percentage");
+                System.out.println(e.getMessage());
                 return;
             }
             try {
@@ -257,32 +302,31 @@ public class shell {
             }
         } else if (t == token.tok_salary) {
             next = sc.next();
-            if (this.l.match(next) != token.tok_double && this.l.match(next) != token.tok_int) {
+            if (next == null || this.l.match(next) != token.tok_double && this.l.match(next) != token.tok_int) {
                 System.out.println("Syntax Error: Should be like set salary [salaryVal]");
                 return;
             }
             double val = 0.0;
             try {
                 val = Double.parseDouble(next);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Syntax Error: Please check your salary val");
+                System.out.println(e.getMessage());
                 return;
             }
             this.setSalary(val);
-        }
-        else {
+        } else {
             next = sc.next();
-            if (this.l.match(next) != token.tok_double && this.l.match(next) != token.tok_int) {
+            if (next == null || this.l.match(next) != token.tok_int) {
                 System.out.println("Syntax Error: Should be like set start [startVal]");
                 return;
             }
             int start = 0;
             try {
                 start = Integer.parseInt(next);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Syntax Error: Please check your start val");
+                System.out.println(e.getMessage());
                 return;
             }
             this.setStart(start);
@@ -293,20 +337,41 @@ public class shell {
 
     }
 
-    private void parseRemove(Scanner sc) {
-
+    private void parseRemove(buffer sc) {
+        if (sc.isEmpty()) {
+            System.out.println("Syntax Error: require more token, should be like remove [idx]");
+            return;
+        }
+        String num = sc.next();
+        if (num == null || this.l.match(num) != token.tok_int) {
+            System.out.println("Syntax Error: Should be like remove [idx]");
+            return;
+        }
+        int idx = 0;
+        try {
+            idx = Integer.parseInt(num);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        removeRule(idx-1);
     }
 
-    private void parseLoad(Scanner sc) {
+    private void parseLoad(buffer sc) {
         String file = sc.next();
+        if (file == null) {
+            System.out.println("Syntax Error: require more token to work, should be like load [file]");
+            return;
+        }
         if (!(this.l.match(file) == token.tok_file)) {
             System.out.println("Syntax Error: Should be like load [file], file should be a csv file");
         }
         try {
             this.loadFile(file);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Error Occured, Please check if file exist");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -318,8 +383,13 @@ public class shell {
         System.out.print(">>> ");
 
         Scanner sc = new Scanner(System.in);
-        String cur = sc.next();
-        token t = l.match(cur);
+        buffer buf = new buffer(sc.nextLine().split("\\s+"), 0);
+        while (buf.isEmpty()) {
+            System.out.print(">>> ");
+            buf.resetBuf(sc.nextLine().split("\\s+"));
+        }
+        String head = buf.next();
+        token t = l.match(head);
 
         while (t != token.tok_exit) {
             switch (t) {
@@ -328,7 +398,7 @@ public class shell {
                     break;
                 }
                 case tok_set: {
-                    parseSet(sc);
+                    parseSet(buf);
                     break;
                 }
                 case tok_calc: {
@@ -343,21 +413,28 @@ public class shell {
                 }
                 case tok_remove: {
                     // TODO
-                    parseRemove(sc);
+                    parseRemove(buf);
                     break;
                 }
                 case tok_load: {
-                    parseLoad(sc);
+                    parseLoad(buf);
+                    break;
+                }
+                case tok_clean: {
+                    clean();
                     break;
                 }
                 case tok_unknown: {
-                    System.out.printf("Unknown Token: %s\n", cur);
+                    System.out.printf("Unknown Token: %s\n", head);
                     break;
                 }
             }
-            System.out.print(">>> ");
-            cur = sc.next();
-            t = l.match(cur);
+            do {
+                System.out.print(">>> ");
+                buf.resetBuf(sc.nextLine().split("\\s+"));
+            } while(buf.isEmpty());
+            head = buf.next();
+            t = this.l.match(head);
         }
 
         System.out.println("GoodBye");

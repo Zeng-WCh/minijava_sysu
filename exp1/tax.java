@@ -41,6 +41,9 @@ class range {
 
     @Override
     public String toString() {
+        if (this.low == -1 || this.high == -1) {
+            return "others";
+        }
         return String.format("(%d, %d)", this.low, this.high);
     }
 }
