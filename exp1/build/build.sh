@@ -6,16 +6,23 @@ JAVACOMPILER='javac'
 [ -d ${SRCPATH} ]
 if [ $? -ne 0 ];
 then
-    echo "No src path find"
+    echo "Unable to find src, exiting..."
     exit 1
 fi
 # Make sure class path exist
 [ -d ${CLASSPATH} ] || mkdir ${CLASSPATH}
-echo y | rm ${CLASSPATH}/*.class
+
+# Clean the CLASSPATH
+if [ "$(ls -A ${CLASSPATH})" ];
+then
+    echo y | rm ${CLASSPATH}/*.class
+fi
+
 ${JAVACOMPILER} -d ${CLASSPATH} --source-path ${SRCPATH} ${SRCPATH}/${MAIN}
 if [ $? -eq 0 ];
 then
-    echo "Successfully to compile to .class file\nTry to run it by run.sh"
+    echo "Compile finish"
+    echo "Try to run it by run.sh"
 else
     echo "Failed"
     exit 1
