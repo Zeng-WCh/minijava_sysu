@@ -287,6 +287,7 @@ public class shell {
             System.out.println("No tax rule can be found, please add them first");
             return;
         }
+        System.out.printf("Your salary is: %.2f, start point is: %d\n", this.salary, this.start);
         setOthers();
         double result = 0.0;
         for (int i = 0; i < this.taxList.size(); ++i) {
@@ -306,7 +307,7 @@ public class shell {
             System.out.print("No rules here, try set or load from file\n");
         }
         for (int i = 0; i < this.taxList.size(); ++i) {
-            System.out.printf("Tax rule NO.%d: %s\n", i + 1, this.taxList.get(i).toString());
+            System.out.printf("Tax rule No.%d: %s\n", i + 1, this.taxList.get(i).toString());
         }
     }
 

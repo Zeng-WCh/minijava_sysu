@@ -40,7 +40,11 @@ class range {
      * @return true if two ranges have a range overlap, else false
      */
     public boolean isOverlap(range r) {
-        return (!(this.low >= r.high || this.high <= r.low));
+        if (this.low != -1 && r.low != -1)
+            return (!(this.low >= r.high || this.high <= r.low));
+        else if (this.low == -1 && r.low == -1)
+            return true;
+        return false;
     }
 
     @Override
