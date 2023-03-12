@@ -22,10 +22,10 @@ javac 11.0.18
 
 ### 文件结构
 
-所提交的 `exp1.zip` 解压后应该有着如下的文件的结构
+所提交的 `exp0.zip` 解压后应该有着如下的文件的结构
 
 ```shell
-exp1
+exp0
 ├── class
 │   ├── *.class
 ├── design.pdf
