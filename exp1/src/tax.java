@@ -4,7 +4,7 @@ class RangeException extends Exception {
     }
 }
 
-class range {
+class range implements Comparable<range> {
     int low, high;
 
     public range() {
@@ -54,6 +54,28 @@ class range {
         }
         return String.format("(%d, %d)", this.low, this.high);
     }
+
+    /**
+     * @param t, a range instance
+     * @return true if two ranges have the same range, else false
+     */
+    public boolean isEqual(range r) {
+        return this.low == r.low && this.high == r.high;
+    }
+
+    @Override
+    public int compareTo(range t) {
+        if (t.low == -1) {
+            return -1;
+        }
+        if (this.low == -1) {
+            return 1;
+        }
+        if (t.low == this.low) {
+            return this.high - t.high;
+        }
+        return this.low - t.low;
+    }
 }
 
 public class tax extends range {
@@ -71,7 +93,7 @@ public class tax extends range {
     }
 
     /**
-     * @param salary: salary minus the baseline
+     * @param salary: salary minus the baseline, for example if someone get 55000 and the baseline is 5000, then set salary to 50000
      * @return how much taxes should someone pay at this level
      */
     public double getTax(double salary) {
@@ -93,5 +115,9 @@ public class tax extends range {
     @Override
     public String toString() {
         return String.format("%s, %.2f%%", super.toString(), this.point * 100);
+    }
+
+    public void setPoint(double point) {
+        this.point = point;
     }
 }

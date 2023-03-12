@@ -18,7 +18,6 @@ class ArgException extends Exception {
 
 /**
  * Current Support Mode: --[trigger] [value], like --debug true
- * TODO: -[shortTrigger] [value], like -d true
  */
 class Args {
     /**
@@ -201,7 +200,7 @@ public class argParser {
      * @param arg, the argument passed by command line, looks like "--debug"
      * @return a string that throw away "--", for example "--debug" and return "debug"
      */
-    private String getTrigger(String arg) {
+    private static String getTrigger(String arg) {
         if (arg.length() == 0) {
             return "";
         }

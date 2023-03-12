@@ -87,6 +87,8 @@ class buffer {
         assert (buf != null);
         this.buf = buf;
         this.idx = idx;
+
+        // to escape all whitespaces
         for (; this.idx < this.buf.length; ++this.idx) {
             if (!this.buf[this.idx].isBlank()) {
                 break;
@@ -117,7 +119,7 @@ class buffer {
     }
 
     /**
-     * @return true if still can get key, else false
+     * @return true if still can get keys, else false
      */
     public boolean isEmpty() {
         return this.buf == null || this.buf.length == 0 || this.idx >= this.buf.length;
@@ -155,35 +157,45 @@ public class shell {
             return;
         }
         for (int i = 0; i < this.taxList.size(); ++i) {
-            if (this.taxList.get(i).isOverlap(t)) {
+            if (this.taxList.get(i).isEqual(t)) {
+                // This means if later rules range is exactly the same as former one, the former one will be replaced
+                this.taxList.get(i).setPoint(t.point);
+                return;
+            }
+            else if (this.taxList.get(i).isOverlap(t)) {
                 System.out.printf("Warning: tax rule %d has a range overlap with the tax rule No.%d, please check your config\n", i + 1, this.taxList.size() + 1);
             }
         }
         this.taxList.add(t);
+        // to make the list in order
+        Collections.sort(this.taxList);
     }
 
     /**
-     * @param index: NO.index rule will be removed (start from 1)
+     * @param index: No.index rule will be removed (start from 0)
      */
-    private void removeRule(int index) {
-        if (index > this.taxList.size()) {
+    private boolean removeRule(int index) {
+        if (index > this.taxList.size() || index < 0) {
             System.out.printf("Warning: index %d is out of range, this will not be used\n", index);
+            return false;
         } else {
             if (this.taxList.get(index).low == -1) {
                 this.existOthers = false;
             }
             this.taxList.remove(index);
+            return true;
         }
     }
 
     /**
      * clean all the rules and user sets
      */
-    private void clean() {
+    private boolean clean() {
         this.existOthers = false;
         this.salary = 0;
         this.start = 0;
         this.taxList.clear();
+        return true;
     }
 
     /**
@@ -311,12 +323,12 @@ public class shell {
         }
     }
 
-    private void parseSet(buffer sc) {
+    private boolean parseSet(buffer sc) {
         int idx = 1;
         String next = sc.next();
         if (next == null) {
             System.out.println("Syntax Error: require more token to work, should be like set [salary|range|others|start] [val]");
-            return;
+            return false;
         }
         token t = this.l.match(next);
         if (t != token.tok_range && t != token.tok_salary && t != token.tok_start && t != token.tok_others) {
@@ -326,7 +338,7 @@ public class shell {
             next = sc.next();
             if (next == null || this.l.match(next) != token.tok_percentage) {
                 System.out.println("Syntax Error: Should be like set [range] [percentage]");
-                return;
+                return false;
             }
             String p = next;
             String formatS = String.format("%s,%s", range, p);
@@ -336,18 +348,20 @@ public class shell {
             } catch (Exception e) {
                 System.out.println("Syntax Error: Please check range or percentage");
                 System.out.println(e.getMessage());
-                return;
+                return false;
             }
             try {
                 this.addRule(nt);
             } catch (RuleException e) {
                 System.out.println(e.getMessage());
+                return false;
             }
         } else if (t == token.tok_salary) {
             next = sc.next();
-            if (next == null || this.l.match(next) != token.tok_double && this.l.match(next) != token.tok_int) {
+            token tok_t = this.l.match(next);
+            if (next == null || (tok_t != token.tok_double && tok_t != token.tok_int)) {
                 System.out.println("Syntax Error: Should be like set salary [salaryVal]");
-                return;
+                return false;
             }
             double val = 0.0;
             try {
@@ -355,19 +369,20 @@ public class shell {
             } catch (Exception e) {
                 System.out.println("Syntax Error: Please check your salary val");
                 System.out.println(e.getMessage());
-                return;
+                return false;
             }
             try {
                 this.setSalary(val);
             }
             catch (RuleException e) {
                 System.out.println(e.getMessage());
+                return false;
             }
         } else {
             next = sc.next();
             if (next == null || this.l.match(next) != token.tok_int) {
                 System.out.println("Syntax Error: Should be like set start [startVal]");
-                return;
+                return false;
             }
             int start = 0;
             try {
@@ -375,15 +390,17 @@ public class shell {
             } catch (Exception e) {
                 System.out.println("Syntax Error: Please check your start val");
                 System.out.println(e.getMessage());
-                return;
+                return false;
             }
             try {
                 this.setStart(start);
             }
             catch (RuleException e) {
                 System.out.println(e.getMessage());
+                return false;
             }
         }
+        return true;
     }
 
     private void helpInfo() {
@@ -402,43 +419,49 @@ public class shell {
         System.out.printf("\t%-6s: to exit this program\n", "exit");
     }
 
-    private void parseRemove(buffer sc) {
+    private boolean parseRemove(buffer sc) {
         if (sc.isEmpty()) {
             System.out.println("Syntax Error: require more token, should be like remove [idx]");
-            return;
+            return false;
         }
         String num = sc.next();
         if (num == null || this.l.match(num) != token.tok_int) {
             System.out.println("Syntax Error: Should be like remove [idx]");
-            return;
+            return false;
         }
         int idx = 0;
         try {
             idx = Integer.parseInt(num);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
-        removeRule(idx - 1);
+        return removeRule(idx - 1);
     }
 
-    private void parseLoad(buffer sc) {
+    private boolean parseLoad(buffer sc) {
         String file = sc.next();
         if (file == null) {
             System.out.println("Syntax Error: require more token to work, should be like load [file]");
-            return;
+            return false;
         }
         if (!(this.l.match(file) == token.tok_file)) {
             System.out.println("Syntax Error: Should be like load [file], file should be a csv file");
+            return false;
         }
         try {
             this.loadFile(file);
         } catch (Exception e) {
-            System.out.println("Error Occured, Please check if file exist");
+            System.out.println("An error occured, Please check if file exist");
             System.out.println(e.getMessage());
+            return false;
         }
+        return true;
     }
 
+    /**
+     * start the shell in Interactive mode
+     */
     public void start() throws Exception {
         if (this.l == null) {
             this.l = new lexer();
@@ -455,6 +478,9 @@ public class shell {
         String head = buf.next();
         token t = l.match(head);
 
+        // use to judge if success info needs to be displayed
+        boolean status = false;
+
         while (t != token.tok_exit) {
             switch (t) {
                 case tok_show: {
@@ -462,7 +488,7 @@ public class shell {
                     break;
                 }
                 case tok_set: {
-                    parseSet(buf);
+                    status = parseSet(buf);
                     break;
                 }
                 case tok_calc: {
@@ -475,15 +501,15 @@ public class shell {
                     break;
                 }
                 case tok_remove: {
-                    parseRemove(buf);
+                    status = parseRemove(buf);
                     break;
                 }
                 case tok_load: {
-                    parseLoad(buf);
+                    status = parseLoad(buf);
                     break;
                 }
                 case tok_clean: {
-                    clean();
+                    status = clean();
                     break;
                 }
                 case tok_unknown: {
@@ -491,12 +517,16 @@ public class shell {
                     break;
                 }
             }
+            if (status) {
+                System.out.println("Success");
+            }
             do {
                 System.out.print(">>> ");
                 buf.resetBuf(sc.nextLine().split("\\s+"));
             } while (buf.isEmpty());
             head = buf.next();
             t = this.l.match(head);
+            status = false;
         }
 
         System.out.println("GoodBye");

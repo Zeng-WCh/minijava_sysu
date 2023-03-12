@@ -32,7 +32,6 @@ public class TaxCalculator {
         }
         try {
             startValS = ap.get("start");
-
         } catch (ArgException a) {
             if (!interactive) {
                 System.out.println(a.getMessage());
