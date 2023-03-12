@@ -299,7 +299,6 @@ public class argParser {
      * @throws ArgException if can not get
      */
     public String get(String trigger) throws ArgException {
-        String e = null;
         String val = null;
         Args a = this.pattern.get(trigger);
         if (a == null) {

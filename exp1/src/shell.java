@@ -331,7 +331,6 @@ public class shell {
     }
 
     private boolean parseSet(buffer sc) {
-        int idx = 1;
         String next = sc.next();
         if (next == null) {
             System.out.println("Syntax Error: require more token to work, should be like set [salary|range|others|start] [val]");
@@ -524,6 +523,10 @@ public class shell {
                     System.out.printf("Unknown Token: %s\n", head);
                     break;
                 }
+                default: {
+                    System.out.printf("Syntax Error: Token(%s) should not be here\n", head);
+                    break;
+                }
             }
             if (status) {
                 System.out.println("Success");
@@ -538,5 +541,6 @@ public class shell {
         }
 
         System.out.println("GoodBye");
+        sc.close();
     }
 }
