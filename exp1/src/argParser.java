@@ -110,9 +110,9 @@ class Args {
      */
     public String helpInfo() {
         if (this.isDefault)
-            return String.format("--%-13s: %7s instance, default=%s, %s", this.trigger, this.getType(), this.defaultVal, this.description);
+            return String.format("--%-13s: %7s, default=%s, %s", this.trigger, this.getType(), this.defaultVal, this.description);
         else
-            return String.format("--%-13s: %7s instance, %s", this.trigger, this.getType(), this.description);
+            return String.format("--%-13s: %7s, %s", this.trigger, this.getType(), this.description);
     }
 
     /**

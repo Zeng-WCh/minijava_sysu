@@ -299,8 +299,15 @@ public class shell {
             System.out.println("No tax rule can be found, please add them first");
             return;
         }
+
+        // convert waring info
+        if (this.taxList.get(0).low != 0 && this.taxList.get(this.taxList.size() - 1).low == -1) {
+            System.out.println("Warning: range do not cover 0, the others rules might not be treated correct");
+        }
+
         System.out.printf("Your salary is: %.2f, start point is: %d\n", this.salary, this.start);
         setOthers();
+
         double result = 0.0;
         for (int i = 0; i < this.taxList.size(); ++i) {
             double res = this.taxList.get(i).getTax(this.salary - this.start);
@@ -333,6 +340,7 @@ public class shell {
         token t = this.l.match(next);
         if (t != token.tok_range && t != token.tok_salary && t != token.tok_start && t != token.tok_others) {
             System.out.println("Syntax Error: Should be like set [salary|range|start] [val]");
+            return false;
         } else if (t == token.tok_range || t == token.tok_others) {
             String range = next;
             next = sc.next();
@@ -411,8 +419,8 @@ public class shell {
         System.out.println("\t\tset [range] [percentage], like set 0-3000 3%");
         System.out.println("\t\tset salary [val], like set salary 50000");
         System.out.println("\t\tset start [startVal], like set start 5000");
-        System.out.printf("\t%-6s: to load tax rule from csv file\n", "load");
-        System.out.printf("\t%-6s: to load tax rule from csv file\n", "show");
+        System.out.printf("\t%-6s: to load tax rule from csv file, use like load [csvFile], like load test1.csv\n", "load");
+        System.out.printf("\t%-6s: to display all tax rules and set values\n", "show");
         System.out.printf("\t%-6s: to remove one rule, like remove 1, it will remove the rule NO.1\n", "remove");
         System.out.printf("\t%-6s: to remove all rules and other sets\n", "clean");
         System.out.printf("\t%-6s: to calc how much tax someone should pay\n", "calc");
