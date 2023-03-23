@@ -2,8 +2,8 @@
 
 import random
 
-LENGTH = 30
-ROUND = 10
+LENGTH = 100
+ROUND = 20
 
 def random_num():
     return random.randint(0, 9)
@@ -13,7 +13,7 @@ def random_op():
 
 def main():
     for r in range(ROUND):
-        with open('../test/recursive/{}.in'.format(r), 'w') as f:
+        with open('../test/{}.in'.format(r), 'w') as f:
             result = ""
             for i in range(LENGTH):
                 result += str(random_num())
