@@ -32,3 +32,56 @@ javac 11.0.18
 
 #### 2. 消除尾递归
 
+首先先是对源程序做测试，为了方便生成一个较大的表达式，使用了 `scripts/generate.py` 来生成
+
+这里需要对程序进行改写，通过阅读代码，我们可以知道，这样的一个语法规则是
+$$
+expr \ :=  \ term \ rest \\
+rest \ := \ + \ rest \ | \ - \ rest \\
+term \ := 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+$$
+
+```java
+void rest() throws IOException {
+    if (lookahead == '+') {
+        match('+');
+        term();
+        System.out.write('+');
+        rest();
+    } else if (lookahead == '-') {
+        match('-');
+        term();
+        System.out.write('-');
+        rest();
+    } else {
+        // do nothing with the input
+    }
+}
+```
+
+以上是存在尾递归的
+
+之后进行改写，如下
+
+```java
+void rest() throws IOException {
+    while (lookahead == '+' || lookahead == '-') {
+        if (lookahead == '+') {
+            match('+');
+            term();
+            System.out.write('+');
+            rest();
+        } else if (lookahead == '-') {
+            match('-');
+            term();
+            System.out.write('-');
+            rest();
+        } else {
+            // do nothing with the input
+        }
+    }
+}
+```
+
+
+

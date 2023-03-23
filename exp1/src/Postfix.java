@@ -13,19 +13,34 @@ class Parser {
 	}
 
 	void rest() throws IOException {
-		if (lookahead == '+') {
-			match('+');
-			term();
-			System.out.write('+');
-			rest();
-		} else if (lookahead == '-') {
-			match('-');
-			term();
-			System.out.write('-');
-			rest();
-		} else {
-			// do nothing with the input
+		while (lookahead == '+' || lookahead == '-') {
+			if (lookahead == '+') {
+				match('+');
+				term();
+				System.out.write('+');
+				rest();
+			} else if (lookahead == '-') {
+				match('-');
+				term();
+				System.out.write('-');
+				rest();
+			} else {
+				// do nothing with the input
+			}
 		}
+		// if (lookahead == '+') {
+		// 	match('+');
+		// 	term();
+		// 	System.out.write('+');
+		// 	rest();
+		// } else if (lookahead == '-') {
+		// 	match('-');
+		// 	term();
+		// 	System.out.write('-');
+		// 	rest();
+		// } else {
+		// 	// do nothing with the input
+		// }
 	}
 
 	void term() throws IOException {
