@@ -7,7 +7,7 @@ public class Postfix {
 
 		p.parse();
 
-		//System.out.printf("Result: %d\n", p.eval());
+		System.out.printf("Result: %d\n", p.eval());
 		System.out.println(p.dump());
 		System.out.println("\nEnd of program.");
 	}

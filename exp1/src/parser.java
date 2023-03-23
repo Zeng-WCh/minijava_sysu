@@ -48,9 +48,8 @@ public class parser {
             ast ret = new opAst('-', term, t2);
             return parseExprTail(ret);
         }
-        if (t == token.tok_slash || t == token.tok_star) {
-            this.l.hold();
-        }
+
+        this.l.hold();
         return term;
     }
 
@@ -73,8 +72,7 @@ public class parser {
             return parseTermTail(ret);
         }
 
-        if (t == token.tok_minus || t == token.tok_plus)
-            this.l.hold();
+        this.l.hold();
         return term;
     }
 
