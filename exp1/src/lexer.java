@@ -1,31 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 
-class lexError extends Error {
-    private int pos;
-    private String readIn;
-    
-    public lexError(String info, String buf, int pos) {
-        super(info);
-        this.readIn = buf;
-        this.pos = pos;
-    }
-
-    /**
-     * 1+
-     *  ^ Require more num
-     */
-    public void logError() {
-        System.out.println(this.readIn);
-        for (int i = 0; i < this.pos; ++i) {
-            System.out.write(' ');
-        }
-        System.out.write('^');
-        System.out.write(' ');
-        System.out.println(this.getMessage());
-    }
-} 
-
 public class lexer {
     private String buf;
     private ArrayList<Character> readIn;
@@ -34,17 +9,21 @@ public class lexer {
     private token now;
     private boolean holdOn;
 
-    public lexer() {
-        this.buf = "";
+    public lexer() throws IOException {
         this.readIn = new ArrayList<>();
-        this.index = 0;
-        this.lastChar = ' ';
+        this.index = 1;
+        this.lastChar = System.in.read();
+        this.buf = "" + this.lastChar;
+        this.readIn.add((char)this.lastChar);
         this.now = token.tok_unknown;
         this.holdOn = false;
     }
 
     private void read() throws IOException {
         this.lastChar = System.in.read();
+        if (this.lastChar == '\n' || this.lastChar == '\r') {
+            return;
+        }
         this.readIn.add((char)this.lastChar);
         this.index++;
     }
@@ -62,12 +41,17 @@ public class lexer {
         //         this.lastChar = System.in.read();
         //     }
         // }
-        while (Character.isSpaceChar(this.lastChar)) {
-            read();
-        }
         if (this.holdOn) {
             this.holdOn = false;
             return this.now;
+        }
+
+        if ((char)this.lastChar == '\n' || (char)this.lastChar == '\r') {
+            return token.tok_eof;
+        }
+
+        while (Character.isSpaceChar(this.lastChar)) {
+            read();
         }
 
         // num, [1-9][0-9]+ | [0-9]
@@ -124,12 +108,9 @@ public class lexer {
             return token.tok_rightParam;
         }
 
-        else if ((char)this.lastChar == '\n' || (char)this.lastChar == '\r') {
-            return token.tok_eof;
-        }
-
         else {
             System.out.println("Unknown token: " + (char)this.lastChar);
+            read();
         }
         return token.tok_unknown;
     }
@@ -139,7 +120,7 @@ public class lexer {
     }
 
     public int getIdx() {
-        return this.index;
+        return this.index - 1;
     }
 
     public token now() {
@@ -151,10 +132,10 @@ public class lexer {
     }
 
     public String getReadIn() {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (char c : this.readIn) {
-            ret += c;
+            ret.append(c);
         }
-        return ret;
+        return ret.toString();
     }
 }
