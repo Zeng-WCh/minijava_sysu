@@ -12,8 +12,6 @@ fi
 # Run the test
 for i in $(ls ${TESTDIR}/*.in)
 do
-    echo ${i}
-    echo ${i%.in}.out
-    #echo "Running test: ${i}"
-    #java -cp ../class TaxCalculator < ${i} > ${i%.in}.out
+    echo "Running test: "${i}
+    ./run.sh < ${i} > ${i%.in}.out
 done

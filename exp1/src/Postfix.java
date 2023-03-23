@@ -1,9 +1,9 @@
 import java.io.*;
 
 class Parser {
-	int lookahead;
+	static int lookahead;
 
-  public Parser() throws IOException {
+	public Parser() throws IOException {
 		lookahead = System.in.read();
 	}
 
@@ -29,28 +29,25 @@ class Parser {
 	}
 
 	void term() throws IOException {
-		if (Character.isDigit((char)lookahead)) {
-			System.out.write((char)lookahead);
+		if (Character.isDigit((char) lookahead)) {
+			System.out.write((char) lookahead);
 			match(lookahead);
-		} else  throw new Error("syntax error");
+		} else
+			throw new Error("syntax error");
 	}
 
 	void match(int t) throws IOException {
-		if (lookahead == t)  lookahead = System.in.read();
-		else  throw new Error("syntax error");
+		if (lookahead == t)
+			lookahead = System.in.read();
+		else
+			throw new Error("syntax error");
 	}
 }
 
 public class Postfix {
 	public static void main(String[] args) throws IOException {
 		System.out.println("Input an infix expression and output its postfix notation:");
-    try {
-      new Parser().expr();
-      System.out.println("Input an infix expression and output its postfix notation:");
-    } catch (Error e) {
-      System.out.println("Syntax Error");
-    }
-      new Parser().expr();
-      System.out.println("\nEnd of program.");
-    }
+		new Parser().expr();
+		System.out.println("\nEnd of program.");
+	}
 }
