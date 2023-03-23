@@ -13,7 +13,7 @@ fi
 for i in $(ls ${TESTDIR}/*.in)
 do
     echo ${i}
-    ${i%.in}.out
+    echo ${i%.in}.out
     #echo "Running test: ${i}"
     #java -cp ../class TaxCalculator < ${i} > ${i%.in}.out
 done
