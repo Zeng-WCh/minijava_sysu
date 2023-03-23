@@ -31,12 +31,22 @@ public class lexer {
     private ArrayList<Character> readIn;
     private int index;
     private int lastChar;
+    private token now;
+    private boolean holdOn;
 
     public lexer() {
         this.buf = "";
         this.readIn = new ArrayList<>();
         this.index = 0;
         this.lastChar = ' ';
+        this.now = token.tok_unknown;
+        this.holdOn = false;
+    }
+
+    private void read() throws IOException {
+        this.lastChar = System.in.read();
+        this.readIn.add((char)this.lastChar);
+        this.index++;
     }
 
     public token next() throws IOException {
@@ -53,33 +63,74 @@ public class lexer {
         //     }
         // }
         while (Character.isSpaceChar(this.lastChar)) {
-            this.lastChar = System.in.read();
+            read();
+        }
+        if (this.holdOn) {
+            this.holdOn = false;
+            return this.now;
         }
 
         // num, [1-9][0-9]+ | [0-9]
         if (Character.isDigit(this.lastChar)) {
             this.buf = String.format("%c", (char)this.lastChar);
-            this.lastChar = System.in.read();
+            read();
             while (Character.isDigit(this.lastChar)) {
                 this.buf += String.format("%c", (char)this.lastChar);
-                this.lastChar = System.in.read();
+                read();
             }
+            this.now = token.tok_num;
             return token.tok_num;
         }
 
-        // +, -
         if ((char)this.lastChar == '+') {
             this.buf = String.format("%c", (char)this.lastChar);
-            this.lastChar = System.in.read();
+            read();
+            this.now = token.tok_plus;
             return token.tok_plus;
         }
 
         else if ((char)this.lastChar == '-') {
             this.buf = String.format("%c", (char)this.lastChar);
-            this.lastChar = System.in.read();
+            read();
+            this.now = token.tok_minus;
             return token.tok_minus;
         }
+        
+        else if ((char)this.lastChar == '*') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.now = token.tok_star;
+            return token.tok_star;
+        }
 
+        else if ((char)this.lastChar == '/') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.now = token.tok_slash;
+            return token.tok_slash;
+        }
+
+        else if ((char)this.lastChar == '(') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.now = token.tok_leftParam;
+            return token.tok_leftParam;
+        }
+
+        else if ((char)this.lastChar == ')') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.now = token.tok_rightParam;
+            return token.tok_rightParam;
+        }
+
+        else if ((char)this.lastChar == '\n' || (char)this.lastChar == '\r') {
+            return token.tok_eof;
+        }
+
+        else {
+            System.out.println("Unknown token: " + (char)this.lastChar);
+        }
         return token.tok_unknown;
     }
 
@@ -87,9 +138,23 @@ public class lexer {
         return this.buf;
     }
 
-    public void clean() {
-        this.index = 0;
-        this.buf = "";
-        this.readIn.clear();
+    public int getIdx() {
+        return this.index;
+    }
+
+    public token now() {
+        return this.now;
+    }
+
+    public void hold() {
+        this.holdOn = true;
+    }
+
+    public String getReadIn() {
+        String ret = "";
+        for (char c : this.readIn) {
+            ret += c;
+        }
+        return ret;
     }
 }
