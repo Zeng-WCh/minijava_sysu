@@ -1,141 +1,155 @@
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class lexer {
-    private String buf;
-    private ArrayList<Character> readIn;
-    private int index;
+public class Lexer {
     private int lastChar;
-    private token now;
+    private int index;
+    private ArrayList<Character> readIn;
+    private String buf;
+    private Token tokNow;
     private boolean holdOn;
-
-    public lexer() throws IOException {
-        this.readIn = new ArrayList<>();
-        this.index = 1;
-        this.lastChar = System.in.read();
-        this.buf = "" + this.lastChar;
-        this.readIn.add((char)this.lastChar);
-        this.now = token.tok_unknown;
-        this.holdOn = false;
-    }
 
     private void read() throws IOException {
         this.lastChar = System.in.read();
         if (this.lastChar == '\n' || this.lastChar == '\r') {
             return;
         }
+        ++this.index;
         this.readIn.add((char)this.lastChar);
-        this.index++;
     }
 
-    public token next() throws IOException {
-        // +,-, num
-        // this.lastChar = System.in.read();
-        // readIn.add((char)this.lastChar);
-        // this.index++;
-        // if (Character.isDigit((this.lastChar))) {
-        //     this.buf = String.format("%c", (char)this.lastChar);
-        //     this.lastChar = System.in.read();
-        //     while (Character.isDigit((this.lastChar))) {
-        //         this.buf = String.format("%c", (char)this.lastChar);
-        //         this.lastChar = System.in.read();
-        //     }
-        // }
+    public Lexer() throws IOException {
+        this.index = 0;
+        this.readIn = new ArrayList<>();
+        read();
+        this.buf = String.format("%c", (char)this.lastChar);
+        this.tokNow = Token.tok_eof;
+        this.holdOn = false;
+    }
+
+    public Token next() throws IOException {
         if (this.holdOn) {
             this.holdOn = false;
-            return this.now;
+            return this.tokNow;
         }
-
-        if ((char)this.lastChar == '\n' || (char)this.lastChar == '\r') {
-            return token.tok_eof;
+        // One line parsing
+        if ((char)this.lastChar == '\r' || (char)this.lastChar == '\n') {
+            this.tokNow = Token.tok_eof;
+            return Token.tok_eof;
         }
-
-        while (Character.isSpaceChar(this.lastChar)) {
+        // escape white spaces
+        if (Character.isWhitespace((char)this.lastChar)) {
             read();
         }
 
-        // num, [1-9][0-9]+ | [0-9]
-        if (Character.isDigit(this.lastChar)) {
-            this.buf = String.format("%c", (char)this.lastChar);
+        // num
+        if (Character.isDigit((char)this.lastChar)) {
+            StringBuilder strBd = new StringBuilder();
+            strBd.append((char)this.lastChar);
             read();
-            while (Character.isDigit(this.lastChar)) {
-                this.buf += String.format("%c", (char)this.lastChar);
+            while (Character.isDigit((char)this.lastChar)) {
+                strBd.append((char)this.lastChar);
                 read();
             }
-            this.now = token.tok_num;
-            return token.tok_num;
+            this.buf = strBd.toString();
+            this.tokNow = Token.tok_num;
+            return Token.tok_num;
         }
 
         if ((char)this.lastChar == '+') {
             this.buf = String.format("%c", (char)this.lastChar);
             read();
-            this.now = token.tok_plus;
-            return token.tok_plus;
+            this.tokNow = Token.tok_plus;
+            return Token.tok_plus;
         }
 
-        else if ((char)this.lastChar == '-') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        // '-' can be an operator
+        // '-1' is a num
+        // thus need to special process
+        if ((char)this.lastChar == '-') {
+            StringBuilder strBd = new StringBuilder();
+            strBd.append((char)this.lastChar);
             read();
-            this.now = token.tok_minus;
-            return token.tok_minus;
-        }
-        
-        else if ((char)this.lastChar == '*') {
-            this.buf = String.format("%c", (char)this.lastChar);
-            read();
-            this.now = token.tok_star;
-            return token.tok_star;
-        }
-
-        else if ((char)this.lastChar == '/') {
-            this.buf = String.format("%c", (char)this.lastChar);
-            read();
-            this.now = token.tok_slash;
-            return token.tok_slash;
-        }
-
-        else if ((char)this.lastChar == '(') {
-            this.buf = String.format("%c", (char)this.lastChar);
-            read();
-            this.now = token.tok_leftParam;
-            return token.tok_leftParam;
+            if (Character.isDigit((char)this.lastChar)) {
+                while (Character.isDigit((char)this.lastChar)) {
+                    strBd.append((char)this.lastChar);
+                    read();
+                }
+                this.buf = strBd.toString();
+                this.tokNow = Token.tok_num;
+                return Token.tok_num;
+            }
+            this.buf = strBd.toString();
+            this.tokNow = Token.tok_minus;
+            return Token.tok_minus;
         }
 
-        else if ((char)this.lastChar == ')') {
+        if ((char)this.lastChar == '*') {
             this.buf = String.format("%c", (char)this.lastChar);
             read();
-            this.now = token.tok_rightParam;
-            return token.tok_rightParam;
+            this.tokNow = Token.tok_star;
+            return Token.tok_star;
         }
 
-        else {
-            System.out.println("Unknown token: " + (char)this.lastChar);
+        if ((char)this.lastChar == '/') {
+            this.buf = String.format("%c", (char)this.lastChar);
             read();
+            this.tokNow = Token.tok_slash;
+            return Token.tok_slash;
         }
-        return token.tok_unknown;
+
+        if ((char)this.lastChar == '(') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.tokNow = Token.tok_lP;
+            return Token.tok_lP;
+        }
+
+        if ((char)this.lastChar == ')') {
+            this.buf = String.format("%c", (char)this.lastChar);
+            read();
+            this.tokNow = Token.tok_rP;
+            return Token.tok_rP;
+        }
+
+        logError(String.format("Unknown token: %c", this.lastChar));
+        this.tokNow = Token.tok_unknown;
+        read();
+        return Token.tok_unknown;
+    }
+
+    public void Debug() throws IOException {
+        while (this.next() != Token.tok_eof) {
+            System.out.println(this.tokNow);
+        }
+    }
+
+    private void logError(String info) {
+        String passed = this.getReadIn();
+        System.out.println(passed);
+        for (int i = 0; i < this.index - 1; ++i) {
+            System.out.write(' ');
+        }
+        System.out.printf("^ %s\n", info);
+    }
+
+    public String getReadIn() {
+        StringBuilder strBd = new StringBuilder();
+        for (char ch : this.readIn) {
+            strBd.append(ch);
+        }
+        return strBd.toString();
     }
 
     public String getBuf() {
         return this.buf;
     }
 
-    public int getIdx() {
-        return this.index - 1;
-    }
-
-    public token now() {
-        return this.now;
-    }
-
     public void hold() {
         this.holdOn = true;
     }
 
-    public String getReadIn() {
-        StringBuilder ret = new StringBuilder();
-        for (char c : this.readIn) {
-            ret.append(c);
-        }
-        return ret.toString();
+    public int getIdx() {
+        return this.index;
     }
 }

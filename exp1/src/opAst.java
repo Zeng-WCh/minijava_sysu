@@ -1,6 +1,6 @@
 public class opAst implements ast {
-    private final char op;
-    private final ast left, right;
+    ast left, right;
+    char op;
 
     public opAst() {
         this.op = 0;
@@ -14,39 +14,28 @@ public class opAst implements ast {
         this.right = right;
     }
 
-    public String toString() {
-        return String.format("%s %c %s", this.left.eval(), this.op, this.right.eval());
-    }
-
-    public void visit(int v) {
-        for (int i = 0; i < v; ++i) {
-            System.out.write('|');
-        }
-        System.out.print("-");
-        System.out.print(this.op);
-        System.out.print("\n|");
-        this.left.visit(v + 1);
-        this.right.visit(v + 1);
-    }
-
     public int eval() {
-        int l = this.left.eval();
-        int r = this.right.eval();
-
-        switch (this.op) {
-            case '+':
-                return l + r;
-            case '-':
-                return l - r;
-            case '*':
-                return l * r;
-            case '/':
-                return l / r;
+        int l = 0;
+        if (this.left != null) {
+            l = this.left.eval();
         }
-        return 0;
+        int r = 0;
+        if (this.right != null) {
+            r = this.right.eval();
+        }
+        return switch (this.op) {
+            case '+' -> l + r;
+            case '-' -> l - r;
+            case '*' -> l * r;
+            case '/' -> l / r;
+            default -> 0;
+        };
     }
 
-    public String backTrace() {
-        return String.format("%s%s%c", this.left.backTrace(), this.right.backTrace(), this.op);
+    public String postFix() {
+        if (this.left == null || this.right == null) {
+            return "Error";
+        }
+        return String.format("%s%s%c", this.left.postFix(), this.right.postFix(), this.op);
     }
 }

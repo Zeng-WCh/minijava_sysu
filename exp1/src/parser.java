@@ -11,15 +11,12 @@ import java.io.IOException;
 // <factor> ::= ( <expr> )
 //            | Num
 
-public class parser {
-    private lexer l;
+public class Parser {
+    private Lexer l;
     private ast root;
-    private boolean isError;
-
-    public parser() throws IOException {
-        this.l = new lexer();
+    public Parser() throws IOException {
+        this.l = new Lexer();
         this.root = null;
-        this.isError = false;
     }
 
     public void parse() throws IOException {
@@ -28,96 +25,92 @@ public class parser {
 
     // <expr> ::= <term> <expr_tail>
     private ast parseExpr() throws IOException {
-        ast term = parseTerm();
-        return parseExprTail(term);
+        ast term = this.parseTerm();
+        return parseExprtail(term);
+    }
+
+    // <term> ::= <factor> <term_tail>
+    private ast parseTerm() throws IOException {
+        ast factor = this.parseFactor();
+        return parseTermtail(factor);
     }
 
     // <expr_tail> ::= + <term> <expr_tail>
     //               | - <term> <expr_tail>
     //               | <empty>
-    private ast parseExprTail(ast term) throws IOException {
-        token t = this.l.next();
+    private ast parseExprtail(ast term) throws IOException {
+        Token t = this.l.next();
 
-        if (t == token.tok_plus) {
-            ast t2 = parseTerm();
-            ast ret = new opAst('+', term, t2);
-            return parseExprTail(ret);
-        }
-        else if (t == token.tok_minus) {
-            ast t2 = parseTerm();
-            ast ret = new opAst('-', term, t2);
-            return parseExprTail(ret);
-        }
+        if (t == Token.tok_plus || t == Token.tok_minus) {
+            // '+' or '-'
+            char op = this.l.getBuf().charAt(0);
+            ast term1 = this.parseTerm();
+            ast current = new opAst(op, term, term1);
+            return parseExprtail(current);
 
-        this.l.hold();
-        return term;
+        }
+        else {
+            this.l.hold();
+            return term;
+        }
     }
 
-    private ast parseTerm() throws IOException {
-        ast factor = parseFactor();
-        return parseTermTail(factor);
-    }
-
-    private ast parseTermTail(ast term) throws IOException {
-        token t = this.l.next();
-
-        if (t == token.tok_star) {
-            ast t2 = parseFactor();
-            ast ret = new opAst('*', term, t2);
-            return parseTermTail(ret);
-        }
-        else if (t == token.tok_slash) {
-            ast t2 = parseFactor();
-            ast ret = new opAst('/', term, t2);
-            return parseTermTail(ret);
-        }
-
-        this.l.hold();
-        return term;
-    }
-
+    // <factor> ::= ( <expr> )
+    //            | Num
     private ast parseFactor() throws IOException {
-        token t = this.l.next();
-
-        if (t == token.tok_num) {
-            return new numAst(Integer.parseInt(this.l.getBuf()));
-        } else if (t == token.tok_leftParam) {
+        Token t = this.l.next();
+        if (t == Token.tok_lP) {
             ast expr = parseExpr();
-            if (!match(token.tok_rightParam)) {
-                logError("Expecting ')'");
+            t = this.l.next();
+            if (t != Token.tok_rP) {
+                logError("Excepted ')'\nContinue parsing...");
                 this.l.hold();
             }
             return expr;
-        } else {
-            logError("Expecting number or '(' before");
-            return new numAst(0);
+        }
+        else if (t == Token.tok_num) {
+            return new numAst(Integer.parseInt(this.l.getBuf()));
+        }
+        else {
+            // Syntax Error, and just return a 0
+            logError("Excepted a number or expression\nContinue parsing...");
+            return new numAst();
         }
     }
 
-    private boolean match(token t) throws IOException {
-        return t == this.l.next();
-    }
-
-    public String dump() {
-        if (this.isError) {
-            return "Syntax Error";
+    // <term_tail> ::= * <factor> <term_tail>
+    //               | / <factor> <term_tail>
+    //               | <empty>
+    private ast parseTermtail(ast factor) throws IOException {
+        Token t = this.l.next();
+        if (t == Token.tok_star || t == Token.tok_slash) {
+            char op = this.l.getBuf().charAt(0);
+            ast factor1 = parseFactor();
+            ast t2 = new opAst(op, factor, factor1);
+            return parseTermtail(t2);
         }
-        return this.root.backTrace();
+        else {
+            this.l.hold();
+            return factor;
+        }
     }
 
-    public int eval() {
-        return this.root.eval();
-    }
-
-    private void logError(String msg) {
-        String s = this.l.getReadIn().replace('\n', ' ');
-        int idx = this.l.getIdx();
-        System.out.printf("%s\n", s);
+    private void logError(String info) {
+        String pass = this.l.getReadIn();
+        int idx = this.l.getIdx() - 1;
+        System.out.println(pass);
         for (int i = 0; i < idx; ++i) {
-            System.out.print(' ');
+            System.out.write(' ');
         }
-        System.out.printf("^ %s\n", msg);
-        System.out.print("Continue parsing...\n");
-        this.isError = true;
+        System.out.printf("^ %s\n", info);
     }
+
+    public void postFix() {
+        System.out.printf("Postfix is: %s\n", this.root.postFix());
+    }
+
+    public void eval() {
+        System.out.printf("Result is: %d\n", this.root.eval());
+    }
+
 }

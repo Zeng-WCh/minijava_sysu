@@ -1,32 +1,18 @@
 public class numAst implements ast {
-    private final int val;
+    int num;
 
+    public numAst(int num) {
+        this.num = num;
+    }
     public numAst() {
-        this.val = 0;
-    }
-
-    public numAst(int val) {
-        this.val = val;
-    }
-
-    public String toString() {
-        return String.format("%d", this.val);
-    }
-
-    public void visit(int v) {
-        for (int i = 0; i < v; ++i) {
-            System.out.write('|');
-        }
-        System.out.print("-");
-        System.out.print(this.val);
-        System.out.println();
+        this.num = 0;
     }
 
     public int eval() {
-        return this.val;
+        return this.num;
     }
 
-    public String backTrace() {
-        return String.format("(%d)", this.val);
+    public String postFix() {
+        return String.format("(%d)", this.num);
     }
 }
