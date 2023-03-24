@@ -1,16 +1,16 @@
 import java.io.IOException;
 
-// <expr> ::= <term> <expr_tail>
-// <expr_tail> ::= + <term> <expr_tail>
-//               | - <term> <expr_tail>
-//               | <empty>
-// <term> ::= <factor> <term_tail>
-// <term_tail> ::= * <factor> <term_tail>
-//               | / <factor> <term_tail>
-//               | <empty>
+// <expr> ::= <term> <exprT>
+// <exprT> ::= + <term> <exprT>
+//           | - <term> <exprT>
+//           | <empty>
+// <term> ::= <factor> <termT>
+// <termT> ::= * <factor> <termT>
+//           | / <factor> <termT>
+//           | <empty>
 // <factor> ::= ( <expr> )
-//            | Num
-//            | - Num
+//           | Num
+//           | - Num
 
 public class Parser {
     private Lexer l;
@@ -27,19 +27,19 @@ public class Parser {
     // <expr> ::= <term> <expr_tail>
     private ast parseExpr() throws IOException {
         ast term = this.parseTerm();
-        return parseExprtail(term);
+        return parseExprT(term);
     }
 
     // <term> ::= <factor> <term_tail>
     private ast parseTerm() throws IOException {
         ast factor = this.parseFactor();
-        return parseTermtail(factor);
+        return parseTermT(factor);
     }
 
     // <expr_tail> ::= + <term> <expr_tail>
     //               | - <term> <expr_tail>
     //               | <empty>
-    private ast parseExprtail(ast term) throws IOException {
+    private ast parseExprT(ast term) throws IOException {
         Token t = this.l.next();
 
         if (t == Token.tok_plus || t == Token.tok_minus) {
@@ -47,7 +47,7 @@ public class Parser {
             char op = this.l.getBuf().charAt(0);
             ast term1 = this.parseTerm();
             ast current = new opAst(op, term, term1);
-            return parseExprtail(current);
+            return parseExprT(current);
         }
         else {
             this.l.hold();
@@ -92,7 +92,7 @@ public class Parser {
     // <term_tail> ::= * <factor> <term_tail>
     //               | / <factor> <term_tail>
     //               | <empty>
-    private ast parseTermtail(ast factor) throws IOException {
+    private ast parseTermT(ast factor) throws IOException {
         Token t = this.l.next();
         if (t == Token.tok_star || t == Token.tok_slash) {
             char op = this.l.getBuf().charAt(0);
@@ -101,7 +101,7 @@ public class Parser {
                 logError("Divided by 0\nContinue parsing...");
             }
             ast t2 = new opAst(op, factor, factor1);
-            return parseTermtail(t2);
+            return parseTermT(t2);
         }
         else {
             this.l.hold();
