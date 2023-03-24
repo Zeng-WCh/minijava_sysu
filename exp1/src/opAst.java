@@ -23,13 +23,18 @@ public class opAst implements ast {
         if (this.right != null) {
             r = this.right.eval();
         }
-        return switch (this.op) {
-            case '+' -> l + r;
-            case '-' -> l - r;
-            case '*' -> l * r;
-            case '/' -> l / r;
-            default -> 0;
-        };
+        switch (this.op) {
+            case '+':
+                return l + r;
+            case '-':
+                return l - r;
+            case '*':
+                return l * r;
+            case '/':
+                return l / r;
+            default:
+                return 0;
+        }
     }
 
     public String postFix() {
