@@ -10,6 +10,7 @@ import java.io.IOException;
 //               | <empty>
 // <factor> ::= ( <expr> )
 //            | Num
+//            | - Num
 
 public class Parser {
     private Lexer l;
@@ -57,6 +58,7 @@ public class Parser {
 
     // <factor> ::= ( <expr> )
     //            | Num
+    //            | - Num
     private ast parseFactor() throws IOException {
         Token t = this.l.next();
         if (t == Token.tok_lP) {
@@ -70,6 +72,16 @@ public class Parser {
         }
         else if (t == Token.tok_num) {
             return new numAst(Integer.parseInt(this.l.getBuf()));
+        }
+        else if (t == Token.tok_minus) {
+            t = this.l.next();
+            if (t == Token.tok_num) {
+                return new numAst(-Integer.parseInt(this.l.getBuf()));
+            }
+            else {
+                logError("Excepted a number\nContinue parsing...");
+                return new numAst();
+            }
         }
         else {
             // Syntax Error, and just return a 0

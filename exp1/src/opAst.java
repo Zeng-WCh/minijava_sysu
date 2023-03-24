@@ -38,9 +38,10 @@ public class opAst implements ast {
     }
 
     public String postFix() {
-        if (this.left == null || this.right == null) {
-            return "Error";
-        }
+        // if (this.left == null || this.right == null) {
+        //     return "Error";
+        // }
+        assert this.left != null && this.right != null;
         return String.format("%s%s%c", this.left.postFix(), this.right.postFix(), this.op);
     }
 }

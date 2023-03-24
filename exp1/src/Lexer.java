@@ -66,20 +66,22 @@ public class Lexer {
         // '-' can be an operator
         // '-1' is a num
         // thus need to special process
+        // but, this will give to parser to handle it, so just return tok_minus
         if ((char)this.lastChar == '-') {
-            StringBuilder strBd = new StringBuilder();
-            strBd.append((char)this.lastChar);
+            // StringBuilder strBd = new StringBuilder();
+            // strBd.append((char)this.lastChar);
+            // read();
+            // if (Character.isDigit((char)this.lastChar)) {
+            //     while (Character.isDigit((char)this.lastChar)) {
+            //         strBd.append((char)this.lastChar);
+            //         read();
+            //     }
+            //     this.buf = strBd.toString();
+            //     this.tokNow = Token.tok_num;
+            //     return Token.tok_num;
+            // }
+            this.buf = String.format("%c", (char)this.lastChar);
             read();
-            if (Character.isDigit((char)this.lastChar)) {
-                while (Character.isDigit((char)this.lastChar)) {
-                    strBd.append((char)this.lastChar);
-                    read();
-                }
-                this.buf = strBd.toString();
-                this.tokNow = Token.tok_num;
-                return Token.tok_num;
-            }
-            this.buf = strBd.toString();
             this.tokNow = Token.tok_minus;
             return Token.tok_minus;
         }
