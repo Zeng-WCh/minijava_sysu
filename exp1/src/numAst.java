@@ -1,18 +1,18 @@
 public class numAst implements ast {
-    int num;
+    double num;
 
-    public numAst(int num) {
+    public numAst(double num) {
         this.num = num;
     }
     public numAst() {
         this.num = 0;
     }
 
-    public int eval() {
+    public double eval() {
         return this.num;
     }
 
     public String postFix() {
-        return String.format("(%d)", this.num);
+        return String.format("(%.2f)", this.num);
     }
 }

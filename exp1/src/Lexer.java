@@ -1,3 +1,4 @@
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ public class Lexer {
 
     private void read() throws IOException {
         this.lastChar = System.in.read();
-        if (this.lastChar == '\n' || this.lastChar == '\r') {
+        if (this.lastChar == '\n' || this.lastChar == '\r' || this.lastChar == -1) {
             return;
         }
         ++this.index;
@@ -33,7 +34,7 @@ public class Lexer {
             return this.tokNow;
         }
         // One line parsing
-        if ((char)this.lastChar == '\r' || (char)this.lastChar == '\n') {
+        if ((char)this.lastChar == '\r' || (char)this.lastChar == '\n' || this.lastChar == -1) {
             this.tokNow = Token.tok_eof;
             return Token.tok_eof;
         }

@@ -48,7 +48,6 @@ public class Parser {
             ast term1 = this.parseTerm();
             ast current = new opAst(op, term, term1);
             return parseExprtail(current);
-
         }
         else {
             this.l.hold();
@@ -71,12 +70,12 @@ public class Parser {
             return expr;
         }
         else if (t == Token.tok_num) {
-            return new numAst(Integer.parseInt(this.l.getBuf()));
+            return new numAst(Double.parseDouble(this.l.getBuf()));
         }
         else if (t == Token.tok_minus) {
             t = this.l.next();
             if (t == Token.tok_num) {
-                return new numAst(-Integer.parseInt(this.l.getBuf()));
+                return new numAst(-Double.parseDouble(this.l.getBuf()));
             }
             else {
                 logError("Excepted a number\nContinue parsing...");
@@ -98,6 +97,9 @@ public class Parser {
         if (t == Token.tok_star || t == Token.tok_slash) {
             char op = this.l.getBuf().charAt(0);
             ast factor1 = parseFactor();
+            if (op == '/' && factor1.eval() == 0) {
+                logError("Divided by 0\nContinue parsing...");
+            }
             ast t2 = new opAst(op, factor, factor1);
             return parseTermtail(t2);
         }
@@ -117,12 +119,14 @@ public class Parser {
         System.out.printf("^ %s\n", info);
     }
 
-    public void postFix() {
-        System.out.printf("Postfix is: %s\n", this.root.postFix());
+    public String postFix() {
+        return this.root.postFix();
+        // System.out.printf("Postfix is: %s\n", this.root.postFix());
     }
 
-    public void eval() {
-        System.out.printf("Result is: %d\n", this.root.eval());
+    public double eval() {
+        return this.root.eval();
+        // System.out.printf("Result is: %f\n", this.root.eval());
     }
 
 }

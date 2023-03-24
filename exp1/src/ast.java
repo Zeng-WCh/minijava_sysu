@@ -1,5 +1,5 @@
 public interface ast {
-    public int eval();
+    public double eval();
 
     public String postFix();
 }

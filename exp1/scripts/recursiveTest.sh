@@ -21,6 +21,7 @@ fi
 for i in $(ls ${TESTDIR}/*.in)
 do
     echo "Running test: "${i}
-    r=${i/test/result}
-    { time ./run.sh < ${i} > ${r}; } 2>> ${LOG}
+    t=${i%.in}.out
+    r=${t/test/result}
+    { time ./run.sh -p -e < ${i} > ${r}; } 2>> ${LOG}
 done

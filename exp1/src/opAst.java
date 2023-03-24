@@ -14,12 +14,12 @@ public class opAst implements ast {
         this.right = right;
     }
 
-    public int eval() {
-        int l = 0;
+    public double eval() {
+        double l = 0;
         if (this.left != null) {
             l = this.left.eval();
         }
-        int r = 0;
+        double r = 0;
         if (this.right != null) {
             r = this.right.eval();
         }
@@ -33,7 +33,7 @@ public class opAst implements ast {
             case '/':
                 return l / r;
             default:
-                return 0;
+                return .0f;
         }
     }
 
