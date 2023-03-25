@@ -34,9 +34,8 @@ exp1
 │   └── Token.class
 ├── doc
 ├── README.pdf
-|── READMD_recursion.pdf
+|── README_recursion.pdf
 ├── result
-│   └── recursive
 ├── scripts
 │   ├── build.sh
 │   ├── doc.sh
