@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.chrono.MinguoChronology;
 
 // <expr> ::= <term> <exprT>
 // <exprT> ::= + <term> <exprT>
@@ -42,17 +43,16 @@ public class Parser {
     private ast parseExprT(ast term) throws IOException {
         Token t = this.l.next();
 
-        if (t == Token.tok_plus || t == Token.tok_minus) {
-            // '+' or '-'
+        while (t == Token.tok_plus || t == Token.tok_minus) {
             char op = this.l.getBuf().charAt(0);
             ast term1 = this.parseTerm();
             ast current = new opAst(op, term, term1);
-            return parseExprT(current);
+            term = current;
+            t = this.l.next();
         }
-        else {
-            this.l.hold();
-            return term;
-        }
+
+        this.l.hold();
+        return term;
     }
 
     // <factor> ::= ( <expr> )
@@ -94,19 +94,20 @@ public class Parser {
     //               | <empty>
     private ast parseTermT(ast factor) throws IOException {
         Token t = this.l.next();
-        if (t == Token.tok_star || t == Token.tok_slash) {
+        
+        while (t == Token.tok_star || t == Token.tok_slash) {
             char op = this.l.getBuf().charAt(0);
             ast factor1 = parseFactor();
             if (op == '/' && factor1.eval() == 0) {
                 logError("Divided by 0\nContinue parsing...");
             }
             ast t2 = new opAst(op, factor, factor1);
-            return parseTermT(t2);
+            factor = t2;
+            t = this.l.next();
         }
-        else {
-            this.l.hold();
-            return factor;
-        }
+
+        this.l.hold();
+        return factor;
     }
 
     private void logError(String info) {
