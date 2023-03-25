@@ -116,15 +116,64 @@ $$
 
 而关于一个错误的字符的问题，我选择的做法是将 `lexer` 和 `parser` 分离，错误串通过 `lexer` 来报错给出，`parser` 只给出错误语法信息
 
-从而我们可以有如下的效果
+对于空格问题，在 `Lexer` 代码中，选择了忽略空格，读取空格所采取的步骤是直接继续往后读，直到读到的是非空格为止，但是对于允许空格，又会带来新的问题，例如考虑下面的表达式
+
+```
+1123  234 + 2134  1234
+```
+
+通过 `Lexer` 会得到如下的 `Token` 表示
+
+```
+tok_num tok_num tok_plus tok_num tok_num
+```
+
+也就是出现了连续的数字的情况，在这种情况下，需要对 `expr'` 和 `term'` 做修改，以 `expr'` 为例
+
+```java
+private ast parseExprT(ast term) throws IOException {
+    Token t = this.l.next();
+
+    while (t == Token.tok_num) {
+        logError("Excepted a operator, giving a '+'\nContinue parsing...");
+        term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
+        t = this.l.next();
+    }
+
+    while (t == Token.tok_plus || t == Token.tok_minus) {
+        char op = this.l.getBuf().charAt(0);
+        ast term1 = this.parseTerm();
+        ast current = new opAst(op, term, term1);
+        term = current;
+        t = this.l.next();
+    }        
+
+    this.l.hold();
+    return term;
+}
+```
+
+因为数字无论如何都是最终会由 `factor` 做处理，从而能够跟在数字后面的只可能是 `expr'` 和 `term'` 这两个，所以对这两个的 `parse` 做修改，即可得到一个可行的错误提示
+
+从而最终的错误提示和恢复如下
+
+<center>不识别的 Token</center>
 
 ![](./assert/errordetect1.png)
 
-即首先是 `lexer` 报错，提示 `a` 是一个无法识别的 `token` ，接着是 `parser` 没有读取到一个数字或者表达式，这里采用了一个取巧的方法，对于这类错误，为了继续解析，会返回一个代表数字 `0` 的节点
+<center>空格造成的多数字连接</center>
 
-而如何转换为后缀表达式，这里使用的方法是构建了一个表达式二叉树，`parse` 的步骤实际上是在建立这样的一个表达式树的过程，最后再通过递归调用进行后序遍历来转换为后缀表达式，具体了，首先
+![](./assert/errordetect2.png)
 
-需要一个接口类，用来做抽象
+<center>未匹配的括号</center>
+
+![](./assert/errordetect3.png)
+
+括号匹配所造成的错误会定位到上一个未匹配的 `(` 处，便于查看
+
+而如何转换为后缀表达式，这里使用的方法是构建了一个表达式二叉树，`parse` 的步骤实际上是在建立这样的一个表达式树的过程，最后再通过递归调用进行后序遍历来转换为后缀表达式，具体的，
+
+首先需要一个接口类，用来做抽象
 
 ```java
 public interface ast {
