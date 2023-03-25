@@ -1,6 +1,14 @@
 import java.io.IOException;
 
+/**
+ * Postfix, main entry point for the program.
+ */
 public class Postfix {
+    /**
+     * printPost: print the postfix expression
+     * printEval: print the evaluation result
+     * test: test mode, only print the evaluation result
+     */
     static boolean printPost = true;
     static boolean printEval = true;
     static boolean test = false;

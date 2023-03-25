@@ -1,6 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Lexer, read in the input and generate tokens.
+ */
 public class Lexer {
     private int lastChar;
     private int index;
@@ -9,6 +12,10 @@ public class Lexer {
     private Token tokNow;
     private boolean holdOn;
 
+    /**
+     * Read in the next char and add it to the readIn list
+     * @throws IOException
+     */
     private void read() throws IOException {
         this.lastChar = System.in.read();
         if (this.lastChar == '\n' || this.lastChar == '\r' || this.lastChar == -1) {
@@ -27,6 +34,11 @@ public class Lexer {
         this.holdOn = false;
     }
 
+    /**
+     * Get the current token
+     * @return token for now
+     * @throws IOException
+     */
     public Token next() throws IOException {
         if (this.holdOn) {
             this.holdOn = false;
@@ -120,12 +132,10 @@ public class Lexer {
         return Token.tok_unknown;
     }
 
-    public void Debug() throws IOException {
-        while (this.next() != Token.tok_eof) {
-            System.out.println(this.tokNow);
-        }
-    }
-
+    /**
+     * Print out the error message
+     * @param info
+     */
     private void logError(String info) {
         String passed = this.getReadIn();
         System.out.println(passed);
@@ -135,6 +145,10 @@ public class Lexer {
         System.out.printf("^ %s\n", info);
     }
 
+    /**
+     * 
+     * @return readIn list as a string
+     */
     public String getReadIn() {
         StringBuilder strBd = new StringBuilder();
         for (char ch : this.readIn) {
@@ -147,6 +161,9 @@ public class Lexer {
         return this.buf;
     }
 
+    /**
+     * Hold the current token, in case the parser need to use it again
+     */
     public void hold() {
         this.holdOn = true;
     }

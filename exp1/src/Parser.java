@@ -13,6 +13,9 @@ import java.time.chrono.MinguoChronology;
 //           | Num
 //           | - Num
 
+/**
+ * Parser, parse the input expression and build the AST.
+ */
 public class Parser {
     private Lexer l;
     private ast root;
@@ -21,25 +24,45 @@ public class Parser {
         this.root = null;
     }
 
+    /**
+     * Parse start point
+     * @throws IOException
+     */
     public void parse() throws IOException {
         this.root = parseExpr();
     }
 
-    // <expr> ::= <term> <expr_tail>
+    // <expr> ::= <term> <exprT>
+    /**
+     * Parse Expr and return the root of AST
+     * @return root of ast
+     * @throws IOException
+     */
     private ast parseExpr() throws IOException {
         ast term = this.parseTerm();
         return parseExprT(term);
     }
 
-    // <term> ::= <factor> <term_tail>
+    // <term> ::= <factor> <termT>
+    /**
+     * Parse Term and return the AST
+     * @return
+     * @throws IOException
+     */
     private ast parseTerm() throws IOException {
         ast factor = this.parseFactor();
         return parseTermT(factor);
     }
 
-    // <expr_tail> ::= + <term> <expr_tail>
-    //               | - <term> <expr_tail>
-    //               | <empty>
+    // <exprT> ::= + <term> <exprT>
+    //           | - <term> <exprT>
+    //           | <empty>
+    /**
+     * Parse ExprT and return the AST
+     * @param term
+     * @return ast node
+     * @throws IOException
+     */
     private ast parseExprT(ast term) throws IOException {
         Token t = this.l.next();
 
@@ -58,6 +81,11 @@ public class Parser {
     // <factor> ::= ( <expr> )
     //            | Num
     //            | - Num
+    /**
+     * Parse Factor and return the AST
+     * @return ast node
+     * @throws IOException
+     */
     private ast parseFactor() throws IOException {
         Token t = this.l.next();
         if (t == Token.tok_lP) {
@@ -89,9 +117,15 @@ public class Parser {
         }
     }
 
-    // <term_tail> ::= * <factor> <term_tail>
-    //               | / <factor> <term_tail>
-    //               | <empty>
+    // <termT> ::= * <factor> <termT>
+    //           | / <factor> <termT>
+    //           | <empty>
+    /**
+     * Parse TermT and return the AST
+     * @param factor
+     * @return
+     * @throws IOException
+     */
     private ast parseTermT(ast factor) throws IOException {
         Token t = this.l.next();
         
@@ -110,6 +144,10 @@ public class Parser {
         return factor;
     }
 
+    /**
+     * Log error and print the error message
+     * @param info, error message
+     */
     private void logError(String info) {
         String pass = this.l.getReadIn();
         int idx = this.l.getIdx() - 1;
@@ -120,11 +158,19 @@ public class Parser {
         System.out.printf("^ %s\n", info);
     }
 
+    /**
+     * return the post fix expression string
+     * @return
+     */
     public String postFix() {
         return this.root.postFix();
         // System.out.printf("Postfix is: %s\n", this.root.postFix());
     }
 
+    /**
+     * return the result of the expression
+     * @return
+     */
     public double eval() {
         return this.root.eval();
         // System.out.printf("Result is: %f\n", this.root.eval());

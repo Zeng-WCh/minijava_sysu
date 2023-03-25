@@ -1,3 +1,6 @@
+/**
+ * the AST Node that represents a number
+ */
 public class numAst implements ast {
     double num;
 

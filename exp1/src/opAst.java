@@ -1,3 +1,11 @@
+/**
+ * the AST Node that represents the operator
+ * left and right are the left and right child of the operator
+ * example
+ *   +
+ *  / \
+ * 1   2
+ */
 public class opAst implements ast {
     ast left, right;
     char op;
@@ -14,6 +22,10 @@ public class opAst implements ast {
         this.right = right;
     }
 
+    /**
+     * eval the AST
+     * @return the result of the AST
+     */
     public double eval() {
         double l = 0;
         if (this.left != null) {
@@ -37,6 +49,9 @@ public class opAst implements ast {
         }
     }
 
+    /**
+     * @return the postfix expression of the AST
+     */
     public String postFix() {
         // if (this.left == null || this.right == null) {
         //     return "Error";
