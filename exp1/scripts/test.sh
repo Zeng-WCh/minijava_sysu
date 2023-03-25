@@ -21,7 +21,7 @@ fi
 
 for i in $(ls ${TESTDIR}/*.in)
 do
-    res=`./run.sh -t < ${i}`
+    res=`./run.sh -t < ${i} | tee -a ${LOG}`
     ./eval.py ${i} ${res}
 done
 
