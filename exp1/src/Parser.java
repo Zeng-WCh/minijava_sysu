@@ -66,13 +66,19 @@ public class Parser {
     private ast parseExprT(ast term) throws IOException {
         Token t = this.l.next();
 
+        while (t == Token.tok_num) {
+            logError("Excepted a operator, giving a '+'\nContinue parsing...");
+            term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
+            t = this.l.next();
+        }
+
         while (t == Token.tok_plus || t == Token.tok_minus) {
             char op = this.l.getBuf().charAt(0);
             ast term1 = this.parseTerm();
             ast current = new opAst(op, term, term1);
             term = current;
             t = this.l.next();
-        }
+        }        
 
         this.l.hold();
         return term;
@@ -89,10 +95,11 @@ public class Parser {
     private ast parseFactor() throws IOException {
         Token t = this.l.next();
         if (t == Token.tok_lP) {
+            int now = this.l.getIdx();
             ast expr = parseExpr();
             t = this.l.next();
             if (t != Token.tok_rP) {
-                logError("Excepted ')'\nContinue parsing...");
+                logError("Excepted ')' for this\nContinue parsing...", now);
                 this.l.hold();
             }
             return expr;
@@ -128,6 +135,12 @@ public class Parser {
      */
     private ast parseTermT(ast factor) throws IOException {
         Token t = this.l.next();
+
+        while (t == Token.tok_num) {
+            logError("Excepted a operator, giving a '*'\nContinue parsing...");
+            factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
+            t = this.l.next();
+        }
         
         while (t == Token.tok_star || t == Token.tok_slash) {
             char op = this.l.getBuf().charAt(0);
@@ -150,9 +163,22 @@ public class Parser {
      */
     private void logError(String info) {
         String pass = this.l.getReadIn();
-        int idx = this.l.getIdx() - 1;
         System.out.println(pass);
-        for (int i = 0; i < idx; ++i) {
+        for (int i = 0; i < this.l.getIdx() - 1; ++i) {
+            System.out.write(' ');
+        }
+        System.out.printf("^ %s\n", info);
+    }
+
+    /**
+     * Log error and print the error message
+     * @param info, error message
+     * @param pos the position of the error
+     */
+    private void logError(String info, int pos) {
+        String pass = this.l.getReadIn();
+        System.out.println(pass);
+        for (int i = 0; i < pos; ++i) {
             System.out.write(' ');
         }
         System.out.printf("^ %s\n", info);

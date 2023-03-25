@@ -11,6 +11,7 @@ public class Lexer {
     private String buf;
     private Token tokNow;
     private boolean holdOn;
+    private boolean end;
 
     /**
      * Read in the next char and add it to the readIn list
@@ -18,10 +19,10 @@ public class Lexer {
      */
     private void read() throws IOException {
         this.lastChar = System.in.read();
+        ++this.index;
         if (this.lastChar == '\n' || this.lastChar == '\r' || this.lastChar == -1) {
             return;
         }
-        ++this.index;
         this.readIn.add((char)this.lastChar);
     }
 
@@ -32,6 +33,7 @@ public class Lexer {
         this.buf = String.format("%c", (char)this.lastChar);
         this.tokNow = Token.tok_eof;
         this.holdOn = false;
+        this.end = false;
     }
 
     /**
@@ -44,13 +46,19 @@ public class Lexer {
             this.holdOn = false;
             return this.tokNow;
         }
+        if (this.end) {
+            return Token.tok_eof;
+        }
         // One line parsing
         if ((char)this.lastChar == '\r' || (char)this.lastChar == '\n' || this.lastChar == -1) {
+            ++this.index;
+            this.end = true;
             this.tokNow = Token.tok_eof;
             return Token.tok_eof;
         }
+
         // escape white spaces
-        if (Character.isWhitespace((char)this.lastChar)) {
+        while (Character.isSpaceChar((char)this.lastChar)) {
             read();
         }
 
@@ -169,6 +177,6 @@ public class Lexer {
     }
 
     public int getIdx() {
-        return this.index;
+        return this.index - this.buf.length() - 1;
     }
 }
