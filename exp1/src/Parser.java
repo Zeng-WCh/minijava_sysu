@@ -66,7 +66,7 @@ public class Parser {
         Token t = next();
 
         while (t == Token.tok_num) {
-            logError("Expecting a operator, giving a '+'\nContinue parsing...");
+            logError("Expecting an operator, giving a '+'\nContinue parsing...");
             term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
             t = next();
         }
@@ -79,7 +79,7 @@ public class Parser {
             t = next();
 
             while (t == Token.tok_num) {
-                logError("Expecting a operator, giving a '+'\nContinue parsing...");
+                logError("Expecting an operator, giving a '+'\nContinue parsing...");
                 term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
                 t = next();
             }
@@ -142,7 +142,7 @@ public class Parser {
         Token t = next();
 
         while (t == Token.tok_num) {
-            logError("Expecting a operator, giving a '*'\nContinue parsing...");
+            logError("Expecting an operator, giving a '*'\nContinue parsing...");
             factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
             t = next();
         }
@@ -158,7 +158,7 @@ public class Parser {
             t = next();
 
             while (t == Token.tok_num) {
-                logError("Excepted a operator, giving a '*'\nContinue parsing...");
+                logError("Expecting an operator, giving a '*'\nContinue parsing...");
                 factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
                 t = next();
             }
