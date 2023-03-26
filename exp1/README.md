@@ -65,13 +65,33 @@ exp1
 * `run.sh` 和之前的类似，运行程序，同时将参数传递至程序
 * `test.sh` 进行测试，测试前要求运行一次 `build.sh` 和 `generate.py` 来编译并生成测试例
 
+### 类说明
+
+#### Token 类
+
+`Token` 是作为一个枚举类，写在 `Token.java` 中，目的是为了指示不同的 `Token`，例如 `tok_num` 表示的是数字，`tok_plus` 表示的是 `+` 等
+
+#### Lexer 类
+
+`Lexer` 即为词法分析器，其会不断从标准输入流中不断读入字符，并根据字符来针对性的返回所得到的 `Token` 的一个类，在这里，针对原始程序所定义的语言进行的修改，去除了无法接收空格的问题，而是对于空格，一律忽略，继续往后读，直到读到一个有意义/不明的标识符为止
+
+#### Parser 类
+
+`Parser` 类即为语法分析器，采用的方法即为递归下降法，根据 `Lexer` 所传入的 `Token`，不断进行递归下降，同时建立一个语法分析树 (在这里即为表达式二叉树)
+
+#### ast 接口类以及对应的派生
+
+这个类是用来做 `ast` 的抽象的，目的是可以使用一个抽象的方法，来统一不同的 `ast` 节点类型，例如这里实现的 `opAst` 和 `numAst` 就分别代表了运算符节点和数字节点，分别有不同的求值和求后缀表达式方法，而通过 `ast` 接口类的抽象以及函数重载，可以实现这样的过程
+
 ### 实验结论
 
 #### 1. 静态成员和非静态成员
 
 在这个实验中，无论是否删去 `static` 都不会影响程序的正确性，都能够正确的解析输入的表达式并输出，这是因为，在整个程序运行过程中，都只有一个 `Parser` 实例，不存在多个 `Parser` ，静态成员和非静态成员最主要的区别就在于，静态成员是类所共享的，而非静态成员则是实例独占的，由于在程序中只存在一个 `Parser` 实例，因而在这个程序中，静态或者是非静态并不会对程序正确性造成影响。
 
-如何选择声明为静态还是非静态取决于程序的设计，例如一个变量需要所有类共享，或者需要在没有实例的情况下被引用，那么设计为静态则是更好的，在这里，保留了静态的设定，因为在语法解析中，`Parser` 的后续是构建一个语法分析树，需要用到 `Parser` 中读到的数据，因而保留了静态的设定
+如何选择声明为静态还是非静态取决于程序的设计，例如一个变量需要所有类共享，或者需要在没有实例的情况下被引用，那么设计为静态则是更好的。
+
+在这里，`Lexer` 类中保留了 `lastChar` (即给定代码的 `lookahead`) 为静态的设定，因为在语法解析中，`Parser` 的后续是构建一个语法分析树，需要用到 `Lexer` 中读到的数据，因而保留了静态的设定
 
 #### 2. 消除尾递归
 
@@ -86,7 +106,7 @@ rest \ ::= \ + \ rest \ | \ - \ rest \\
 term \ ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 $$
 
-一个想法是，是否可以实现一个完整的四则运算解析，首先需要考虑的是运算优先级，即 `*` 和 `/` 需要优先被解析，之后才是 `+` 和 `-` ，同时还需要注意到的是，括号的优先级，即形如 `(expr)` 的表达式在任何时候，都需要被优先的解析，也就是，需要另一个 `rest` 项，来做 `*` 和 `/` 的解析，且需要在 `rest` 前被解析，我们可以这样考虑，将 `term` 改写如下的形式
+对于程序扩展的一个想法是，是否可以实现一个完整的四则运算解析，首先需要考虑的是运算优先级，即 `*` 和 `/` 需要优先被解析，之后才是 `+` 和 `-` ，同时还需要注意到的是，括号的优先级，即形如 `(expr)` 的表达式在任何时候，都需要被优先的解析，也就是，需要另一个 `rest` 项，来做 `*` 和 `/` 的解析，且需要在 `rest` 前被解析，我们可以这样考虑，将 `term` 改写如下的形式
 $$
 term \ ::= \ factor \ term' \\
 factor \ ::= \ number \ | \ ( \ expr \ ) \\
@@ -109,35 +129,35 @@ Factor \ ::= \ Number \ | \ -Number \ | \ ( \ Expr \ )\\
 Op1 \ ::= \ + \ | \ - \ \\
 Op2 \ ::= \ * \ | \ / \
 $$
-错误处理需要做的主要是在那些非空的终结符上才能实现，因为如果可以为空，那么一个可能的情况是在这里可以推导为空，当前的符号是后面一个语法项的，所以主要的错误处理都放在了 `Factor` 因子的推导，即可能的错误为
+错误处理首先需要考虑的是在那些非空的终结符上的，因为对于那些可以为空的串，一个可能的情况是在这里可以推导为空，当前的符号是后面一个语法项的，所以主要的错误处理都放在了 `Factor` 因子的推导，即可能的错误为
 
 * 括号不匹配
 * 不是数字也不是一个括号表达式
 
-而关于一个错误的字符的问题，我选择的做法是将 `lexer` 和 `parser` 分离，错误串通过 `lexer` 来报错给出，`parser` 只给出错误语法信息
+而关于一个错误的字符的问题，我选择的做法是将 `lexer` 和 `parser` 分离，`lexer` 面对不合规的字符的时候，返回一个 `unknown` 的 `Token Class` 并由 `parser` 预先对 `lexer` 的输出做筛选，筛选出那些并不是 `unknown` 的 `token` 做 `parse` 具体的情况可以见下面的图
 
 对于空格问题，在 `Lexer` 代码中，选择了忽略空格，读取空格所采取的步骤是直接继续往后读，直到读到的是非空格为止，但是对于允许空格，又会带来新的问题，例如考虑下面的表达式
 
 ```
-1123  234 + 2134  1234
+1123  234 + 2134 * 1234 11 12 123
 ```
 
 通过 `Lexer` 会得到如下的 `Token` 表示
 
 ```
-tok_num tok_num tok_plus tok_num tok_num
+tok_num tok_num tok_plus tok_num tok_star tok_num tok_num tok_num tok_num
 ```
 
 也就是出现了连续的数字的情况，在这种情况下，需要对 `expr'` 和 `term'` 做修改，以 `expr'` 为例
 
 ```java
 private ast parseExprT(ast term) throws IOException {
-    Token t = this.l.next();
+    Token t = next();
 
     while (t == Token.tok_num) {
-        logError("Excepted a operator, giving a '+'\nContinue parsing...");
+        logError("Expecting a operator, giving a '+'\nContinue parsing...");
         term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
-        t = this.l.next();
+        t = next();
     }
 
     while (t == Token.tok_plus || t == Token.tok_minus) {
@@ -145,7 +165,13 @@ private ast parseExprT(ast term) throws IOException {
         ast term1 = this.parseTerm();
         ast current = new opAst(op, term, term1);
         term = current;
-        t = this.l.next();
+        t = next();
+
+        while (t == Token.tok_num) {
+            logError("Expecting a operator, giving a '+'\nContinue parsing...");
+            term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
+            t = next();
+        }
     }        
 
     this.l.hold();
@@ -164,6 +190,8 @@ private ast parseExprT(ast term) throws IOException {
 <center>空格造成的多数字连接</center>
 
 ![](./assert/errordetect2.png)
+
+对于这个 `parse` 结果，简单解释下，即对于出现数字中没有符号连接的情况，会假定给出一个符号，例如上面都给出了一个 `*` ，目的是为了让 `parser` 继续工作，继续 `parse`，而不是由于错误而直接停止退出
 
 <center>未匹配的括号</center>
 
