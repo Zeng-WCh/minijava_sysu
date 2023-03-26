@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * Lexer, read in the input and generate tokens.
  */
 public class Lexer {
-    private int lastChar;
+    static private int lastChar;
     private int index;
     private ArrayList<Character> readIn;
     private String buf;
@@ -18,19 +18,19 @@ public class Lexer {
      * @throws IOException
      */
     private void read() throws IOException {
-        this.lastChar = System.in.read();
+        lastChar = System.in.read();
         ++this.index;
-        if (this.lastChar == '\n' || this.lastChar == '\r' || this.lastChar == -1) {
+        if (lastChar == '\n' || lastChar == '\r' || lastChar == -1) {
             return;
         }
-        this.readIn.add((char)this.lastChar);
+        this.readIn.add((char)lastChar);
     }
 
     public Lexer() throws IOException {
         this.index = 0;
         this.readIn = new ArrayList<>();
         read();
-        this.buf = String.format("%c", (char)this.lastChar);
+        this.buf = String.format("%c", (char)lastChar);
         this.tokNow = Token.tok_eof;
         this.holdOn = false;
         this.end = false;
@@ -50,7 +50,7 @@ public class Lexer {
             return Token.tok_eof;
         }
         // One line parsing
-        if ((char)this.lastChar == '\r' || (char)this.lastChar == '\n' || this.lastChar == -1) {
+        if ((char)lastChar == '\r' || (char)lastChar == '\n' || lastChar == -1) {
             ++this.index;
             this.end = true;
             this.tokNow = Token.tok_eof;
@@ -58,17 +58,17 @@ public class Lexer {
         }
 
         // escape white spaces
-        while (Character.isSpaceChar((char)this.lastChar)) {
+        while (Character.isSpaceChar((char)lastChar)) {
             read();
         }
 
         // num
-        if (Character.isDigit((char)this.lastChar)) {
+        if (Character.isDigit((char)lastChar)) {
             StringBuilder strBd = new StringBuilder();
-            strBd.append((char)this.lastChar);
+            strBd.append((char)lastChar);
             read();
-            while (Character.isDigit((char)this.lastChar)) {
-                strBd.append((char)this.lastChar);
+            while (Character.isDigit((char)lastChar)) {
+                strBd.append((char)lastChar);
                 read();
             }
             this.buf = strBd.toString();
@@ -76,8 +76,8 @@ public class Lexer {
             return Token.tok_num;
         }
 
-        if ((char)this.lastChar == '+') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        if ((char)lastChar == '+') {
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_plus;
             return Token.tok_plus;
@@ -87,71 +87,72 @@ public class Lexer {
         // '-1' is a num
         // thus need to special process
         // but, this will give to parser to handle it, so just return tok_minus
-        if ((char)this.lastChar == '-') {
+        if ((char)lastChar == '-') {
             // StringBuilder strBd = new StringBuilder();
-            // strBd.append((char)this.lastChar);
+            // strBd.append((char)lastChar);
             // read();
-            // if (Character.isDigit((char)this.lastChar)) {
-            //     while (Character.isDigit((char)this.lastChar)) {
-            //         strBd.append((char)this.lastChar);
+            // if (Character.isDigit((char)lastChar)) {
+            //     while (Character.isDigit((char)lastChar)) {
+            //         strBd.append((char)lastChar);
             //         read();
             //     }
             //     this.buf = strBd.toString();
             //     this.tokNow = Token.tok_num;
             //     return Token.tok_num;
             // }
-            this.buf = String.format("%c", (char)this.lastChar);
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_minus;
             return Token.tok_minus;
         }
 
-        if ((char)this.lastChar == '*') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        if ((char)lastChar == '*') {
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_star;
             return Token.tok_star;
         }
 
-        if ((char)this.lastChar == '/') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        if ((char)lastChar == '/') {
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_slash;
             return Token.tok_slash;
         }
 
-        if ((char)this.lastChar == '(') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        if ((char)lastChar == '(') {
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_lP;
             return Token.tok_lP;
         }
 
-        if ((char)this.lastChar == ')') {
-            this.buf = String.format("%c", (char)this.lastChar);
+        if ((char)lastChar == ')') {
+            this.buf = String.format("%c", (char)lastChar);
             read();
             this.tokNow = Token.tok_rP;
             return Token.tok_rP;
         }
 
-        logError(String.format("Unknown token: %c", this.lastChar));
+        // logError(String.format("Unknown token: %c", lastChar));
+        this.buf = String.format("%c", (char)lastChar);
         this.tokNow = Token.tok_unknown;
         read();
         return Token.tok_unknown;
     }
 
-    /**
-     * Print out the error message
-     * @param info
-     */
-    private void logError(String info) {
-        String passed = this.getReadIn();
-        System.out.println(passed);
-        for (int i = 0; i < this.index - 1; ++i) {
-            System.out.write(' ');
-        }
-        System.out.printf("^ %s\n", info);
-    }
+    // /**
+    //  * Print out the error message
+    //  * @param info
+    //  */
+    // private void logError(String info) {
+    //     String passed = this.getReadIn();
+    //     System.out.println(passed);
+    //     for (int i = 0; i < this.index - 1; ++i) {
+    //         System.out.write(' ');
+    //     }
+    //     System.out.printf("^ %s\n", info);
+    // }
 
     /**
      * 

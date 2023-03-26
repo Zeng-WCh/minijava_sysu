@@ -64,12 +64,12 @@ public class Parser {
      * @throws IOException
      */
     private ast parseExprT(ast term) throws IOException {
-        Token t = this.l.next();
+        Token t = next();
 
         while (t == Token.tok_num) {
             logError("Excepted a operator, giving a '+'\nContinue parsing...");
             term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
-            t = this.l.next();
+            t = next();
         }
 
         while (t == Token.tok_plus || t == Token.tok_minus) {
@@ -77,7 +77,13 @@ public class Parser {
             ast term1 = this.parseTerm();
             ast current = new opAst(op, term, term1);
             term = current;
-            t = this.l.next();
+            t = next();
+
+            while (t == Token.tok_num) {
+                logError("Excepted a operator, giving a '+'\nContinue parsing...");
+                term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
+                t = next();
+            }
         }        
 
         this.l.hold();
@@ -93,11 +99,11 @@ public class Parser {
      * @throws IOException
      */
     private ast parseFactor() throws IOException {
-        Token t = this.l.next();
+        Token t = next();
         if (t == Token.tok_lP) {
             int now = this.l.getIdx();
             ast expr = parseExpr();
-            t = this.l.next();
+            t = next();
             if (t != Token.tok_rP) {
                 logError("Excepted ')' for this\nContinue parsing...", now);
                 this.l.hold();
@@ -108,7 +114,7 @@ public class Parser {
             return new numAst(Double.parseDouble(this.l.getBuf()));
         }
         else if (t == Token.tok_minus) {
-            t = this.l.next();
+            t = next();
             if (t == Token.tok_num) {
                 return new numAst(-Double.parseDouble(this.l.getBuf()));
             }
@@ -134,12 +140,12 @@ public class Parser {
      * @throws IOException
      */
     private ast parseTermT(ast factor) throws IOException {
-        Token t = this.l.next();
+        Token t = next();
 
         while (t == Token.tok_num) {
             logError("Excepted a operator, giving a '*'\nContinue parsing...");
             factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
-            t = this.l.next();
+            t = next();
         }
         
         while (t == Token.tok_star || t == Token.tok_slash) {
@@ -150,7 +156,13 @@ public class Parser {
             }
             ast t2 = new opAst(op, factor, factor1);
             factor = t2;
-            t = this.l.next();
+            t = next();
+
+            while (t == Token.tok_num) {
+                logError("Excepted a operator, giving a '*'\nContinue parsing...");
+                factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
+                t = next();
+            }
         }
 
         this.l.hold();
@@ -162,12 +174,13 @@ public class Parser {
      * @param info, error message
      */
     private void logError(String info) {
-        String pass = this.l.getReadIn();
-        System.out.println(pass);
-        for (int i = 0; i < this.l.getIdx() - 1; ++i) {
-            System.out.write(' ');
-        }
-        System.out.printf("^ %s\n", info);
+        // String pass = this.l.getReadIn();
+        // System.out.println(pass);
+        // for (int i = 0; i < this.l.getIdx() - 1; ++i) {
+        //     System.out.write(' ');
+        // }
+        // System.out.printf("^ %s\n", info);
+        logError(info, this.l.getIdx() - 1);
     }
 
     /**
@@ -200,6 +213,25 @@ public class Parser {
     public double eval() {
         return this.root.eval();
         // System.out.printf("Result is: %f\n", this.root.eval());
+    }
+
+    private Token next() throws IOException {
+        Token t = this.l.next();
+
+        StringBuilder strBd = new StringBuilder();
+        boolean flag = false;
+
+        while (t == Token.tok_unknown) {
+            strBd.append(this.l.getBuf());
+            t = this.l.next();
+            flag = true;
+        }
+
+        if (flag) {
+            logError(String.format("Unknown token: %s", strBd.toString()));
+        }
+
+        return t;
     }
 
 }
