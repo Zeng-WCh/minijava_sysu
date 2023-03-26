@@ -134,8 +134,6 @@ public class Lexer {
             return Token.tok_rP;
         }
 
-        // logError(String.format("Unknown token: %c", lastChar));
-        this.buf = String.format("%c", (char)lastChar);
         this.tokNow = Token.tok_unknown;
         read();
         return Token.tok_unknown;
@@ -168,6 +166,14 @@ public class Lexer {
 
     public String getBuf() {
         return this.buf;
+    }
+
+    public String getBuf(int l, int r) {
+        StringBuilder bd = new StringBuilder();
+        for (; l < r; ++l) {
+            bd.append(this.readIn.get(l));
+        }
+        return bd.toString();
     }
 
     /**

@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.time.chrono.MinguoChronology;
 
 // <expr> ::= <term> <exprT>
 // <exprT> ::= + <term> <exprT>
@@ -67,7 +66,7 @@ public class Parser {
         Token t = next();
 
         while (t == Token.tok_num) {
-            logError("Excepted a operator, giving a '+'\nContinue parsing...");
+            logError("Expecting a operator, giving a '+'\nContinue parsing...");
             term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
             t = next();
         }
@@ -174,12 +173,6 @@ public class Parser {
      * @param info, error message
      */
     private void logError(String info) {
-        // String pass = this.l.getReadIn();
-        // System.out.println(pass);
-        // for (int i = 0; i < this.l.getIdx() - 1; ++i) {
-        //     System.out.write(' ');
-        // }
-        // System.out.printf("^ %s\n", info);
         logError(info, this.l.getIdx() - 1);
     }
 
@@ -215,20 +208,26 @@ public class Parser {
         // System.out.printf("Result is: %f\n", this.root.eval());
     }
 
+    /**
+     * 
+     * @return the next token that is not unknown to the parser
+     * @throws IOException
+     */
     private Token next() throws IOException {
         Token t = this.l.next();
+        int l = -1, r = -1;
 
-        StringBuilder strBd = new StringBuilder();
-        boolean flag = false;
+        if (t == Token.tok_unknown) {
+            l = this.l.getIdx();
 
-        while (t == Token.tok_unknown) {
-            strBd.append(this.l.getBuf());
-            t = this.l.next();
-            flag = true;
+            while(t == Token.tok_unknown) {
+                t = this.l.next();
+            }
         }
+        r = this.l.getIdx();
 
-        if (flag) {
-            logError(String.format("Unknown token: %s", strBd.toString()));
+        if (l != -1) {
+            logError(String.format("Unknown token: %s\nIgnoring it and continue parsing...", this.l.getBuf(l, r)), l);
         }
 
         return t;
