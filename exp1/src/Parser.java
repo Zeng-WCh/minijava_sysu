@@ -79,7 +79,7 @@ public class Parser {
             t = next();
 
             while (t == Token.tok_num) {
-                logError("Excepted a operator, giving a '+'\nContinue parsing...");
+                logError("Expecting a operator, giving a '+'\nContinue parsing...");
                 term = new opAst('+', term, new numAst(Double.parseDouble(this.l.getBuf())));
                 t = next();
             }
@@ -104,7 +104,7 @@ public class Parser {
             ast expr = parseExpr();
             t = next();
             if (t != Token.tok_rP) {
-                logError("Excepted ')' for this\nContinue parsing...", now);
+                logError("Missing match ')' for this\nContinue parsing...", now);
                 this.l.hold();
             }
             return expr;
@@ -118,13 +118,13 @@ public class Parser {
                 return new numAst(-Double.parseDouble(this.l.getBuf()));
             }
             else {
-                logError("Excepted a number\nContinue parsing...");
+                logError("Expecting a number\nContinue parsing...");
                 return new numAst();
             }
         }
         else {
             // Syntax Error, and just return a 0
-            logError("Excepted a number or expression\nContinue parsing...");
+            logError("Expecting a number or expression\nContinue parsing...");
             return new numAst();
         }
     }
@@ -142,7 +142,7 @@ public class Parser {
         Token t = next();
 
         while (t == Token.tok_num) {
-            logError("Excepted a operator, giving a '*'\nContinue parsing...");
+            logError("Expecting a operator, giving a '*'\nContinue parsing...");
             factor = new opAst('*', factor, new numAst(Double.parseDouble(this.l.getBuf())));
             t = next();
         }
