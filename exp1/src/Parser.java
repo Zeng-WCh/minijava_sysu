@@ -10,7 +10,7 @@ import java.io.IOException;
 //           | <empty>
 // <factor> ::= ( <expr> )
 //           | Num
-//           | - Num
+//           | - Factor
 
 /**
  * Parser, parse the input expression and build the AST.
