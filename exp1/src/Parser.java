@@ -186,6 +186,27 @@ public class Parser {
     }
 
     /**
+     * Log error and print the error message
+     * @param info, error message
+     * @param pos, the position of the error
+     * @param length, the length of the error input
+     */
+    private void logError(String info, int pos, int length) {
+        String pass = this.l.getReadIn();
+        System.out.println(pass);
+        for (int i = 0; i < pos; ++i) {
+            System.out.write(' ');
+        }
+        System.out.write('^');
+        if (length > 1) {
+            for (int i = 0; i < length - 1; ++i) {
+                System.out.write('~');
+            }
+        }
+        System.out.printf(" %s\n", info);
+    }
+
+    /**
      * return the post fix expression string
      * @return
      */
@@ -222,7 +243,7 @@ public class Parser {
         r = this.l.getIdx();
 
         if (l != -1) {
-            logError(String.format("Unknown token: %s\nIgnoring it and continue parsing...", this.l.getBuf(l, r)), l);
+            logError(String.format("Unknown token: %s\nIgnoring it and continue parsing...", this.l.getBuf(l, r)), l, r - l);
         }
 
         return t;
