@@ -91,7 +91,7 @@ public class Parser {
 
     // <factor> ::= ( <expr> )
     //            | Num
-    //            | - Num
+    //            | - <factor>
     /**
      * Parse Factor and return the AST
      * @return ast node
@@ -113,18 +113,13 @@ public class Parser {
             return new numAst(Double.parseDouble(this.l.getBuf()));
         }
         else if (t == Token.tok_minus) {
-            t = next();
-            if (t == Token.tok_num) {
-                return new numAst(-Double.parseDouble(this.l.getBuf()));
-            }
-            else {
-                logError("Expecting a number\nContinue parsing...");
-                return new numAst();
-            }
+            ast factor = parseFactor();
+            return new opAst('-', new numAst(0), factor);
         }
         else {
             // Syntax Error, and just return a 0
             logError("Expecting a number or expression\nContinue parsing...");
+            this.l.hold();
             return new numAst();
         }
     }

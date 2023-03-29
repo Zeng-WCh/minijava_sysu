@@ -117,6 +117,8 @@ $$
 
 另一个问题在于，负数的解析，在原来的语法中，是不能够解析这样的表达式 `-1` ，因为第一个 `term` 没有办法匹配到一个数字，而改写后的语法，也是没法直接解析的，一个可能的方法是将 `-number` 包含在 `number` 的定义中，即 `number ::= [-] 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9` ，但是这样又会导致 `1-1` 这样的表达式被错误分割为 `number number` 的形式 (因为 `-1` 被视为一个整体的项)，从而导致解析失败，在这里我的做法是改写 `factor` 使其变为 `factor ::= number | - number | ( expr )` 这样来实现负数表达的解析
 
+但是这样会出现无法解析 `-(1+2)` 的问题，这里我进行了重新的考虑，将 `-` 解析为 `0-` 的方法，这样只需要将 `factor` 改写为 `factor ::= number | - factor ( expr )` 即可
+
 最后是扩展下 `number` 的定义，将其扩展为任意位的正整数，即 `number ::= {digit}`， ` digit ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9`，最终语法的推导见下面的语法推导部分
 
 得到的语法为
@@ -125,7 +127,7 @@ Expr \ ::= \ Term \ Expr' \\
 Expr' \ ::= \ Op1 \ Term \ Expr' \ | \ \epsilon \\
 Term \ ::= \ Factor \ Term' \\
 Term' \ ::= \ Op2 \ Factor \ Term' \ | \ \epsilon \\
-Factor \ ::= \ Number \ | \ -Number \ | \ ( \ Expr \ )\\
+Factor \ ::= \ Number \ | \ -Factor \ | \ ( \ Expr \ )\\
 Op1 \ ::= \ + \ | \ - \ \\
 Op2 \ ::= \ * \ | \ / \
 $$
@@ -352,7 +354,7 @@ Expr \ ::= \ Term \ Expr' \\
 Expr' \ ::= \ Op1 \ Term \ Expr' \ | \ \epsilon \\
 Term \ ::= \ Factor \ Term' \\
 Term' \ ::= \ Op2 \ Factor \ Term' \ | \ \epsilon \\
-Factor \ ::= \ Number \ | \ -Number \ | \ ( \ Expr \ )\\
+Factor \ ::= \ Number \ | \ -Factor \ | \ ( \ Expr \ )\\
 Op1 \ ::= \ + \ | \ - \ \\
 Op2 \ ::= \ * \ | \ / \
 $$
