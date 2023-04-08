@@ -60,6 +60,7 @@ def visualize(data: dict, l: int):
     plt.bar(xr, yr, width, label = 'Recursion', color = 'r')
     plt.bar(xr + width, ynr, width, label = 'Nonrecursion', color = 'b')
     plt.xticks(xr + width / 2, keys)
+    plt.title('Recursion VS Nonrecursion Time Test of Length {}'.format(l))
     plt.legend()
     plt.savefig('../result/time/{}.png'.format(l))
     plt.clf()
@@ -129,6 +130,8 @@ def readresult(l: int):
     return data
 
 def main():
+    with open(RESULT, 'w') as f:
+        pass
     data = {'nonrec': [], 'rec': []}
     for l in TESTLEN:
         print("Now Test length: {}".format(l))
