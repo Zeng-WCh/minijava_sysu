@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import sys
 import subprocess
 
 TESTDIR = '../test/infix'
@@ -9,6 +10,7 @@ RESULTDIR = '../result/time/'
 NONRECURSION = 'nonrecursion'
 RECURSION = 'recursion'
 CASENUM = 1000
+TESTLEN = 3500 if len(sys.argv) < 2 else int(sys.argv[1])
 
 def test(idx: int):
     print("Now Test No.{}".format(idx))
@@ -26,6 +28,8 @@ def test(idx: int):
 def main():
     os.system('./build.sh Postfix')
     os.system('./build.sh PostfixRecursion')
+    if not os.path.exists(TESTDIR):
+        os.system('./generate.py {}'.format(TESTLEN))
     if not os.path.exists(RESULTDIR):
         os.system('mkdir -p {}'.format(RESULTDIR))
     if not os.path.exists(RESULTDIR + NONRECURSION):
