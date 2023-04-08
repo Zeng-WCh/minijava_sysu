@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-import subprocess
+import os
 import sys
+import subprocess
 
 
 TESTDIR = '../test/infix'
@@ -24,6 +25,7 @@ def test(index: int):
 
 
 def main():
+    os.system('./build.sh {}'.format(PROGRAM))
     fail = []
     for i in range(CASENUM):
         print("Now testing {}.in".format(i))

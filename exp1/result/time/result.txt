@@ -1,0 +1,105 @@
+--------------------------------------
+Test length: 1000
+Cases Num: 1000
+Recursion faster: 115, which is %.2f%%
+Recursion Mean: 2.256ms, Median: 2ms
+Nonrecursion Mean: 2.154ms, Median: 2ms
+--------------------------------------
+--------------------------------------
+Test length: 2000
+Cases Num: 1000
+Recursion faster: 147, which is %.2f%%
+Recursion Mean: 3.014ms, Median: 3ms
+Nonrecursion Mean: 2.915ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 3000
+Cases Num: 1000
+Recursion faster: 128, which is %.2f%%
+Recursion Mean: 3.416ms, Median: 3ms
+Nonrecursion Mean: 3.219ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 4000
+Cases Num: 1000
+Recursion faster: 195, which is %.2f%%
+Recursion Mean: 3.789ms, Median: 4ms
+Nonrecursion Mean: 3.595ms, Median: 4ms
+--------------------------------------
+--------------------------------------
+Test length: 5000
+Cases Num: 1000
+Recursion faster: 186, which is %.2f%%
+Recursion Mean: 4.425ms, Median: 4ms
+Nonrecursion Mean: 4.136ms, Median: 4ms
+--------------------------------------
+--------------------------------------
+Test length: 1000
+Cases Num: 1000
+Recursion faster: 115, which is 12%
+Recursion Mean: 2.256ms, Median: 2ms
+Nonrecursion Mean: 2.154ms, Median: 2ms
+--------------------------------------
+--------------------------------------
+Test length: 2000
+Cases Num: 1000
+Recursion faster: 147, which is 15%
+Recursion Mean: 3.014ms, Median: 3ms
+Nonrecursion Mean: 2.915ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 3000
+Cases Num: 1000
+Recursion faster: 128, which is 13%
+Recursion Mean: 3.416ms, Median: 3ms
+Nonrecursion Mean: 3.219ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 4000
+Cases Num: 1000
+Recursion faster: 195, which is 20%
+Recursion Mean: 3.789ms, Median: 4ms
+Nonrecursion Mean: 3.595ms, Median: 4ms
+--------------------------------------
+--------------------------------------
+Test length: 5000
+Cases Num: 1000
+Recursion faster: 186, which is 19%
+Recursion Mean: 4.425ms, Median: 4ms
+Nonrecursion Mean: 4.136ms, Median: 4ms
+--------------------------------------
+--------------------------------------
+Test length: 1000
+Cases Num: 1000
+Recursion faster: 139, which is 14%
+Recursion Mean: 2.259ms, Median: 2ms
+Nonrecursion Mean: 2.178ms, Median: 2ms
+--------------------------------------
+--------------------------------------
+Test length: 2000
+Cases Num: 1000
+Recursion faster: 113, which is 11%
+Recursion Mean: 3.021ms, Median: 3ms
+Nonrecursion Mean: 2.881ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 3000
+Cases Num: 1000
+Recursion faster: 151, which is 15%
+Recursion Mean: 3.429ms, Median: 3ms
+Nonrecursion Mean: 3.269ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 4000
+Cases Num: 1000
+Recursion faster: 176, which is 18%
+Recursion Mean: 3.724ms, Median: 4ms
+Nonrecursion Mean: 3.511ms, Median: 3ms
+--------------------------------------
+--------------------------------------
+Test length: 5000
+Cases Num: 1000
+Recursion faster: 124, which is 12%
+Recursion Mean: 4.156ms, Median: 4ms
+Nonrecursion Mean: 3.918ms, Median: 4ms
+--------------------------------------

@@ -4,13 +4,13 @@ import os
 import sys
 import subprocess
 
+TESTLEN = 3500 if len(sys.argv) < 2 else int(sys.argv[1])
 TESTDIR = '../test/infix'
 TESTFMT = TESTDIR + '/{}.in'
-RESULTDIR = '../result/time/'
+RESULTDIR = '../result/time/{}/'.format(TESTLEN)
 NONRECURSION = 'nonrecursion'
 RECURSION = 'recursion'
 CASENUM = 1000
-TESTLEN = 3500 if len(sys.argv) < 2 else int(sys.argv[1])
 
 def test(idx: int):
     print("Now Test No.{}".format(idx))
