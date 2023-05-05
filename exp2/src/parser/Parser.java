@@ -31,9 +31,9 @@ public class Parser {
     public ast parse() throws ExpressionException {
         lookahead = this.sc.next();
 
-        while (true) {
-            TokenBase top = this.stack.peek();
-        }
+        // while (true) {
+        //     TokenBase top = this.stack.peek();
+        // }
 
         return new UnaryOperator();
     }

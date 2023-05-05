@@ -28,15 +28,6 @@ public class Scanner {
         return integerPart.toString();
     }
 
-    private String parseFraction() {
-        StringBuilder fractionPart = new StringBuilder();
-        while (Character.isDigit(this.lastChar)) {
-            fractionPart.append((char) this.lastChar);
-            readIn();
-        }
-        return fractionPart.toString();
-    }
-
     public TokenBase next() throws LexicalException {
         if (this.lastChar == 0) {
             return null;
@@ -52,10 +43,10 @@ public class Scanner {
             String integerPart = this.parseInteger();
             if (this.lastChar == '.') {
                 readIn();
-                fractionPart = this.parseFraction();
-                if (fractionPart.equals("")) {
+                if (Character.isDigit(lastChar))
+                    fractionPart = this.parseInteger();
+                else
                     throw new IllegalDecimalException();
-                }
             }
             if (this.lastChar == 'e') {
                 readIn();
@@ -63,11 +54,12 @@ public class Scanner {
                     exponentPart += (char) this.lastChar;
                     readIn();
                 }
-                exponentPart += this.parseInteger();
-                if (fractionPart.equals("") || exponentPart.equals("+") || exponentPart.equals("-")) {
+                if (Character.isDigit(lastChar))
+                    exponentPart += this.parseInteger();
+                else
                     throw new IllegalDecimalException();
-                }
             }
+            return new Decimal(integerPart, fractionPart, exponentPart);
         }
 
         if (this.lastChar == '+') {
@@ -215,6 +207,7 @@ public class Scanner {
                     if (this.lastChar == 's') {
                         readIn();
                         if (this.lastChar == 'e') {
+                            readIn();
                             return new Bool(TokenType.tok_false, "false");
                         }
                         else {
@@ -239,6 +232,7 @@ public class Scanner {
             if (this.lastChar == 'i') {
                 readIn();
                 if (this.lastChar == 'n') {
+                    readIn();
                     return new Function(TokenType.tok_sin, "sin");
                 }
                 else {
@@ -255,6 +249,7 @@ public class Scanner {
             if (this.lastChar == 'o') {
                 readIn();
                 if (this.lastChar == 's') {
+                    readIn();
                     return new Function(TokenType.tok_cos, "cos");
                 }
                 else {
