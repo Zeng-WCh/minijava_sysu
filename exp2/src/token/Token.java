@@ -3,13 +3,13 @@ package token;
 /**
  * This class is the base class of all tokens.
  */
-public abstract class TokenBase {
+public abstract class Token {
     /**
      * The type of the token.
      */
     private final TokenType type;
 
-    public TokenBase(TokenType type) {
+    public Token(TokenType type) {
         this.type = type;
     }
 

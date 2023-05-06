@@ -1,6 +1,6 @@
 package token;
 
-public class Function extends TokenBase {
+public class Function extends Token {
     private String value;
     
     public Function(TokenType type, String value) {

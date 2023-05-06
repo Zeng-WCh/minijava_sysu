@@ -1,6 +1,6 @@
 package token;
 
-public class Decimal extends TokenBase {
+public class Decimal extends Token {
     private String integerPart, fractionPart, exponentPart;
 
     public Decimal(String integerPart, String fractionPart, String exponentPart) {

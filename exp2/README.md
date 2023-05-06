@@ -81,3 +81,5 @@ graph TB
 ## 参考文献
 
 1. 算符优先文法, https://moyangsensei.github.io/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90/
+
+2. 算符优先文法, https://www.cnblogs.com/eslzzyl/p/16344673.html

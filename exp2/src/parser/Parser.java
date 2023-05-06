@@ -1,12 +1,11 @@
 package parser;
 
-import ast.UnaryOperator;
 import ast.ast;
 import exceptions.EmptyExpressionException;
 import exceptions.ExpressionException;
 import scanner.Buffer;
 import scanner.Scanner;
-import token.TokenBase;
+import token.Token;
 import token.TokenType;
 
 import java.util.Stack;
@@ -14,8 +13,8 @@ import java.util.HashMap;
 
 public class Parser {
     private final Scanner sc;
-    private TokenBase lookahead;
-    private final Stack<TokenBase> stack;
+    private Token lookahead;
+    private final Stack<StackElement> stack;
     /**
      * Op used to represent the operator level, higher one must be parsed first
      */
@@ -70,7 +69,10 @@ public class Parser {
 
         // level 11
         ret.put(TokenType.tok_question, 1);
-        ret.put(TokenType.tok_comma, 1);
+        ret.put(TokenType.tok_colon, 1);
+
+        // level 12
+        ret.put(null, 0);
 
         return ret;
     }
@@ -94,10 +96,30 @@ public class Parser {
         lookahead = this.sc.next();
 
         do {
-            stack.push(lookahead);
-            lookahead = this.sc.next();
-        } while (!this.stack.empty());
+            Terminal t = new Terminal(lookahead.getType(), lookahead.toString());
+            StackElement top = this.getTopElement();
+            if (top == null)
+                this.stack.push(t);
+            else {
 
-        return new UnaryOperator();
+            }
+        } while(true);
+
+
+        // return null;
+    }
+
+    private StackElement getTopElement() {
+        if (this.stack.empty()) {
+            return null;
+        }
+        int i = this.stack.size() - 1;
+        while (i >= 0) {
+            StackElement st = this.stack.get(i);
+            if (st.isTerminal()) {
+                return st;
+            }
+        }
+        return null;
     }
 }

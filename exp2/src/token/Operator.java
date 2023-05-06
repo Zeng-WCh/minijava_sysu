@@ -1,6 +1,6 @@
 package token;
 
-public class Operator extends TokenBase {
+public class Operator extends Token {
     private String value;
 
     public Operator(TokenType type, String value) {

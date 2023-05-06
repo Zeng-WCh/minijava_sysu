@@ -13,6 +13,8 @@ public class Scanner {
     private int lastChar;
     private final Buffer bf;
 
+    private TokenType lastToken;
+
 
     /**
      * 
@@ -21,6 +23,7 @@ public class Scanner {
     public Scanner(Buffer bf) {
         this.lastChar = ' ';
         this.bf = bf;
+        this.lastToken = null;
     }
 
     private void readIn() {
@@ -47,7 +50,7 @@ public class Scanner {
      * @return the next token if buffer is not empty, else null
      * @throws LexicalException if Scanner can not read in the token successfully
      */
-    public TokenBase next() throws LexicalException {
+    public Token next() throws LexicalException {
         if (this.lastChar == 0) {
             return null;
         }
@@ -78,76 +81,95 @@ public class Scanner {
                 else
                     throw new IllegalDecimalException();
             }
+            this.lastToken = TokenType.tok_decimal;
             return new Decimal(integerPart, fractionPart, exponentPart);
         }
 
         if (this.lastChar == '+') {
             readIn();
+            this.lastToken = TokenType.tok_add;
             return new Operator(TokenType.tok_add, "+");
         }
 
         if (this.lastChar == '-') {
             readIn();
-            return new Operator(TokenType.tok_minus, "-");
+            if (this.lastToken == TokenType.tok_decimal || this.lastToken == TokenType.tok_rparen) {
+                this.lastToken = TokenType.tok_minus;
+                return new Operator(TokenType.tok_minus, "-");
+            }
+            this.lastToken = TokenType.tok_unary_minus;
+            return new Operator(TokenType.tok_unary_minus, "-");
         }
 
         if (this.lastChar == '*') {
             readIn();
+            this.lastToken = TokenType.tok_star;
             return new Operator(TokenType.tok_star, "*");
         }
         
         if (this.lastChar == '/') {
             readIn();
+            this.lastToken = TokenType.tok_slash;
             return new Operator(TokenType.tok_slash, "/");
         }
 
         if (this.lastChar == '(') {
             readIn();
+            this.lastToken = TokenType.tok_lparen;
             return new Operator(TokenType.tok_lparen, "(");
         }
 
         if (this.lastChar == ')') {
             readIn();
+            this.lastToken = TokenType.tok_rparen;
             return new Operator(TokenType.tok_rparen, ")");
         }
 
         if (this.lastChar == ':') {
             readIn();
+            this.lastToken = TokenType.tok_colon;
             return new Operator(TokenType.tok_colon, ":");
         }
 
         if (this.lastChar == '^') {
             readIn();
+            this.lastToken = TokenType.tok_caret;
             return new Operator(TokenType.tok_caret, "^");
         }
 
         if (this.lastChar == ',') {
             readIn();
+            this.lastToken = TokenType.tok_comma;
             return new Operator(TokenType.tok_comma, ",");
         }
 
         if (this.lastChar == '?') {
             readIn();
+            this.lastToken = TokenType.tok_question;
             return new Operator(TokenType.tok_question, "?");
         }
 
         if (this.lastChar == '&') {
             readIn();
+            this.lastToken = TokenType.tok_and;
             return new Operator(TokenType.tok_and, "&");
         }
 
         if (this.lastChar == '|') {
             readIn();
+            this.lastToken = TokenType.tok_or;
             return new Operator(TokenType.tok_or, "|");
         }
 
         if (this.lastChar == '!') {
             readIn();
+            this.lastToken = TokenType.tok_not;
             return new Operator(TokenType.tok_not, "!");
         }
 
         if (this.lastChar == '=') {
             readIn();
+            this.lastToken = TokenType.tok_equal;
             return new Operator(TokenType.tok_equal, "=");
         }
 
@@ -155,8 +177,10 @@ public class Scanner {
             readIn();
             if (this.lastChar == '=') {
                 readIn();
+                this.lastToken = TokenType.tok_greater_equal;
                 return new Operator(TokenType.tok_greater_equal, ">=");
             }
+            this.lastToken = TokenType.tok_greater;
             return new Operator(TokenType.tok_greater, ">");
         }
 
@@ -164,12 +188,15 @@ public class Scanner {
             readIn();
             if (this.lastChar == '=') {
                 readIn();
+                this.lastToken = TokenType.tok_less_equal;
                 return new Operator(TokenType.tok_less_equal, "<=");
             }
             else if (this.lastChar == '>') {
                 readIn();
+                this.lastToken = TokenType.tok_not_equal;
                 return new Operator(TokenType.tok_not_equal, "<>");
             }
+            this.lastToken = TokenType.tok_less;
             return new Operator(TokenType.tok_less, "<");
         }
 
@@ -179,6 +206,7 @@ public class Scanner {
                 readIn();
                 if (this.lastChar == 'n') {
                     readIn();
+                    this.lastToken = TokenType.tok_min;
                     return new Function(TokenType.tok_min, "min");
                 }
                 else {
@@ -189,6 +217,7 @@ public class Scanner {
                 readIn();
                 if (this.lastChar == 'x') {
                     readIn();
+                    this.lastToken = TokenType.tok_max;
                     return new Function(TokenType.tok_max, "max");
                 }
                 else {
@@ -208,6 +237,7 @@ public class Scanner {
                     readIn();
                     if (this.lastChar == 'e') {
                         readIn();
+                        this.lastToken = TokenType.tok_true;
                         return new Bool(TokenType.tok_true, "true");
                     }
                     else {
@@ -233,6 +263,7 @@ public class Scanner {
                         readIn();
                         if (this.lastChar == 'e') {
                             readIn();
+                            this.lastToken = TokenType.tok_false;
                             return new Bool(TokenType.tok_false, "false");
                         }
                         else {
@@ -258,6 +289,7 @@ public class Scanner {
                 readIn();
                 if (this.lastChar == 'n') {
                     readIn();
+                    this.lastToken = TokenType.tok_sin;
                     return new Function(TokenType.tok_sin, "sin");
                 }
                 else {
@@ -275,6 +307,7 @@ public class Scanner {
                 readIn();
                 if (this.lastChar == 's') {
                     readIn();
+                    this.lastToken = TokenType.tok_cos;
                     return new Function(TokenType.tok_cos, "cos");
                 }
                 else {

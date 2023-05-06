@@ -25,7 +25,6 @@ public class Calculator {
 	 *                             exception will be raised.
 	 **/
 	public double calculate(String expression) throws ExpressionException {
-		// You should substitute this method body ...
 		return new Parser(expression).parse().eval();
 	}
 }

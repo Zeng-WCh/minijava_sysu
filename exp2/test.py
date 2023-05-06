@@ -13,6 +13,9 @@ def scannertest():
     return
 
 def parsertest():
+    os.system('./build.sh')
+    p = subprocess.Popen(['java', '-classpath', './bin', 'ParserTest'])
+    p.wait()
     return
 
 TESTPROGRAM = {
