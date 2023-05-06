@@ -1,6 +1,12 @@
 package token;
 
+/**
+ * This class is the base class of all tokens.
+ */
 public abstract class TokenBase {
+    /**
+     * The type of the token.
+     */
     private final TokenType type;
 
     public TokenBase(TokenType type) {
@@ -12,4 +18,6 @@ public abstract class TokenBase {
     }
 
     public abstract String toString();
+
+    public abstract boolean isOperator();
 }

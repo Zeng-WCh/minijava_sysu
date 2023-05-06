@@ -12,4 +12,9 @@ public class Function extends TokenBase {
     public String toString() {
         return this.value;
     }
+
+    @Override
+    public boolean isOperator() {
+        return true;
+    }
 }

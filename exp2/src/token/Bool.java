@@ -12,4 +12,9 @@ public class Bool extends TokenBase {
     public String toString() {
         return this.value;
     }
+
+    @Override
+    public boolean isOperator() {
+        return false;
+    }
 }

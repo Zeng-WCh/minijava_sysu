@@ -4,12 +4,20 @@ import exceptions.*;
 import token.*;
 
 /**
+ * Scanner class for the Calculator
+ * 
  * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/06)
  */
 public class Scanner {
     private int lastChar;
     private final Buffer bf;
 
+
+    /**
+     * 
+     * @param bf, a buffer class used to store the input expression string
+     */
     public Scanner(Buffer bf) {
         this.lastChar = ' ';
         this.bf = bf;
@@ -19,6 +27,12 @@ public class Scanner {
         this.lastChar = this.bf.next();
     }
 
+    /**
+     * Methods used to parse Integer part of a number, can be used in string like "123.456".
+     * First it will return 123, then 456
+     * 
+     * @return Integer String that have been parsed
+     */
     private String parseInteger() {
         StringBuilder integerPart = new StringBuilder();
         while (Character.isDigit(this.lastChar)) {
@@ -28,6 +42,11 @@ public class Scanner {
         return integerPart.toString();
     }
 
+    /**
+     * 
+     * @return the next token if buffer is not empty, else null
+     * @throws LexicalException if Scanner can not read in the token successfully
+     */
     public TokenBase next() throws LexicalException {
         if (this.lastChar == 0) {
             return null;
@@ -162,12 +181,18 @@ public class Scanner {
                     readIn();
                     return new Function(TokenType.tok_min, "min");
                 }
+                else {
+                    throw new IllegalIdentifierException();
+                }
             }
             else if (this.lastChar == 'a') {
                 readIn();
                 if (this.lastChar == 'x') {
                     readIn();
                     return new Function(TokenType.tok_max, "max");
+                }
+                else {
+                    throw new IllegalIdentifierException();
                 }
             }
             else {

@@ -34,4 +34,9 @@ public class Decimal extends TokenBase {
             return this.integerPart + "e" + this.exponentPart;
         return this.integerPart + "." + this.fractionPart + this.exponentPart;
     }
+
+    @Override
+    public boolean isOperator() {
+        return false;
+    }
 }
