@@ -75,7 +75,7 @@ public class BoolExpr implements ast {
         }
         else if (this.type == 3) {
             if (this.op == TokenType.tok_not) {
-                boolean v = this.left.eval() == 1 ? true : false;
+                boolean v = (this.left.eval() == 1 ? true : false);
                 return !v ? 1 : 0;
             }
         }

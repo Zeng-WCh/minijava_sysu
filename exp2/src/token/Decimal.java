@@ -32,7 +32,7 @@ public class Decimal extends Token {
             return this.integerPart + "." + this.fractionPart;
         if (this.fractionPart.equals(""))
             return this.integerPart + "e" + this.exponentPart;
-        return this.integerPart + "." + this.fractionPart + this.exponentPart;
+        return this.integerPart + "." + this.fractionPart + "e" + this.exponentPart;
     }
 
     @Override

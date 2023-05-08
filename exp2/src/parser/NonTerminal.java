@@ -1,13 +1,15 @@
 package parser;
 
 import token.TokenType;
-import ast.ast;
+import ast.*;
 
 public class NonTerminal extends StackElement {
-    private ast ast;
+    private ast ast = null;
 
-    public NonTerminal(TokenType type, String value) {
-        super(type, value);
+    public NonTerminal(TokenType type, ast value) {
+        super(type, "");
+
+        this.ast = value;
     }
 
     @Override

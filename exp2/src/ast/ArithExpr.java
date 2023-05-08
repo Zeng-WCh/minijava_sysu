@@ -1,12 +1,12 @@
 package ast;
 
 import exceptions.DividedByZeroException;
-import token.Bool;
 import token.TokenType;
 
 public class ArithExpr implements ast {
     private double num = 0;
-    private ast left = null, mid = null, right = null;
+    private ast left = null, right = null;
+    private BoolExpr condition = null;
     private TokenType op = null, op1 = null;
     private int type = -1;
 
@@ -28,10 +28,10 @@ public class ArithExpr implements ast {
         this.type = 2;
     }
 
-    public ArithExpr(ast left, TokenType op, ast mid, TokenType op1, ast right) {
-        this.left = left;
+    public ArithExpr(BoolExpr condition, TokenType op, ast left, TokenType op1, ast right) {
+        this.condition = condition;
         this.op = op;
-        this.mid = mid;
+        this.left = left;
         this.op1 = op1;
         this.right = right;
         this.type = 3;
@@ -79,10 +79,11 @@ public class ArithExpr implements ast {
         }
         else if (this.type == 3) {
             // When Used in Boolean Expression, eval return 0 if false, 1 if true
-            boolean flag = (this.left.eval() == 1);
+            boolean flag = (this.condition.eval() == 1);
+            assert(this.op1 == TokenType.tok_colon);
 
             if (flag) {
-                return this.mid.eval();
+                return this.left.eval();
             }
             else {
                 return this.right.eval();

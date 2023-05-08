@@ -8,16 +8,16 @@ public class ArithExprList implements ast {
     private ArithExprList list;
     private TokenType type;
 
-    public ArithExprList(ArithExpr expr) {
+    public ArithExprList(ArithExpr expr, TokenType type) {
         this.expr = expr;
+        this.type = type;
         this.list = null;
-        this.type = null;
     }
 
-    public ArithExprList(ArithExpr expr, ArithExprList list) {
+    public ArithExprList(ArithExpr expr, ArithExprList list, TokenType type) {
         this.expr = expr;
-        this.list = null;
-        this.type = null;
+        this.type = type;
+        this.list = list;
     }
 
     public void setType(TokenType type) {

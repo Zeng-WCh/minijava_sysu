@@ -31,6 +31,8 @@ class OPPTable:
             for j in range(len(self.keys)):
                 if self.keys[i] == '$' and self.keys[j] == '$':
                     tmp = '3'
+                elif (self.keys[i] == '~' or self.keys[i] == '+' or self.keys[i] == '-' or self.keys[i] == '*' or self.keys[i] == '/' or self.keys[i] == '^') and self.keys[j] == '?':
+                    tmp = '2'
                 else:
                     tmp = str(self.table[self.keys[i]][self.keys[j]])
                     if tmp == '<' or tmp == '=':
@@ -98,7 +100,9 @@ def readConfig(filename):
 def getOpPriority(opPriority, opAssociativity, opstack, opstring):
     if opPriority[opstack] < opPriority[opstring]:
         return '>'
-    elif opPriority[opstack] >= opPriority[opstring]:
+    elif opPriority[opstack] > opPriority[opstring]:
+        return '<'
+    elif opPriority[opstack] == opPriority[opstring]:
         if opAssociativity[opstack] == 'left':
             return '>'
         else:
