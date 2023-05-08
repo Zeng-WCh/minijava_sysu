@@ -2,6 +2,10 @@ package parser;
 
 import token.TokenType;
 
+/**
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/04/28)
+ */
 public abstract class StackElement {
     private TokenType type;
     private String value;

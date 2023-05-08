@@ -10,6 +10,12 @@ import token.TokenType;
 import java.util.Stack;
 import java.util.Vector;
 
+/**
+ * OPPTable generate by ./generateOPPTable.py
+ * 
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/08)
+ */
 class OPPTable {
     public static final int shift = 1;
     public static final int reduce = 2;
@@ -147,7 +153,7 @@ public class Parser {
         Terminal top = null;
         while (true) {
             top = this.getTopTerminal();
-            printStack();
+            // printStack();
             // System.out.println("Current Top: " + top.getType());
             // System.out.println("Current Lookahead: " + lookahead.toString());
             int op = OPPTable.OPPTable[OPPTable.opToToken(top.getType())][OPPTable.opToToken(lookahead.getType())];
@@ -275,7 +281,17 @@ public class Parser {
             throw new ExpressionException();
         }
         NonTerminal l = (NonTerminal) this.stack.pop();
-        this.stack.push(new NonTerminal(type, new ArithExpr(l.genAST(), type, r.genAST())));
+        
+        ArithExpr lOprand = null, rOprand = null;
+
+        try {
+            lOprand = (ArithExpr) l.genAST();
+            rOprand = (ArithExpr) r.genAST();
+        } catch (Exception e) {
+            throw new TypeMismatchedException();
+        }
+
+        this.stack.push(new NonTerminal(type, new ArithExpr(lOprand, type, rOprand)));
     }
 
     private void reduceUnaryOperator(TokenType type) throws ExpressionException {
@@ -283,7 +299,13 @@ public class Parser {
             throw new ExpressionException();
         NonTerminal Oprand = (NonTerminal) this.stack.pop();
         this.stack.pop();
-        this.stack.push(new NonTerminal(type, new ArithExpr(Oprand.genAST(), type)));
+        ArithExpr UnaryOprand = null;
+        try {
+            UnaryOprand = (ArithExpr) Oprand.genAST();
+        } catch (Exception e) {
+            throw new TypeMismatchedException();
+        }
+        this.stack.push(new NonTerminal(type, new ArithExpr(UnaryOprand, type)));
     }
 
     private void reduceTripleOperator(TokenType type) throws ExpressionException {
@@ -300,15 +322,18 @@ public class Parser {
         NonTerminal l = (NonTerminal) this.stack.pop();
 
         BoolExpr condition = null;
+        ArithExpr left = null, right = null;
 
         try {
             condition = (BoolExpr) l.genAST();
+            left = (ArithExpr) r1.genAST();
+            right = (ArithExpr) r2.genAST();
         } catch (Exception e) {
             throw new TypeMismatchedException();
         }
 
         this.stack.push(new NonTerminal(type,
-                new ArithExpr(condition, TokenType.tok_question, r1.genAST(), TokenType.tok_colon, r2.genAST())));
+                new ArithExpr(condition, TokenType.tok_question, left, TokenType.tok_colon, right)));
     }
 
     private void reduceRalationOperator(TokenType type) throws ExpressionException {
@@ -346,7 +371,14 @@ public class Parser {
         TokenType stType = func.getType();
         if (stType == TokenType.tok_sin || stType == TokenType.tok_cos) {
             this.stack.pop();
-            this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType, buildParam(st, stType)))));
+            ast tmp = buildParam(st, stType);
+            ArithExpr unary = null;
+            try {
+                unary = (ArithExpr) tmp;
+            } catch (Exception e) {
+                throw new TypeMismatchedException();
+            }
+            this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType, unary))));
         } else if (stType == TokenType.tok_min || stType == TokenType.tok_max) {
             this.stack.pop();
             this.stack.push(new NonTerminal(stType, buildParam(st, stType)));
@@ -409,7 +441,6 @@ public class Parser {
             if (st.lastElement().isTerminal())
                 throw new ExpressionException();
             left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-            // r = new ArithExprList(left, r, type);
             return new ArithExpr(new VariablFunc(type, left, r));
         }
     }

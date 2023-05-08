@@ -1,8 +1,14 @@
 package ast;
 
-import exceptions.DividedByZeroException;
+import exceptions.ExpressionException;
 import token.TokenType;
 
+/**
+ * VariableFunction AST Node
+ * 
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/04)
+ */
 public class VariablFunc implements ast {
     private TokenType type;
     private ArithExpr expr;
@@ -16,7 +22,7 @@ public class VariablFunc implements ast {
     }
 
     @Override
-    public double eval() throws DividedByZeroException {
+    public double eval() throws ExpressionException {
         if (this.type == TokenType.tok_min) {
             double now = this.expr.eval();
             double min = this.arithExprList.eval();

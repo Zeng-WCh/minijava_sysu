@@ -1,11 +1,20 @@
 package ast;
 
+import exceptions.ExpressionException;
 import exceptions.DividedByZeroException;
 import token.TokenType;
 
+/**
+ * ArithExpr AST Node
+ * 
+ * @author Weichao Zeng
+ * @version 3.00 (Last update: 2023/05/08)
+ */
 public class ArithExpr implements ast {
     private double num = 0;
-    private ast left = null, right = null;
+    private ArithExpr left = null, right = null;
+    private UnaryFunc unary = null;
+    private VariablFunc var = null;
     private BoolExpr condition = null;
     private TokenType op = null, op1 = null;
     private int type = -1;
@@ -15,20 +24,20 @@ public class ArithExpr implements ast {
         this.type = 0;
     }
 
-    public ArithExpr(ast unary, TokenType op) {
+    public ArithExpr(ArithExpr unary, TokenType op) {
         this.left = unary;
         this.op = op;
         this.type = 1;
     }
 
-    public ArithExpr(ast left, TokenType op, ast right) {
+    public ArithExpr(ArithExpr left, TokenType op, ArithExpr right) {
         this.left = left;
         this.op = op;
         this.right = right;
         this.type = 2;
     }
 
-    public ArithExpr(BoolExpr condition, TokenType op, ast left, TokenType op1, ast right) {
+    public ArithExpr(BoolExpr condition, TokenType op, ArithExpr left, TokenType op1, ArithExpr right) {
         this.condition = condition;
         this.op = op;
         this.left = left;
@@ -37,13 +46,18 @@ public class ArithExpr implements ast {
         this.type = 3;
     }
 
-    public ArithExpr(ast FuncCall) {
-        this.left = FuncCall;
+    public ArithExpr(UnaryFunc FuncCall) {
+        this.unary = FuncCall;
         this.type = 4;
     }
 
+    public ArithExpr(VariablFunc FuncCall) {
+        this.var = FuncCall;
+        this.type = 5;
+    }
+
     @Override
-    public double eval() throws DividedByZeroException {
+    public double eval() throws ExpressionException {
         if (this.type == 0) {
             return this.num;
         }
@@ -90,7 +104,10 @@ public class ArithExpr implements ast {
             }
         }
         else if (this.type == 4) {
-            return this.left.eval();
+            return this.unary.eval();
+        }
+        else if (this.type == 5) {
+            return this.var.eval();
         }
         return 0;
     }

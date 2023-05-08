@@ -1,8 +1,15 @@
 package ast;
 
-import exceptions.DividedByZeroException;
+import exceptions.ExpressionException;
+import exceptions.TypeMismatchedException;
 import token.TokenType;
 
+/**
+ * BoolExpr AST Node
+ * 
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/04)
+ */
 public class BoolExpr implements ast {
     private boolean value = false;
     private ast left = null, right = null;
@@ -32,8 +39,24 @@ public class BoolExpr implements ast {
         this.type = 3;
     }
 
+    private void checkType() throws TypeMismatchedException {
+        if (this.op == TokenType.tok_greater || this.op == TokenType.tok_less || this.op == TokenType.tok_greater_equal || this.op == TokenType.tok_less_equal || this.op == TokenType.tok_not_equal) {
+            if (this.left instanceof ArithExpr && this.right instanceof ArithExpr) {
+                return;
+            }
+            throw new TypeMismatchedException();
+        }
+        if (this.op == TokenType.tok_not || this.op == TokenType.tok_or || this.op == TokenType.tok_and) {
+            if (this.left instanceof BoolExpr && this.right instanceof BoolExpr) {
+                return;
+            }
+            throw new TypeMismatchedException();
+        }
+    }
+
     @Override
-    public double eval() throws DividedByZeroException {
+    public double eval() throws ExpressionException {
+        checkType();
         if (this.type == 0) {
             return this.value ? 1 : 0;
         }
@@ -45,6 +68,7 @@ public class BoolExpr implements ast {
             double right = this.right.eval();
 
             if (this.op == TokenType.tok_greater) {
+
                 return left > right ? 1 : 0;
             }
             else if (this.op == TokenType.tok_greater_equal) {

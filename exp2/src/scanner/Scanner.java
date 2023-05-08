@@ -13,10 +13,14 @@ public class Scanner {
     private int lastChar;
     private final Buffer bf;
 
+    /**
+     * Use to determine whether the current - is a unary minus or a binary minus
+     */
     private TokenType lastToken;
 
 
     /**
+     * Constructor for Scanner class
      * 
      * @param bf, a buffer class used to store the input expression string
      */
@@ -26,6 +30,9 @@ public class Scanner {
         this.lastToken = null;
     }
 
+    /**
+     * To read in the next character from the buffer
+     */
     private void readIn() {
         this.lastChar = this.bf.next();
     }
@@ -46,19 +53,23 @@ public class Scanner {
     }
 
     /**
+     * The main method of Scanner class, used to get the next token from the buffer
      * 
      * @return the next token if buffer is not empty, else tok_eof
      * @throws LexicalException if Scanner can not read in the token successfully
      */
     public Token next() throws LexicalException {
+        // EOF is important, so check it first
         if (this.lastChar == 0) {
             return new EOFToken();
         }
 
+        // Skip all the white spaces
         while (Character.isWhitespace(this.lastChar)) {
             readIn();
         }
 
+        // Parse the Decimal Token Type
         if (Character.isDigit(lastChar)) {
             String fractionPart = "";
             String exponentPart = "";

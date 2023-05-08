@@ -11,7 +11,7 @@ public enum TokenType {
     tok_decimal,
 
     tok_plus, // +
-    tok_unary_minus, // -, need special judge when parsing
+    tok_unary_minus, // -, need special judge when scanning
     tok_minus, // - 
     tok_star, // *
     tok_slash, // /

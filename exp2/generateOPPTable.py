@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import datetime
 
 class OPPTable:
     def __init__(self, classname: str, table, opToToken):
@@ -8,6 +9,7 @@ class OPPTable:
         self.table = table
         self.opToToken = opToToken
         self.keys = list(self.opToToken.keys())
+        self.info = '/**\n* OPPTable generate by ' + sys.argv[0]+ '\n* \n* @author Weichao Zeng\n* @version 1.00 (Last update: ' + str(datetime.datetime.now()).split()[0].replace('-', '/') + ')\n*/\n'
         pass
 
     def setOp(self, table, opToToken):
@@ -15,7 +17,7 @@ class OPPTable:
         self.opToToken = opToToken
 
     def genConst(self):
-        return 'public static final int shift = 1;\npublic static final int reduce = 2;\npublic static final int accept = 3;public static final int error = -1;'
+        return 'public static final int shift = 1;\npublic static final int reduce = 2;\npublic static final int accept = 3;\npublic static final int error = -1;'
 
     def genopToToken(self):
         base = 'public static int opToToken(TokenType op) {\n'
@@ -49,7 +51,8 @@ class OPPTable:
         return base + '\n};'
 
     def genCode(self):
-        base = 'class ' + self.classname + ' {\n'
+        base = self.info
+        base += 'class ' + self.classname + ' {\n'
         base += self.genConst()
         base += '\n\n'
         base += self.genopToToken()

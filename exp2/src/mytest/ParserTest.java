@@ -18,6 +18,5 @@ public class ParserTest {
         System.out.printf("======================================================\n");
 
         System.out.println("Test finished");
-
     }
 }

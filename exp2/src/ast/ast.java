@@ -1,10 +1,11 @@
 package ast;
-import exceptions.DividedByZeroException;
+import exceptions.ExpressionException;
 /**
- * @author Weichao Zeng
- * @version 1.00 (Last update: 2023/04/28)
  * Use to represent the basic type of AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/04)
  */
 public interface ast {
-    public double eval() throws DividedByZeroException;
+    public double eval() throws ExpressionException;
 }

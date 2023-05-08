@@ -1,8 +1,14 @@
 package ast;
 
-import exceptions.DividedByZeroException;
+import exceptions.ExpressionException;
 import token.TokenType;
 
+/**
+ * ArithExprList AST Node
+ * 
+ * @author Weichao Zeng
+ * @version 2.00 (Last update: 2023/05/05)
+ */
 public class ArithExprList implements ast {
     private ArithExpr expr;
     private ArithExprList list;
@@ -27,7 +33,7 @@ public class ArithExprList implements ast {
     }
 
     @Override
-    public double eval() throws DividedByZeroException {
+    public double eval() throws ExpressionException {
         double now = this.expr.eval();
         if (this.list == null) {
             return now;
