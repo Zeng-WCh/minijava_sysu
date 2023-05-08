@@ -197,6 +197,8 @@ public class Parser {
             break;
             case tok_rparen:
             break;
+            default:
+            break;
         }
     }
 }
