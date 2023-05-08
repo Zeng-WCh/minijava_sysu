@@ -1,15 +1,13 @@
 package parser;
 
 import token.TokenType;
-
-import java.util.Vector;
+import ast.ast;
 
 public class NonTerminal extends StackElement {
-    private final Vector<StackElement> production;
+    private ast ast;
 
     public NonTerminal(TokenType type, String value) {
         super(type, value);
-        this.production = new Vector<>();
     }
 
     @Override
@@ -17,7 +15,7 @@ public class NonTerminal extends StackElement {
         return false;
     }
 
-    public void addProduction(StackElement element) {
-        this.production.add(element);
+    public ast genAST() {
+        return this.ast;
     }
 }

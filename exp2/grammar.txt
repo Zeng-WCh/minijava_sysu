@@ -1,0 +1,61 @@
+Start ::= $ Expr $
+Expr ::= ArithExpr
+ArithExpr ::= decimal
+ArithExpr ::= ( ArithExpr )
+ArithExpr ::= ArithExpr + ArithExpr
+ArithExpr ::= ArithExpr - ArithExpr
+ArithExpr ::= ArithExpr * ArithExpr
+ArithExpr ::= ArithExpr / ArithExpr
+ArithExpr ::= ArithExpr ^ ArithExpr
+ArithExpr ::= ~ ArithExpr
+ArithExpr ::= BoolExpr ? ArithExpr : ArithExpr
+ArithExpr ::= UnaryFunc
+ArithExpr ::= VariablFunc
+UnaryFunc ::= sin ( ArithExpr )
+UnaryFunc ::= cos ( ArithExpr )
+VariablFunc ::= max ( ArithExpr , ArithExprList )
+VariablFunc ::= min ( ArithExpr , ArithExprList )
+ArithExprList ::= ArithExpr
+ArithExprList ::= ArithExpr , ArithExprList
+BoolExpr ::= true
+BoolExpr ::= false
+BoolExpr ::= ( BoolExpr )
+BoolExpr ::= ArithExpr > ArithExpr
+BoolExpr ::= ArithExpr >= ArithExpr
+BoolExpr ::= ArithExpr < ArithExpr
+BoolExpr ::= ArithExpr <= ArithExpr
+BoolExpr ::= ArithExpr = ArithExpr
+BoolExpr ::= ArithExpr <> ArithExpr
+BoolExpr ::= BoolExpr & BoolExpr
+BoolExpr ::= BoolExpr | BoolExpr
+BoolExpr ::= ! BoolExpr
+
+##
+( 1 left tok_lparen
+) 1 left tok_rparen
+sin 2 left tok_sin
+cos 2 left tok_cos
+min 2 left tok_min
+max 2 left tok_max
+~ 3 right tok_unary_minus
+^ 4 right tok_caret
+* 5 left tok_star
+/ 5 left tok_slash
++ 6 left tok_plus
+- 6 left tok_minus
+> 7 left tok_greater
+>= 7 left tok_greater_equal
+< 7 left tok_less
+<= 7 left tok_less_equal
+= 7 left tok_equal
+<> 7 left tok_not_equal
+! 8 right tok_not
+& 9 left tok_and
+| 10 left tok_or
+? 11 right tok_question
+: 11 right tok_colon
+$ 12 left tok_eof
+true -1 left tok_true
+false -1 left tok_false
+decimal -1 left tok_decimal
+, -1 left tok_comma

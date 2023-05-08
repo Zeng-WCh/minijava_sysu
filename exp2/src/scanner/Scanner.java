@@ -47,12 +47,12 @@ public class Scanner {
 
     /**
      * 
-     * @return the next token if buffer is not empty, else null
+     * @return the next token if buffer is not empty, else tok_eof
      * @throws LexicalException if Scanner can not read in the token successfully
      */
     public Token next() throws LexicalException {
         if (this.lastChar == 0) {
-            return null;
+            return new EOFToken();
         }
 
         while (Character.isWhitespace(this.lastChar)) {
@@ -87,8 +87,8 @@ public class Scanner {
 
         if (this.lastChar == '+') {
             readIn();
-            this.lastToken = TokenType.tok_add;
-            return new Operator(TokenType.tok_add, "+");
+            this.lastToken = TokenType.tok_plus;
+            return new Operator(TokenType.tok_plus, "+");
         }
 
         if (this.lastChar == '-') {

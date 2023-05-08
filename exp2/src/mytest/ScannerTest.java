@@ -8,10 +8,10 @@ public class ScannerTest {
         Scanner sc = new Scanner(new Buffer(input));
         while (true) {
             Token now = sc.next();
-            if (now == null) {
+            System.out.printf("Read: %s, Get: {%s, %s}\n", now.toString(), now.toString(), now.getType().toString());
+            if (now.getType() == TokenType.tok_eof) {
                 break;
             }
-            System.out.printf("Read: %s, Get: %s\n", now.toString(), now.getType().toString());
         }
         System.out.printf("======================================================\n");
     }

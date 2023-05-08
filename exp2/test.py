@@ -4,11 +4,13 @@ import os
 import sys
 import subprocess
 
+INPUTSTR = ['1+1+6-10+sin(3.14)-cos(1)+max(1,2, 3)+1e6+-sin(1-3.2)', '1+ sin(2>3?4:5)', '1+-5', '1+true?2:4', '-1+4']
+
 
 def scannertest():
-    inputstr = ['1+1+6-10+sin(3.14)-cos(1)+max(1,2, 3)+1e6+-sin(1-3.2)', '1+ sin(2>3?4:5)', '1+-5']
+    
     os.system('./build.sh')
-    p = subprocess.Popen(['java', '-classpath', './bin', 'ScannerTest'] + inputstr)
+    p = subprocess.Popen(['java', '-classpath', './bin', 'ScannerTest'] + INPUTSTR)
     p.wait()
     return
 
