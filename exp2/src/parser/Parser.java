@@ -10,81 +10,115 @@ import token.TokenType;
 import java.util.Stack;
 
 /**
-* OPPTable generate by ./generateOPPTable.py
-*
-* @author Weichao Zeng
-* @version 1.00 (Last update: 2023/05/10)
-*/
+ * OPPTable generate by ./generateOPPTable.py
+ *
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/10)
+ */
 class OPPTable {
     public static final int shift = 1;
     public static final int reduce = 2;
     public static final int accept = 3;
     public static final int error = -1;
-    
+
     public static int opToToken(TokenType op) {
-    if(op == TokenType.tok_unary_minus) return 0;
-    if(op == TokenType.tok_caret) return 1;
-    if(op == TokenType.tok_star) return 2;
-    if(op == TokenType.tok_slash) return 3;
-    if(op == TokenType.tok_plus) return 4;
-    if(op == TokenType.tok_minus) return 5;
-    if(op == TokenType.tok_greater) return 6;
-    if(op == TokenType.tok_greater_equal) return 7;
-    if(op == TokenType.tok_less) return 8;
-    if(op == TokenType.tok_less_equal) return 9;
-    if(op == TokenType.tok_equal) return 10;
-    if(op == TokenType.tok_not_equal) return 11;
-    if(op == TokenType.tok_not) return 12;
-    if(op == TokenType.tok_and) return 13;
-    if(op == TokenType.tok_or) return 14;
-    if(op == TokenType.tok_question) return 15;
-    if(op == TokenType.tok_colon) return 16;
-    if(op == TokenType.tok_eof) return 17;
-    if(op == TokenType.tok_lparen) return 18;
-    if(op == TokenType.tok_rparen) return 19;
-    if(op == TokenType.tok_sin) return 20;
-    if(op == TokenType.tok_cos) return 21;
-    if(op == TokenType.tok_min) return 22;
-    if(op == TokenType.tok_max) return 23;
-    if(op == TokenType.tok_true) return 24;
-    if(op == TokenType.tok_false) return 25;
-    if(op == TokenType.tok_decimal) return 26;
-    if(op == TokenType.tok_comma) return 27;
-    return -1;
+        if (op == TokenType.tok_unary_minus)
+            return 0;
+        if (op == TokenType.tok_caret)
+            return 1;
+        if (op == TokenType.tok_star)
+            return 2;
+        if (op == TokenType.tok_slash)
+            return 3;
+        if (op == TokenType.tok_plus)
+            return 4;
+        if (op == TokenType.tok_minus)
+            return 5;
+        if (op == TokenType.tok_greater)
+            return 6;
+        if (op == TokenType.tok_greater_equal)
+            return 7;
+        if (op == TokenType.tok_less)
+            return 8;
+        if (op == TokenType.tok_less_equal)
+            return 9;
+        if (op == TokenType.tok_equal)
+            return 10;
+        if (op == TokenType.tok_not_equal)
+            return 11;
+        if (op == TokenType.tok_not)
+            return 12;
+        if (op == TokenType.tok_and)
+            return 13;
+        if (op == TokenType.tok_or)
+            return 14;
+        if (op == TokenType.tok_question)
+            return 15;
+        if (op == TokenType.tok_colon)
+            return 16;
+        if (op == TokenType.tok_eof)
+            return 17;
+        if (op == TokenType.tok_lparen)
+            return 18;
+        if (op == TokenType.tok_rparen)
+            return 19;
+        if (op == TokenType.tok_sin)
+            return 20;
+        if (op == TokenType.tok_cos)
+            return 21;
+        if (op == TokenType.tok_min)
+            return 22;
+        if (op == TokenType.tok_max)
+            return 23;
+        if (op == TokenType.tok_true)
+            return 24;
+        if (op == TokenType.tok_false)
+            return 25;
+        if (op == TokenType.tok_decimal)
+            return 26;
+        if (op == TokenType.tok_comma)
+            return 27;
+        return -1;
     }
-    
+
     public static int[][] OPPTable = {
-    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,-1,-1,1,2,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,1,-1,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,2,1,1,1,1,1,1,1,2},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,3,1,-1,1,1,1,1,1,1,1,-1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,1,1,1,1,1,1,1,1,1,1},
-    {-1,2,2,2,2,2,2,2,2,2,2,2,-1,2,2,2,2,2,-1,2,-1,-1,-1,-1,-1,-1,-1,2},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,-1,-1,-1,2,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,-1,-1,-1,2,-1,-1,-1,-1,-1,-1,-1,-1},
-    {-1,2,2,2,2,2,2,2,2,2,2,2,-1,2,2,2,2,2,-1,2,-1,-1,-1,-1,-1,-1,-1,2},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,1,1,1,1,1,1,1,1,1,1},
-    
+            { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 3, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+            { -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, 2, -1, -1, -1, -1, -1, -1, -1, 2 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1,
+                    -1 },
+            { -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, 2, -1, -1, -1, -1, -1, -1, -1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+
     };
-    }
+}
 
 /**
  * Parser for ExprEval
@@ -218,7 +252,7 @@ public class Parser {
         Terminal top = null;
         while (this.ExprAst == null) {
             top = this.getTopTerminal();
-            // printStack();
+            printStack();
             // System.out.println("Current Top: " + top.getType());
             // System.out.println("Current Lookahead: " + lookahead.toString());
             int op = OPPTable.OPPTable[OPPTable.opToToken(top.getType())][OPPTable.opToToken(lookahead.getType())];
@@ -515,32 +549,33 @@ public class Parser {
         StackElement func = this.stack.peek();
         TokenType stType = func.getType();
         // if (stType == TokenType.tok_sin || stType == TokenType.tok_cos) {
-        //     this.stack.pop();
-        //     ast tmp = buildParam(s, stType);
-        //     ArithExpr unary = null;
-        //     try {
-        //         unary = (ArithExpr) tmp;
-        //     } catch (Exception e) {
-        //         throw new TypeMismatchedException();
-        //     }
-        //     // ast p = buildParam2(st, stType);
-        //     // try {
-        //     // unary = (ArithExpr) p;
-        //     // } catch (Exception e) {
-        //     // throw new TypeMismatchedException();
-        //     // }
-        //     this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType, unary))));
+        // this.stack.pop();
+        // ast tmp = buildParam(s, stType);
+        // ArithExpr unary = null;
+        // try {
+        // unary = (ArithExpr) tmp;
+        // } catch (Exception e) {
+        // throw new TypeMismatchedException();
+        // }
+        // // ast p = buildParam2(st, stType);
+        // // try {
+        // // unary = (ArithExpr) p;
+        // // } catch (Exception e) {
+        // // throw new TypeMismatchedException();
+        // // }
+        // this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType,
+        // unary))));
         // } else if (stType == TokenType.tok_min || stType == TokenType.tok_max) {
-        //     this.stack.pop();
-        //     this.stack.push(new NonTerminal(stType, buildParam(s, stType)));
+        // this.stack.pop();
+        // this.stack.push(new NonTerminal(stType, buildParam(s, stType)));
         // } else {
-        //     ast param = buildParam(s, stType);
-        //     if (param instanceof BoolExpr) {
-        //         this.stack.push(new NonTerminal(type, new BoolExpr(param)));
-        //     } else if (param instanceof ArithExpr) {
-        //         this.stack.push(new NonTerminal(type, new ArithExpr((ArithExpr) param)));
-        //     } else
-        //         throw new ExpressionException();
+        // ast param = buildParam(s, stType);
+        // if (param instanceof BoolExpr) {
+        // this.stack.push(new NonTerminal(type, new BoolExpr(param)));
+        // } else if (param instanceof ArithExpr) {
+        // this.stack.push(new NonTerminal(type, new ArithExpr((ArithExpr) param)));
+        // } else
+        // throw new ExpressionException();
         // }
         ast node = buildParam2(s, stType);
 
@@ -555,8 +590,7 @@ public class Parser {
                 throw new TypeMismatchedException();
             }
             this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType, exp))));
-        }
-        else if (stType == TokenType.tok_min || stType == TokenType.tok_max) {
+        } else if (stType == TokenType.tok_min || stType == TokenType.tok_max) {
             this.stack.pop();
             VariablFunc exp = null;
             try {
@@ -568,12 +602,11 @@ public class Parser {
                 throw new TypeMismatchedException();
             }
             this.stack.push(new NonTerminal(stType, new ArithExpr(exp)));
-        }
-        else {
+        } else {
             // if (node instanceof BoolExpr)
-            //     this.stack.push(new NonTerminal(stType, new BoolExpr(node)));
+            // this.stack.push(new NonTerminal(stType, new BoolExpr(node)));
             // else if (node instanceof ArithExpr)
-            //     this.stack.push(new NonTerminal(stType, new ArithExpr((ArithExpr) node)));
+            // this.stack.push(new NonTerminal(stType, new ArithExpr((ArithExpr) node)));
             // else
             this.stack.push(new NonTerminal(stType, node));
         }
@@ -582,108 +615,115 @@ public class Parser {
     /**
      * Build a () expression
      * 
-     * @param st stack contains all elements
-     * @param type function call type, if not cos, sin, min, max, then we will ignore it
+     * @param st   stack contains all elements
+     * @param type function call type, if not cos, sin, min, max, then we will
+     *             ignore it
      * @return the ast node
      * @throws ExpressionException if error occurs
      */
-    // private ast buildParam(Stack<StackElement> st, TokenType type) throws ExpressionException {
-    //     if ((type == TokenType.tok_sin || type == TokenType.tok_cos) && st.size() != 1) {
-    //         throw new FunctionCallException();
-    //     }
+    // private ast buildParam(Stack<StackElement> st, TokenType type) throws
+    // ExpressionException {
+    // if ((type == TokenType.tok_sin || type == TokenType.tok_cos) && st.size() !=
+    // 1) {
+    // throw new FunctionCallException();
+    // }
 
-    //     if ((type == TokenType.tok_min || type == TokenType.tok_max) && st.size() < 3) {
-    //         throw new MissingOperandException();
-    //     }
+    // if ((type == TokenType.tok_min || type == TokenType.tok_max) && st.size() <
+    // 3) {
+    // throw new MissingOperandException();
+    // }
 
-    //     if (st.size() == 1) {
-    //         if (st.peek().isTerminal())
-    //             throw new MissingOperandException();
-    //         return ((NonTerminal) st.peek()).genAST();
-    //     } else {
-    //         ArithExpr right = null;
-    //         ArithExpr left = null;
-    //         ArithExprList r = null;
-    //         if (st.size() == 3) {
-    //             if (st.peek().isTerminal())
-    //                 throw new MissingOperandException();
-    //             try {
-    //                 right = (ArithExpr) ((NonTerminal) st.pop()).genAST();
-    //             } catch (Exception e) {
-    //                 throw new TypeMismatchedException();
-    //             }
+    // if (st.size() == 1) {
+    // if (st.peek().isTerminal())
+    // throw new MissingOperandException();
+    // return ((NonTerminal) st.peek()).genAST();
+    // } else {
+    // ArithExpr right = null;
+    // ArithExpr left = null;
+    // ArithExprList r = null;
+    // if (st.size() == 3) {
+    // if (st.peek().isTerminal())
+    // throw new MissingOperandException();
+    // try {
+    // right = (ArithExpr) ((NonTerminal) st.pop()).genAST();
+    // } catch (Exception e) {
+    // throw new TypeMismatchedException();
+    // }
 
-    //             StackElement comma = st.pop();
-    //             if (!comma.isTerminal() || comma.getType() != TokenType.tok_comma)
-    //                 throw new ExpressionException();
-    //             if (st.peek().isTerminal())
-    //                 throw new MissingOperandException();
-    //             try {
-    //                 left = (ArithExpr) ((NonTerminal) st.pop()).genAST();
-    //             } catch (Exception e) {
-    //                 throw new TypeMismatchedException();
-    //             }
+    // StackElement comma = st.pop();
+    // if (!comma.isTerminal() || comma.getType() != TokenType.tok_comma)
+    // throw new ExpressionException();
+    // if (st.peek().isTerminal())
+    // throw new MissingOperandException();
+    // try {
+    // left = (ArithExpr) ((NonTerminal) st.pop()).genAST();
+    // } catch (Exception e) {
+    // throw new TypeMismatchedException();
+    // }
 
-    //             return new ArithExpr(new VariablFunc(type, left, new ArithExprList(right, type)));
-    //         }
-    //         while (st.size() != 3) {
-    //             if (r == null) {
-    //                 if (st.lastElement().isTerminal())
-    //                     throw new MissingOperandException();
-    //                 right = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    //                 r = new ArithExprList(right, type);
-    //                 st.add(new NonTerminal(type, r));
-    //             } else {
-    //                 if (st.lastElement().isTerminal())
-    //                     throw new MissingOperandException();
-    //                 r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    //                 st.remove(st.size() - 1);
-    //                 if (st.lastElement().isTerminal())
-    //                     throw new MissingOperandException();
-    //                 left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    //                 r = new ArithExprList(left, r, type);
-    //                 st.add(new NonTerminal(type, r));
-    //             }
-    //         }
-    //         if (st.lastElement().isTerminal())
-    //             throw new MissingOperandException();
-    //         r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    //         st.remove(st.size() - 1);
-    //         if (st.lastElement().isTerminal())
-    //             throw new MissingOperandException();
-    //         left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    //         return new ArithExpr(new VariablFunc(type, left, r));
-    //     }
+    // return new ArithExpr(new VariablFunc(type, left, new ArithExprList(right,
+    // type)));
+    // }
+    // while (st.size() != 3) {
+    // if (r == null) {
+    // if (st.lastElement().isTerminal())
+    // throw new MissingOperandException();
+    // right = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
+    // r = new ArithExprList(right, type);
+    // st.add(new NonTerminal(type, r));
+    // } else {
+    // if (st.lastElement().isTerminal())
+    // throw new MissingOperandException();
+    // r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
+    // st.remove(st.size() - 1);
+    // if (st.lastElement().isTerminal())
+    // throw new MissingOperandException();
+    // left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
+    // r = new ArithExprList(left, r, type);
+    // st.add(new NonTerminal(type, r));
+    // }
+    // }
+    // if (st.lastElement().isTerminal())
+    // throw new MissingOperandException();
+    // r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
+    // st.remove(st.size() - 1);
+    // if (st.lastElement().isTerminal())
+    // throw new MissingOperandException();
+    // left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
+    // return new ArithExpr(new VariablFunc(type, left, r));
+    // }
     // }
 
     /**
      * Build a '()' expression
      * 
-     * @param st stack contains all elements
-     * @param function function call type, if not cos, sin, min, max, then we will ignore it
+     * @param st       stack contains all elements
+     * @param function function call type, if not cos, sin, min, max, then we will
+     *                 ignore it
      * @return the ast node
      * @throws ExpressionException if error occurs
      */
     private ast buildParam2(Stack<StackElement> st, TokenType function) throws ExpressionException {
         boolean init = true;
         boolean func = false;
-        if (function == TokenType.tok_sin || function == TokenType.tok_cos || function == TokenType.tok_min || function == TokenType.tok_max)
-            func = true; 
+        if (function == TokenType.tok_sin || function == TokenType.tok_cos || function == TokenType.tok_min
+                || function == TokenType.tok_max)
+            func = true;
 
         // while (!st.empty()) {
-        //     StackElement t = st.pop();
-        //     if (t.isTerminal())
-        //         System.out.printf("%s\n", t.getType());
-        //     else {
-        //         System.out.printf("%s\n", ((NonTerminal) t).genAST().getClass());
-        //     }
+        // StackElement t = st.pop();
+        // if (t.isTerminal())
+        // System.out.printf("%s\n", t.getType());
+        // else {
+        // System.out.printf("%s\n", ((NonTerminal) t).genAST().getClass());
         // }
-        
+        // }
+
         while (st.size() != 1) {
             StackElement right = st.pop();
             // System.out.printf("%s\n", right.getType());
 
-            if (right.isTerminal()) 
+            if (right.isTerminal())
                 throw new MissingOperandException();
             if (init) {
                 NonTerminal r = (NonTerminal) right;
@@ -693,8 +733,8 @@ public class Parser {
                     exp = (ArithExpr) r.genAST();
                 } catch (Exception e) {
                     throw new TypeMismatchedException();
-                } 
-                
+                }
+
                 if (func) {
                     st.push(new NonTerminal(function, new ArithExprList(exp, function)));
                 } else {
@@ -702,23 +742,22 @@ public class Parser {
                 }
 
                 init = false;
-            }
-            else {
+            } else {
                 NonTerminal r = (NonTerminal) right;
                 StackElement comma = st.pop();
 
                 if (!(comma.isTerminal()) || comma.getType() != TokenType.tok_comma)
                     throw new MissingOperatorException();
-                
+
                 if (st.empty()) {
                     throw new MissingOperandException();
                 }
 
                 StackElement left = st.pop();
 
-                if (left.isTerminal()) 
+                if (left.isTerminal())
                     throw new MissingOperandException();
-                
+
                 NonTerminal l = (NonTerminal) left;
 
                 ArithExprList rt = null;
@@ -736,44 +775,46 @@ public class Parser {
                 else
                     st.push(new NonTerminal(TokenType.tok_eof, new ArithExprList(lt, rt, TokenType.tok_eof)));
 
-
-                
                 // StackElement comma = st.pop();
-                // if (!(comma.isTerminal()) || ((Terminal) comma).getType() != TokenType.tok_comma) 
-                //     throw new MissingOperatorException();
+                // if (!(comma.isTerminal()) || ((Terminal) comma).getType() !=
+                // TokenType.tok_comma)
+                // throw new MissingOperatorException();
                 // if (init) {
-                //     ArithExpr exp = null;
-                //     try {
-                //         exp = (ArithExpr) ((NonTerminal) right).genAST();
-                //     } catch (Exception e) {
-                //         throw new TypeMismatchedException();
-                //     }
-                //     if (func)
-                //         st.push(new NonTerminal(function, new ArithExprList(exp, function)));
-                //     else
-                //         st.push(new NonTerminal(TokenType.tok_eof, new ArithExprList(exp, TokenType.tok_eof)));
-                //     init = false;
+                // ArithExpr exp = null;
+                // try {
+                // exp = (ArithExpr) ((NonTerminal) right).genAST();
+                // } catch (Exception e) {
+                // throw new TypeMismatchedException();
+                // }
+                // if (func)
+                // st.push(new NonTerminal(function, new ArithExprList(exp, function)));
+                // else
+                // st.push(new NonTerminal(TokenType.tok_eof, new ArithExprList(exp,
+                // TokenType.tok_eof)));
+                // init = false;
                 // }
                 // else {
-                //     StackElement left = st.pop();
+                // StackElement left = st.pop();
 
-                //     if (left.isTerminal())
-                //         throw new MissingOperandException();
-                    
-                //     ArithExprList expList = null;
-                //     ArithExpr exp = null;
+                // if (left.isTerminal())
+                // throw new MissingOperandException();
 
-                //     try {
-                //         expList = (ArithExprList) ((NonTerminal) right).genAST();
-                //         exp = (ArithExpr) ((NonTerminal) left).genAST();
-                //     } catch (Exception e) {
-                //         throw new TypeMismatchedException();
-                //     }
-                    
-                //     if (func)
-                //         st.push(new NonTerminal(function, new ArithExprList(exp, expList, function)));
-                //     else
-                //     st.push(new NonTerminal(function, new ArithExprList(exp, expList, TokenType.tok_eof)));
+                // ArithExprList expList = null;
+                // ArithExpr exp = null;
+
+                // try {
+                // expList = (ArithExprList) ((NonTerminal) right).genAST();
+                // exp = (ArithExpr) ((NonTerminal) left).genAST();
+                // } catch (Exception e) {
+                // throw new TypeMismatchedException();
+                // }
+
+                // if (func)
+                // st.push(new NonTerminal(function, new ArithExprList(exp, expList,
+                // function)));
+                // else
+                // st.push(new NonTerminal(function, new ArithExprList(exp, expList,
+                // TokenType.tok_eof)));
                 // }
             }
         }
