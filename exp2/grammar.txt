@@ -48,7 +48,7 @@ BoolExpr ::= ! BoolExpr
 & 9 left tok_and
 | 10 left tok_or
 ? 11 right tok_question
-: 11 left tok_colon
+: 11 right tok_colon
 $ 15 left tok_eof
 
 ##

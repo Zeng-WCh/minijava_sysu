@@ -1,6 +1,7 @@
 package ast;
 
 import exceptions.ExpressionException;
+import exceptions.FunctionCallException;
 import token.TokenType;
 
 /**
@@ -52,7 +53,7 @@ public class VariablFunc implements ast {
             double max = this.arithExprList.eval();
             return now > max ? now : max;
         }
-        return 0;
+        throw new FunctionCallException("");
     }
 
     @Override

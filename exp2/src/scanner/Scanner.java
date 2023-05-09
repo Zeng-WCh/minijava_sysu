@@ -211,45 +211,26 @@ public class Scanner {
             return new Operator(TokenType.tok_less, "<");
         }
 
-        if (this.lastChar == 'm') {
-            readIn();
-            if (this.lastChar == 'i') {
+        if (Character.isAlphabetic(this.lastChar)) {
+            if (this.lastChar == 'm') {
                 readIn();
-                if (this.lastChar == 'n') {
+                if (this.lastChar == 'i') {
                     readIn();
-                    this.lastToken = TokenType.tok_min;
-                    return new Function(TokenType.tok_min, "min");
-                }
-                else {
-                    throw new IllegalIdentifierException();
-                }
-            }
-            else if (this.lastChar == 'a') {
-                readIn();
-                if (this.lastChar == 'x') {
-                    readIn();
-                    this.lastToken = TokenType.tok_max;
-                    return new Function(TokenType.tok_max, "max");
-                }
-                else {
-                    throw new IllegalIdentifierException();
-                }
-            }
-            else {
-                throw new IllegalIdentifierException();
-            }
-        }
-
-        if (this.lastChar == 't') {
-            readIn();
-            if (this.lastChar == 'r') {
-                readIn();
-                if (this.lastChar == 'u') {
-                    readIn();
-                    if (this.lastChar == 'e') {
+                    if (this.lastChar == 'n') {
                         readIn();
-                        this.lastToken = TokenType.tok_true;
-                        return new Bool(TokenType.tok_true, "true");
+                        this.lastToken = TokenType.tok_min;
+                        return new Function(TokenType.tok_min, "min");
+                    }
+                    else {
+                        throw new IllegalIdentifierException();
+                    }
+                }
+                else if (this.lastChar == 'a') {
+                    readIn();
+                    if (this.lastChar == 'x') {
+                        readIn();
+                        this.lastToken = TokenType.tok_max;
+                        return new Function(TokenType.tok_max, "max");
                     }
                     else {
                         throw new IllegalIdentifierException();
@@ -259,23 +240,17 @@ public class Scanner {
                     throw new IllegalIdentifierException();
                 }
             }
-            else {
-                throw new IllegalIdentifierException();
-            }
-        }
-
-        if (this.lastChar == 'f') {
-            readIn();
-            if (this.lastChar == 'a') {
+    
+            if (this.lastChar == 't') {
                 readIn();
-                if (this.lastChar == 'l') {
+                if (this.lastChar == 'r') {
                     readIn();
-                    if (this.lastChar == 's') {
+                    if (this.lastChar == 'u') {
                         readIn();
                         if (this.lastChar == 'e') {
                             readIn();
-                            this.lastToken = TokenType.tok_false;
-                            return new Bool(TokenType.tok_false, "false");
+                            this.lastToken = TokenType.tok_true;
+                            return new Bool(TokenType.tok_true, "true");
                         }
                         else {
                             throw new IllegalIdentifierException();
@@ -289,45 +264,78 @@ public class Scanner {
                     throw new IllegalIdentifierException();
                 }
             }
-            else {
-                throw new IllegalIdentifierException();
-            }
-        }
-
-        if (this.lastChar == 's') {
-            readIn();
-            if (this.lastChar == 'i') {
+    
+            if (this.lastChar == 'f') {
                 readIn();
-                if (this.lastChar == 'n') {
+                if (this.lastChar == 'a') {
                     readIn();
-                    this.lastToken = TokenType.tok_sin;
-                    return new Function(TokenType.tok_sin, "sin");
+                    if (this.lastChar == 'l') {
+                        readIn();
+                        if (this.lastChar == 's') {
+                            readIn();
+                            if (this.lastChar == 'e') {
+                                readIn();
+                                this.lastToken = TokenType.tok_false;
+                                return new Bool(TokenType.tok_false, "false");
+                            }
+                            else {
+                                throw new IllegalIdentifierException();
+                            }
+                        }
+                        else {
+                            throw new IllegalIdentifierException();
+                        }
+                    }
+                    else {
+                        throw new IllegalIdentifierException();
+                    }
                 }
                 else {
                     throw new IllegalIdentifierException();
                 }
             }
-            else {
-                throw new IllegalIdentifierException();
-            }
-        }
-
-        if (this.lastChar == 'c') {
-            readIn();
-            if (this.lastChar == 'o') {
+    
+            if (this.lastChar == 's') {
                 readIn();
-                if (this.lastChar == 's') {
+                if (this.lastChar == 'i') {
                     readIn();
-                    this.lastToken = TokenType.tok_cos;
-                    return new Function(TokenType.tok_cos, "cos");
+                    if (this.lastChar == 'n') {
+                        readIn();
+                        this.lastToken = TokenType.tok_sin;
+                        return new Function(TokenType.tok_sin, "sin");
+                    }
+                    else {
+                        throw new IllegalIdentifierException();
+                    }
                 }
                 else {
                     throw new IllegalIdentifierException();
                 }
             }
-            else {
-                throw new IllegalIdentifierException();
+    
+            if (this.lastChar == 'c') {
+                readIn();
+                if (this.lastChar == 'o') {
+                    readIn();
+                    if (this.lastChar == 's') {
+                        readIn();
+                        this.lastToken = TokenType.tok_cos;
+                        return new Function(TokenType.tok_cos, "cos");
+                    }
+                    else {
+                        throw new IllegalIdentifierException();
+                    }
+                }
+                else {
+                    throw new IllegalIdentifierException();
+                }
             }
+
+            throw new IllegalIdentifierException();
+        }
+
+        if (this.lastChar == '.') {
+            throw new IllegalDecimalException();
         }
 
         throw new IllegalSymbolException();

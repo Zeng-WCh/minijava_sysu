@@ -62,4 +62,12 @@ public class ArithExprList implements ast {
             this.list.print(depth + 1);
         }
     }
+
+    public ArithExpr getExpr() {
+        return this.expr;
+    }
+
+    public ArithExprList getExprList() {
+        return this.list;
+    }
 }

@@ -4,19 +4,17 @@ import os
 import sys
 import subprocess
 
-INPUTSTR = ['1+1+6-10+sin(3.14)-cos(1)+max(1,2, 3)+1e6+-sin(1-3.2)', '1+ sin(2>3?4:5)', '1+-5', '1+(true?2:4)', '-1+4']
+#INPUTSTR = ['1+1+6-10+sin(3.14)-cos(1)+max(1,2, 3)+1e6+-sin(1-3.2)', '1+ sin(2>3?4:5)', '1+-5', '1+(true?2:4)', '-1+4']
 
 
 def scannertest():
     os.system('./build.sh')
-    p = subprocess.Popen(['java', '-classpath', './bin', 'ScannerTest'] + INPUTSTR)
-    p.wait()
+    os.system('./test_self.sh ScannerTest.xml')
     return
 
-def parsertest():
+def parsertest(testfile: str = 'ParserTest.xml'):
     os.system('./build.sh')
-    p = subprocess.Popen(['java', '-classpath', './bin', 'ParserTest'] + INPUTSTR)
-    p.wait()
+    os.system('./test_self.sh {}'.format(testfile))
     return
 
 TESTPROGRAM = {
@@ -38,10 +36,17 @@ def main():
         print("Usage: " + sys.argv[0] + gethelp())
         sys.exit(1)
     testp = sys.argv[1]
+    if len(sys.argv) == 2:
+        testfile = None
+    else:
+        testfile = sys.argv[2]
     if testp not in TESTPROGRAM.keys():
         print("Usage: " + sys.argv[0] + gethelp())
         sys.exit(1)
-    TESTPROGRAM[testp]()
+    if testfile is not None:
+        TESTPROGRAM[testp](testfile)
+    else:
+        TESTPROGRAM[testp]()
     sys.exit(0)
 
 if __name__ == '__main__':

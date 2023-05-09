@@ -1,6 +1,7 @@
 package ast;
 
 import exceptions.ExpressionException;
+import exceptions.FunctionCallException;
 import token.TokenType;
 
 /**
@@ -38,8 +39,7 @@ public class UnaryFunc implements ast {
         else if (this.funcType == TokenType.tok_cos) {
             return Math.cos(this.expr.eval());
         }
-
-        return 0;
+        throw new FunctionCallException();
     }
 
     @Override

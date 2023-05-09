@@ -114,6 +114,8 @@ def readConfig(filename):
 
 
 def getOpPriority(opPriority, opAssociativity, opstack, opstring):
+    if opstack == ':' and opstring == ':':
+        return '>'
     if opPriority[opstack] < opPriority[opstring]:
         return '>'
     elif opPriority[opstack] > opPriority[opstring]:
