@@ -140,6 +140,10 @@ public class Parser {
      * The lookahead token
      */
     private Token lookahead;
+    /**
+     * The result of parsing
+     */
+    private ast ExprAst;
 
     /**
      * Constructor of Parser
@@ -154,12 +158,13 @@ public class Parser {
         this.sc = new Scanner(new Buffer(expression));
         this.stack = new Stack<>();
         this.stack.push(new Terminal(TokenType.tok_eof, "$"));
+        this.ExprAst = null;
     }
 
     /**
      * Print the stack for debug
      */
-    private void printStack() {
+    public void printStack() {
         for (StackElement st : this.stack) {
             if (st.isTerminal()) {
                 System.out.printf("Type: Terminal, %s %s\n", st.getType(), st.getValue());
@@ -188,7 +193,7 @@ public class Parser {
      * 
      * @param stackToken, the topest Terminal in stack
      * @param readIn, the newest token just read in
-     * @throws ExpressionException
+     * @throws ExpressionException if error occurs
      */
     private static void errorHandler(TokenType stackToken, TokenType readIn) throws ExpressionException {
         if (stackToken == TokenType.tok_lparen && readIn != TokenType.tok_rparen) 
@@ -213,12 +218,18 @@ public class Parser {
         throw new ExpressionException();
     }
 
+    /**
+     * The parse function, use OPPTable to determine the action
+     * 
+     * @return the ast of the expression if success
+     * @throws ExpressionException if expression is invaild
+     */
     public ast parse() throws ExpressionException {
         lookahead = this.sc.next();
         Terminal top = null;
-        while (true) {
+        while (this.ExprAst == null) {
             top = this.getTopTerminal();
-            printStack();
+            // printStack();
             // System.out.println("Current Top: " + top.getType());
             // System.out.println("Current Lookahead: " + lookahead.toString());
             int op = OPPTable.OPPTable[OPPTable.opToToken(top.getType())][OPPTable.opToToken(lookahead.getType())];
@@ -233,7 +244,14 @@ public class Parser {
                 case OPPTable.accept:
                     if (this.stack.peek().isTerminal())
                         throw new ExpressionException();
-                    return ((NonTerminal) this.stack.peek()).genAST();
+                    ArithExpr exp = null;
+                    try {
+                        exp = (ArithExpr)((NonTerminal) this.stack.pop()).genAST();
+                    } catch (Exception e) {
+                        throw new TypeMismatchedException();
+                    }
+                    this.ExprAst = new Expr(exp);
+                    break;
                 case OPPTable.error:
                     errorHandler(top.getType(), lookahead.getType());
                     break;
@@ -241,6 +259,7 @@ public class Parser {
                     break;
             }
         }
+        return this.ExprAst;
     }
 
     /**
@@ -260,10 +279,22 @@ public class Parser {
         return null;
     }
 
+    /**
+     * Shift the token into stack
+     * 
+     * @param t, the token to be shifted
+     */
     private void shift(Terminal t) {
         this.stack.push(t);
     }
 
+    /**
+     * Reduce from the stack
+     * 
+     * @param topofStack, the topest terminal token
+     * @param t, the token just read in
+     * @throws ExpressionException if reduce failed
+     */
     private void reduce(Terminal topofStack, Terminal t) throws ExpressionException {
         TokenType type = topofStack.getType();
         switch (type) {
@@ -313,6 +344,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Reduce the boolean operator like and, or
+     * 
+     * @param type, the type of the operator
+     * @throws ExpressionException if error occurs
+     */
     private void reduceBooleanOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
             throw new MissingOperandException();
@@ -326,6 +363,12 @@ public class Parser {
         this.stack.push(new NonTerminal(type, new BoolExpr(l.genAST(), type, r.genAST())));
     }
 
+    /**
+     * Reduce the unary bool expression
+     * 
+     * @param type, the operator
+     * @throws ExpressionException if error occurs
+     */
     private void reduceBooleanUnaryOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
             throw new MissingOperandException();
@@ -334,10 +377,15 @@ public class Parser {
         NonTerminal oprand = (NonTerminal) this.stack.pop();
 
         this.stack.pop();
-
         this.stack.push(new NonTerminal(type, new BoolExpr(oprand.genAST(), type)));
     }
 
+    /**
+     * Reduce the operator like +, -, *, /, ^
+     * 
+     * @param type the operator
+     * @throws ExpressionException if error occurs
+     */
     private void reduceOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
             throw new MissingOperandException();
@@ -361,6 +409,12 @@ public class Parser {
         this.stack.push(new NonTerminal(type, new ArithExpr(lOprand, type, rOprand)));
     }
 
+    /**
+     * Reduce the unary operator
+     * 
+     * @param type only unary minus can be 
+     * @throws ExpressionException if error occurs
+     */
     private void reduceUnaryOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
             throw new MissingOperandException();
@@ -375,6 +429,12 @@ public class Parser {
         this.stack.push(new NonTerminal(type, new ArithExpr(UnaryOprand, type)));
     }
 
+    /**
+     * Reduce the trinary operator, like true?1:2
+     * 
+     * @param type the reduce flag
+     * @throws ExpressionException if error occurs
+     */
     private void reduceTripleOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
             throw new TrinaryOperationException();
@@ -405,6 +465,12 @@ public class Parser {
                 new ArithExpr(condition, TokenType.tok_question, left, TokenType.tok_colon, right)));
     }
 
+    /**
+     * Reduce boolean relation operators
+     * 
+     * @param type reduce flag
+     * @throws ExpressionException if error occurs
+     */
     private void reduceRalationOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
             throw new MissingOperandException();
@@ -416,11 +482,20 @@ public class Parser {
         this.stack.push(new NonTerminal(type, new BoolExpr(l.genAST(), type, r.genAST())));
     }
 
+    /**
+     * Reduce Param Expression, also notice that function call will be reduced here
+     * 
+     * @param type reduce flag
+     * @throws ExpressionException if error occurs
+     */
     private void reduceParam(TokenType type) throws ExpressionException {
         // )
         this.stack.pop();
         Vector<StackElement> st = new Vector<>();
         StackElement top = this.stack.pop();
+        if (top.isTerminal() && top.getType() == TokenType.tok_lparen) {
+            throw new MissingOperandException();
+        }
         // read until meet '('
         boolean getLparen = false;
         while (!this.stack.empty()) {
@@ -453,7 +528,15 @@ public class Parser {
             this.stack.pop();
             this.stack.push(new NonTerminal(stType, buildParam(st, stType)));
         } else {
-            this.stack.push(new NonTerminal(type, buildParam(st, stType)));
+            ast param = buildParam(st, stType);
+            if (param instanceof BoolExpr) {
+                this.stack.push(new NonTerminal(type, new BoolExpr(param)));
+            }
+            else if (param instanceof ArithExpr) {
+                this.stack.push(new NonTerminal(type, new ArithExpr((ArithExpr) param)));
+            }
+            else
+                throw new TypeMismatchedException();
         }
     }
 
@@ -468,7 +551,7 @@ public class Parser {
 
         if (st.size() == 1) {
             if (st.lastElement().isTerminal())
-                throw new ExpressionException();
+                throw new MissingOperandException();
             return ((NonTerminal) st.lastElement()).genAST();
         } else {
             ArithExpr right = null;
@@ -476,39 +559,41 @@ public class Parser {
             ArithExprList r = null;
             if (st.size() == 3) {
                 if (st.lastElement().isTerminal())
-                    throw new ExpressionException();
+                    throw new MissingOperandException();
                 right = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-                st.remove(st.size() - 1);
-                if (st.lastElement().isTerminal())
+                StackElement comma = st.remove(st.size() - 1);
+                if (!comma.isTerminal() || comma.getType() != TokenType.tok_comma)
                     throw new ExpressionException();
+                if (st.lastElement().isTerminal())
+                    throw new MissingOperandException();
                 left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
                 return new ArithExpr(new VariablFunc(type, left, new ArithExprList(right, type)));
             }
             while (st.size() != 3) {
                 if (r == null) {
                     if (st.lastElement().isTerminal())
-                        throw new ExpressionException();
+                        throw new MissingOperandException();
                     right = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
                     r = new ArithExprList(right, type);
                     st.add(new NonTerminal(type, r));
                 } else {
                     if (st.lastElement().isTerminal())
-                        throw new ExpressionException();
+                        throw new MissingOperandException();
                     r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
                     st.remove(st.size() - 1);
                     if (st.lastElement().isTerminal())
-                        throw new ExpressionException();
+                        throw new MissingOperandException();
                     left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
                     r = new ArithExprList(left, r, type);
                     st.add(new NonTerminal(type, r));
                 }
             }
             if (st.lastElement().isTerminal())
-                throw new ExpressionException();
+                throw new MissingOperandException();
             r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
             st.remove(st.size() - 1);
             if (st.lastElement().isTerminal())
-                throw new ExpressionException();
+                throw new MissingOperandException();
             left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
             return new ArithExpr(new VariablFunc(type, left, r));
         }

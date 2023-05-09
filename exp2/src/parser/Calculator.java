@@ -11,7 +11,7 @@ import exceptions.*;
  * Main program of the expression based calculator ExprEval
  * 
  * @author Weichao Zeng
- * @version 1.00 (Last update: 2023/04/28)
+ * @version 1.00 (Last update: 2023/05/09)
  **/
 public class Calculator {
 	/**

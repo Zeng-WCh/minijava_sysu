@@ -7,7 +7,7 @@ import token.*;
  * Scanner class for the Calculator
  * 
  * @author Weichao Zeng
- * @version 1.00 (Last update: 2023/05/06)
+ * @version 1.00 (Last update: 2023/05/09)
  */
 public class Scanner {
     private int lastChar;

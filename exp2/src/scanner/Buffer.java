@@ -4,7 +4,7 @@ package scanner;
  * A Buffer class to store the input expression string
  * 
  * @author Weichao Zeng
- * @version 1.00 (Last update: 2023/05/06)
+ * @version 1.00 (Last update: 2023/05/09)
  */
 public class Buffer {
     private String buf;

@@ -1,6 +1,10 @@
 import scanner.*;
 import token.*;
 import exceptions.*;
+
+/**
+ * Scanner Test
+ */
 public class ScannerTest {
     private static void test(int testNum, String input) throws LexicalException {
         System.out.printf("======================================================\n");
