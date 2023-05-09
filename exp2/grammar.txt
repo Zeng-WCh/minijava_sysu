@@ -31,12 +31,7 @@ BoolExpr ::= BoolExpr | BoolExpr
 BoolExpr ::= ! BoolExpr
 
 ##
-( 1 left tok_lparen
-) 1 left tok_rparen
-sin 2 left tok_sin
-cos 2 left tok_cos
-min 2 left tok_min
-max 2 left tok_max
+
 ~ 3 right tok_unary_minus
 ^ 4 right tok_caret
 * 5 left tok_star
@@ -53,9 +48,18 @@ max 2 left tok_max
 & 9 left tok_and
 | 10 left tok_or
 ? 11 right tok_question
-: 11 right tok_colon
-$ 12 left tok_eof
-true -1 left tok_true
-false -1 left tok_false
-decimal -1 left tok_decimal
-, -1 left tok_comma
+: 11 left tok_colon
+$ 15 left tok_eof
+
+##
+
+( tok_lparen
+) tok_rparen
+sin tok_sin
+cos tok_cos
+min tok_min
+max tok_max
+true tok_true
+false tok_false
+decimal tok_decimal
+, tok_comma

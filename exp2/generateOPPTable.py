@@ -33,8 +33,8 @@ class OPPTable:
             for j in range(len(self.keys)):
                 if self.keys[i] == '$' and self.keys[j] == '$':
                     tmp = '3'
-                elif (self.keys[i] == '~' or self.keys[i] == '+' or self.keys[i] == '-' or self.keys[i] == '*' or self.keys[i] == '/' or self.keys[i] == '^') and self.keys[j] == '?':
-                    tmp = '2'
+                # elif (self.keys[i] == '~' or self.keys[i] == '+' or self.keys[i] == '-' or self.keys[i] == '*' or self.keys[i] == '/' or self.keys[i] == '^') and self.keys[j] == '?':
+                #     tmp = '2'
                 else:
                     tmp = str(self.table[self.keys[i]][self.keys[j]])
                     if tmp == '<' or tmp == '=':
@@ -79,11 +79,13 @@ def getRules(f) -> list:
         rules.append(line.strip())
     return rules
 
-def getOtherInfo(f) -> tuple[dict, dict, dict]:
+def getPriority(f) -> tuple[dict, dict, dict]:
     opPriority = dict()
     opAssociativity = dict()
     opToToken = dict()
     for line in f:
+        if line.strip() == '##':
+            break
         tmp = line.strip().split()
         if len(tmp) != 4:
             continue
@@ -92,11 +94,22 @@ def getOtherInfo(f) -> tuple[dict, dict, dict]:
         opToToken[tmp[0]] = tmp[3]
     return opPriority, opAssociativity, opToToken
 
+def getOthers(f) -> dict:
+    others = dict()
+    for line in f:
+        tmp = line.strip().split()
+        if len(tmp) != 2:
+            continue
+        others[tmp[0]] = tmp[1]
+    return others
 
 def readConfig(filename):
     with open(filename, 'r') as f:
         rules = getRules(f)
-        opPriority, opAssociativity, opToToken = getOtherInfo(f)
+        opPriority, opAssociativity, opToToken = getPriority(f)
+        others = getOthers(f)
+        for k in others:
+            opToToken[k] = others[k]
     return rules, opPriority, opAssociativity, opToToken
 
 
@@ -123,7 +136,7 @@ def main():
     filename = sys.argv[1]
 
     rules, opPriority, opAssociativity, opToTok = readConfig(filename)
-    
+
     TERMINALSTR = list()
     NONTERMINALSTR = list()
     for line in rules:
@@ -139,6 +152,7 @@ def main():
         for t in right:
             if t not in NONTERMINALSTR and t not in TERMINALSTR:
                 TERMINALSTR.append(t)
+    
     FIRSTVT = dict()
     LASTVT = dict()
     for nonterminal in NONTERMINALSTR:
@@ -221,11 +235,11 @@ def main():
 
     for k in table.keys():
         for v in table[k].keys():
-            if table[k][v] == 'undefined':
+            if table[k][v] is not None and k in opPriority.keys() and v in opPriority.keys():
                 table[k][v] = getOpPriority(opPriority, opAssociativity, k, v)
     
-    j = OPPTable('OPPTable', table, opToTok)
-    print(j.genCode())
+    opp = OPPTable('OPPTable', table, opToTok)
+    print(opp.genCode())
     
     with open('table.csv', 'w') as f:
         print(',', end='', file=f)

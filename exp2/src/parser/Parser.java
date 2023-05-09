@@ -12,9 +12,9 @@ import java.util.Vector;
 
 /**
  * OPPTable generate by ./generateOPPTable.py
- * 
+ *
  * @author Weichao Zeng
- * @version 1.00 (Last update: 2023/05/08)
+ * @version 1.00 (Last update: 2023/05/09)
  */
 class OPPTable {
     public static final int shift = 1;
@@ -23,53 +23,53 @@ class OPPTable {
     public static final int error = -1;
 
     public static int opToToken(TokenType op) {
-        if (op == TokenType.tok_lparen)
-            return 0;
-        if (op == TokenType.tok_rparen)
-            return 1;
-        if (op == TokenType.tok_sin)
-            return 2;
-        if (op == TokenType.tok_cos)
-            return 3;
-        if (op == TokenType.tok_min)
-            return 4;
-        if (op == TokenType.tok_max)
-            return 5;
         if (op == TokenType.tok_unary_minus)
-            return 6;
+            return 0;
         if (op == TokenType.tok_caret)
-            return 7;
+            return 1;
         if (op == TokenType.tok_star)
-            return 8;
+            return 2;
         if (op == TokenType.tok_slash)
-            return 9;
+            return 3;
         if (op == TokenType.tok_plus)
-            return 10;
+            return 4;
         if (op == TokenType.tok_minus)
-            return 11;
+            return 5;
         if (op == TokenType.tok_greater)
-            return 12;
+            return 6;
         if (op == TokenType.tok_greater_equal)
-            return 13;
+            return 7;
         if (op == TokenType.tok_less)
-            return 14;
+            return 8;
         if (op == TokenType.tok_less_equal)
-            return 15;
+            return 9;
         if (op == TokenType.tok_equal)
-            return 16;
+            return 10;
         if (op == TokenType.tok_not_equal)
-            return 17;
+            return 11;
         if (op == TokenType.tok_not)
-            return 18;
+            return 12;
         if (op == TokenType.tok_and)
-            return 19;
+            return 13;
         if (op == TokenType.tok_or)
-            return 20;
+            return 14;
         if (op == TokenType.tok_question)
-            return 21;
+            return 15;
         if (op == TokenType.tok_colon)
-            return 22;
+            return 16;
         if (op == TokenType.tok_eof)
+            return 17;
+        if (op == TokenType.tok_lparen)
+            return 18;
+        if (op == TokenType.tok_rparen)
+            return 19;
+        if (op == TokenType.tok_sin)
+            return 20;
+        if (op == TokenType.tok_cos)
+            return 21;
+        if (op == TokenType.tok_min)
+            return 22;
+        if (op == TokenType.tok_max)
             return 23;
         if (op == TokenType.tok_true)
             return 24;
@@ -83,47 +83,62 @@ class OPPTable {
     }
 
     public static int[][] OPPTable = {
-            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1 },
-            { -1, 2, -1, -1, -1, -1, -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, -1, -1, 2 },
-            { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, -1, -1, 1, 2, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 3, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+            { -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, 2, -1, -1, -1, -1, -1, -1, -1, 2 },
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, -1, -1, 1, 1, 1, -1 },
-            { 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1 },
-            { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2 },
-            { 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 3, 1, 1, 1, -1 },
-            { -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, -1, -1,
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, -1, -1,
+            { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, 2, 2, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1,
                     -1 },
-            { -1, 2, -1, -1, -1, -1, -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, -1, -1, 2 },
-            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1 },
+            { -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, 2, 2, 2, 2, 2, -1, 2, -1, -1, -1, -1, -1, -1, -1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 
     };
 }
 
+/**
+ * Parser for ExprEval
+ * 
+ * @author Weichao Zeng
+ * @version 1.00 (Last update: 2023/05/09)
+ */
 public class Parser {
+    /**
+     * The scanner used to tokenize the expression
+     */
     private final Scanner sc;
+    /**
+     * Parsing Stack
+     */
     private final Stack<StackElement> stack;
+    /**
+     * The lookahead token
+     */
     private Token lookahead;
 
     /**
@@ -141,11 +156,61 @@ public class Parser {
         this.stack.push(new Terminal(TokenType.tok_eof, "$"));
     }
 
+    /**
+     * Print the stack for debug
+     */
     private void printStack() {
         for (StackElement st : this.stack) {
-            System.out.printf("Type: %s, ", st.isTerminal() ? "Terminal" : "NonTerminal");
-            System.out.println(st.getType() + " " + st.getValue());
+            if (st.isTerminal()) {
+                System.out.printf("Type: Terminal, %s %s\n", st.getType(), st.getValue());
+            } else {
+                System.out.printf("Type: NonTerminal, %s\n", ((NonTerminal) st).genAST().getClass());
+            }
         }
+    }
+
+    /**
+     * To check if current token require a decimal, used in errorHandler
+     * 
+     * @param type, current type of token
+     * @return true if the token require a decimal, false otherwise
+     */
+    private static boolean requireDecimal(TokenType type) {
+        return type == TokenType.tok_plus || type == TokenType.tok_minus || type == TokenType.tok_star
+                || type == TokenType.tok_slash || type == TokenType.tok_greater || type == TokenType.tok_greater_equal
+                || type == TokenType.tok_less || type == TokenType.tok_less_equal || type == TokenType.tok_equal
+                || type == TokenType.tok_comma
+                || type == TokenType.tok_not_equal;
+    }
+
+    /**
+     * A error handler function, used to throw different subclass of ExpressionException
+     * 
+     * @param stackToken, the topest Terminal in stack
+     * @param readIn, the newest token just read in
+     * @throws ExpressionException
+     */
+    private static void errorHandler(TokenType stackToken, TokenType readIn) throws ExpressionException {
+        if (stackToken == TokenType.tok_lparen && readIn != TokenType.tok_rparen) 
+            throw new MissingRightParenthesisException();
+        if (stackToken == TokenType.tok_rparen && readIn == TokenType.tok_decimal)
+            throw new MissingOperatorException();
+        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_rparen)
+            throw new MissingLeftParenthesisException();
+        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_colon)
+            throw new TrinaryOperationException();
+        // For example like min(1, 2) the stack will have at least a terminal named '(' when meet ',', so should throw MissingOprand
+        // So I consider to throw a Missing LeftParen Exception given that ',' can only present between '(' and ')'
+        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_comma)
+            throw new MissingLeftParenthesisException();
+        if (stackToken == TokenType.tok_true || stackToken == TokenType.tok_false) {
+            if (requireDecimal(readIn))
+                throw new TypeMismatchedException();
+            else {
+                throw new MissingOperatorException();
+            }
+        }
+        throw new ExpressionException();
     }
 
     public ast parse() throws ExpressionException {
@@ -153,7 +218,7 @@ public class Parser {
         Terminal top = null;
         while (true) {
             top = this.getTopTerminal();
-            // printStack();
+            printStack();
             // System.out.println("Current Top: " + top.getType());
             // System.out.println("Current Lookahead: " + lookahead.toString());
             int op = OPPTable.OPPTable[OPPTable.opToToken(top.getType())][OPPTable.opToToken(lookahead.getType())];
@@ -170,7 +235,8 @@ public class Parser {
                         throw new ExpressionException();
                     return ((NonTerminal) this.stack.peek()).genAST();
                 case OPPTable.error:
-                    throw new ExpressionException();
+                    errorHandler(top.getType(), lookahead.getType());
+                    break;
                 default:
                     break;
             }
@@ -178,6 +244,7 @@ public class Parser {
     }
 
     /**
+     * Get the Terminal on the nearest top of the stack
      * 
      * @return the Terminal on the nearest top of the stack, null if not found
      */
@@ -248,12 +315,12 @@ public class Parser {
 
     private void reduceBooleanOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
-            throw new ExpressionException();
+            throw new MissingOperandException();
         }
         NonTerminal r = (NonTerminal) this.stack.pop();
         this.stack.pop();
         if (this.stack.peek().isTerminal()) {
-            throw new ExpressionException();
+            throw new MissingOperandException();
         }
         NonTerminal l = (NonTerminal) this.stack.pop();
         this.stack.push(new NonTerminal(type, new BoolExpr(l.genAST(), type, r.genAST())));
@@ -261,7 +328,7 @@ public class Parser {
 
     private void reduceBooleanUnaryOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
-            throw new ExpressionException();
+            throw new MissingOperandException();
         }
 
         NonTerminal oprand = (NonTerminal) this.stack.pop();
@@ -273,15 +340,15 @@ public class Parser {
 
     private void reduceOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal()) {
-            throw new ExpressionException();
+            throw new MissingOperandException();
         }
         NonTerminal r = (NonTerminal) this.stack.pop();
         this.stack.pop();
         if (this.stack.peek().isTerminal()) {
-            throw new ExpressionException();
+            throw new MissingOperandException();
         }
         NonTerminal l = (NonTerminal) this.stack.pop();
-        
+
         ArithExpr lOprand = null, rOprand = null;
 
         try {
@@ -296,7 +363,7 @@ public class Parser {
 
     private void reduceUnaryOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
-            throw new ExpressionException();
+            throw new MissingOperandException();
         NonTerminal Oprand = (NonTerminal) this.stack.pop();
         this.stack.pop();
         ArithExpr UnaryOprand = null;
@@ -310,15 +377,17 @@ public class Parser {
 
     private void reduceTripleOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
-            throw new ExpressionException();
+            throw new TrinaryOperationException();
         NonTerminal r2 = (NonTerminal) this.stack.pop();
-        this.stack.pop();
+        if (this.stack.pop().getType() != TokenType.tok_colon)
+            throw new TrinaryOperationException();
         if (this.stack.peek().isTerminal())
-            throw new ExpressionException();
+            throw new TrinaryOperationException();
         NonTerminal r1 = (NonTerminal) this.stack.pop();
-        this.stack.pop();
+        if (this.stack.pop().getType() != TokenType.tok_question)
+            throw new TrinaryOperationException();
         if (this.stack.peek().isTerminal())
-            throw new ExpressionException();
+            throw new TrinaryOperationException();
         NonTerminal l = (NonTerminal) this.stack.pop();
 
         BoolExpr condition = null;
@@ -338,7 +407,7 @@ public class Parser {
 
     private void reduceRalationOperator(TokenType type) throws ExpressionException {
         if (this.stack.peek().isTerminal())
-            throw new ExpressionException();
+            throw new MissingOperandException();
         NonTerminal r = (NonTerminal) this.stack.pop();
         this.stack.pop();
         if (this.stack.peek().isTerminal())
@@ -354,7 +423,7 @@ public class Parser {
         StackElement top = this.stack.pop();
         // read until meet '('
         boolean getLparen = false;
-        while (top.getType() != TokenType.tok_eof) {
+        while (!this.stack.empty()) {
             st.add(top);
             top = this.stack.pop();
             if (top.getType() == TokenType.tok_lparen) {
@@ -364,6 +433,7 @@ public class Parser {
         }
 
         if (!getLparen) {
+            this.stack.push(top);
             throw new MissingLeftParenthesisException();
         }
 
@@ -385,7 +455,6 @@ public class Parser {
         } else {
             this.stack.push(new NonTerminal(type, buildParam(st, stType)));
         }
-
     }
 
     private ast buildParam(Vector<StackElement> st, TokenType type) throws ExpressionException {
