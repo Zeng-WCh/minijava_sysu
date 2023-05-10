@@ -79,6 +79,24 @@ def getRules(f) -> list:
         rules.append(line.strip())
     return rules
 
+def isTriple(op):
+    return op == '?' or op == ':'
+
+def getTriple(opstack, opstring, opPriority, opAssociativity):
+    assert isTriple(opstack) and isTriple(opstring)
+    if opstack == ':' and opstring == ':':
+        return '>'
+    if opPriority[opstack] < opPriority[opstring]:
+        return '>'
+    elif opPriority[opstack] > opPriority[opstring]:
+        return '<'
+    elif opPriority[opstack] == opPriority[opstring]:
+        if opAssociativity[opstack] == 'left':
+            return '>'
+        else:
+            return '<'
+
+
 def getPriority(f) -> tuple[dict, dict, dict]:
     opPriority = dict()
     opAssociativity = dict()
@@ -114,8 +132,8 @@ def readConfig(filename):
 
 
 def getOpPriority(opPriority, opAssociativity, opstack, opstring):
-    if opstack == ':' and opstring == ':':
-        return '>'
+    if isTriple(opstack) and isTriple(opstring):
+        return getTriple(opstack, opstring, opPriority, opAssociativity)
     if opPriority[opstack] < opPriority[opstring]:
         return '>'
     elif opPriority[opstack] > opPriority[opstring]:

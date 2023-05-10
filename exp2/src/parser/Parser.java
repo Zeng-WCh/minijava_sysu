@@ -194,7 +194,8 @@ public class Parser {
      * @return true if is
      */
     private static boolean isRelation(TokenType type) {
-        return type == TokenType.tok_and || type == TokenType.tok_or || type == TokenType.tok_not || type == TokenType.tok_greater
+        return type == TokenType.tok_and || type == TokenType.tok_or || type == TokenType.tok_not
+                || type == TokenType.tok_greater
                 || type == TokenType.tok_less || type == TokenType.tok_equal || type == TokenType.tok_not_equal
                 || type == TokenType.tok_greater_equal || type == TokenType.tok_less_equal;
     }
@@ -265,10 +266,11 @@ public class Parser {
             }
         }
 
-        // EOF would be like 1>=2, due to we can not convert boolean to decimal, so should throw TypeMismatchedException
+        // EOF would be like 1>=2, due to we can not convert boolean to decimal, so
+        // should throw TypeMismatchedException
         // : would be like true?1>=2:23, same as above
         // , min(!true, 1, 2)
-        if (isRelation(stackToken)) 
+        if (isRelation(stackToken))
             throw new TypeMismatchedException();
 
         throw new ExpressionException();
@@ -295,7 +297,7 @@ public class Parser {
                     lookahead = this.sc.next();
                     break;
                 case OPPTable.reduce:
-                    this.reduce(top, new Terminal(lookahead.getType(), lookahead.toString()));
+                    this.reduce(top);
                     break;
                 case OPPTable.accept:
                     if (this.stack.peek().isTerminal())
@@ -348,10 +350,9 @@ public class Parser {
      * Reduce from the stack
      * 
      * @param topofStack, the topest terminal token
-     * @param t,          the token just read in
      * @throws ExpressionException if reduce failed
      */
-    private void reduce(Terminal topofStack, Terminal t) throws ExpressionException {
+    private void reduce(Terminal topofStack) throws ExpressionException {
         TokenType type = topofStack.getType();
         switch (type) {
             case tok_decimal:
@@ -581,35 +582,6 @@ public class Parser {
 
         StackElement func = this.stack.peek();
         TokenType stType = func.getType();
-        // if (stType == TokenType.tok_sin || stType == TokenType.tok_cos) {
-        // this.stack.pop();
-        // ast tmp = buildParam(s, stType);
-        // ArithExpr unary = null;
-        // try {
-        // unary = (ArithExpr) tmp;
-        // } catch (Exception e) {
-        // throw new TypeMismatchedException();
-        // }
-        // // ast p = buildParam2(st, stType);
-        // // try {
-        // // unary = (ArithExpr) p;
-        // // } catch (Exception e) {
-        // // throw new TypeMismatchedException();
-        // // }
-        // this.stack.push(new NonTerminal(stType, new ArithExpr(new UnaryFunc(stType,
-        // unary))));
-        // } else if (stType == TokenType.tok_min || stType == TokenType.tok_max) {
-        // this.stack.pop();
-        // this.stack.push(new NonTerminal(stType, buildParam(s, stType)));
-        // } else {
-        // ast param = buildParam(s, stType);
-        // if (param instanceof BoolExpr) {
-        // this.stack.push(new NonTerminal(type, new BoolExpr(param)));
-        // } else if (param instanceof ArithExpr) {
-        // this.stack.push(new NonTerminal(type, new ArithExpr((ArithExpr) param)));
-        // } else
-        // throw new ExpressionException();
-        // }
         ast node = buildParam(s, stType);
 
         if (stType == TokenType.tok_sin || stType == TokenType.tok_cos) {
@@ -638,11 +610,6 @@ public class Parser {
         } else {
             if (node instanceof VariablFunc)
                 throw new SyntacticException();
-            // if (node instanceof BoolExpr)
-            // this.stack.push(new NonTerminal(stType, new BoolExpr(node)));
-            // else if (node instanceof ArithExpr)
-            // this.stack.push(new NonTerminal(stType, new ArithExpr((ArithExpr) node)));
-            // else
             this.stack.push(new NonTerminal(stType, node));
         }
     }
@@ -662,15 +629,6 @@ public class Parser {
         if (function == TokenType.tok_sin || function == TokenType.tok_cos || function == TokenType.tok_min
                 || function == TokenType.tok_max)
             func = true;
-
-        // while (!st.empty()) {
-        // StackElement t = st.pop();
-        // if (t.isTerminal())
-        // System.out.printf("%s\n", t.getType());
-        // else {
-        // System.out.printf("%s\n", ((NonTerminal) t).genAST().getClass());
-        // }
-        // }
 
         while (st.size() != 1) {
             StackElement right = st.pop();
@@ -727,48 +685,6 @@ public class Parser {
                     st.push(new NonTerminal(function, new ArithExprList(lt, rt, function)));
                 else
                     st.push(new NonTerminal(TokenType.tok_eof, new ArithExprList(lt, rt, TokenType.tok_eof)));
-
-                // StackElement comma = st.pop();
-                // if (!(comma.isTerminal()) || ((Terminal) comma).getType() !=
-                // TokenType.tok_comma)
-                // throw new MissingOperatorException();
-                // if (init) {
-                // ArithExpr exp = null;
-                // try {
-                // exp = (ArithExpr) ((NonTerminal) right).genAST();
-                // } catch (Exception e) {
-                // throw new TypeMismatchedException();
-                // }
-                // if (func)
-                // st.push(new NonTerminal(function, new ArithExprList(exp, function)));
-                // else
-                // st.push(new NonTerminal(TokenType.tok_eof, new ArithExprList(exp,
-                // TokenType.tok_eof)));
-                // init = false;
-                // }
-                // else {
-                // StackElement left = st.pop();
-
-                // if (left.isTerminal())
-                // throw new MissingOperandException();
-
-                // ArithExprList expList = null;
-                // ArithExpr exp = null;
-
-                // try {
-                // expList = (ArithExprList) ((NonTerminal) right).genAST();
-                // exp = (ArithExpr) ((NonTerminal) left).genAST();
-                // } catch (Exception e) {
-                // throw new TypeMismatchedException();
-                // }
-
-                // if (func)
-                // st.push(new NonTerminal(function, new ArithExprList(exp, expList,
-                // function)));
-                // else
-                // st.push(new NonTerminal(function, new ArithExprList(exp, expList,
-                // TokenType.tok_eof)));
-                // }
             }
         }
 

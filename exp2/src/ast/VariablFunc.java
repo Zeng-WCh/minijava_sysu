@@ -30,8 +30,8 @@ public class VariablFunc implements ast {
     /**
      * Variable Function Call Constructor
      * 
-     * @param type, function type
-     * @param expr, the first parameter
+     * @param type,          function type
+     * @param expr,          the first parameter
      * @param arithExprList, the rest parameter
      */
     public VariablFunc(TokenType type, ArithExpr expr, ArithExprList arithExprList) {
@@ -47,8 +47,7 @@ public class VariablFunc implements ast {
             double now = this.expr.eval();
             double min = this.arithExprList.eval();
             return now < min ? now : min;
-        }
-        else if (this.type == TokenType.tok_max) {
+        } else if (this.type == TokenType.tok_max) {
             double now = this.expr.eval();
             double max = this.arithExprList.eval();
             return now > max ? now : max;

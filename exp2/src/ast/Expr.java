@@ -17,7 +17,7 @@ public class Expr implements ast {
     public Expr(ArithExpr expr) {
         this.arithexpr = expr;
     }
-    
+
     @Override
     public double eval() throws ExpressionException {
         return this.arithexpr.eval();

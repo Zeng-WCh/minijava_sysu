@@ -21,7 +21,7 @@ public abstract class StackElement {
     /**
      * Construct a StackElement
      * 
-     * @param type token type
+     * @param type  token type
      * @param value the value of the token
      */
     public StackElement(TokenType type, String value) {
@@ -46,7 +46,7 @@ public abstract class StackElement {
     public String getValue() {
         return this.value;
     }
-    
+
     /**
      * judge whether this is a terminal
      * 

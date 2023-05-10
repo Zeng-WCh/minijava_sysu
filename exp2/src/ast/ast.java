@@ -1,5 +1,7 @@
 package ast;
+
 import exceptions.ExpressionException;
+
 /**
  * Use to represent the basic type of AST
  * 
@@ -12,7 +14,8 @@ public interface ast {
     /**
      * Evaluate the AST, return the result
      * 
-     * @return the result of the AST, specially, if the AST is a BoolExpr, return 1 if true, 0 if false
+     * @return the result of the AST, specially, if the AST is a BoolExpr, return 1
+     *         if true, 0 if false
      * @throws ExpressionException if the expression is invalid
      */
     public double eval() throws ExpressionException;

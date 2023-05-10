@@ -3,7 +3,7 @@ package token;
 /**
  * @author Weichao Zeng
  * @version 1.00 (Last update: 2023/05/09)
- * Use to represent the token type, which is used in Scanner
+ *          Use to represent the token type, which is used in Scanner
  */
 public enum TokenType {
     tok_true,
@@ -12,7 +12,7 @@ public enum TokenType {
 
     tok_plus, // +
     tok_unary_minus, // -, need special judge when scanning
-    tok_minus, // - 
+    tok_minus, // -
     tok_star, // *
     tok_slash, // /
 
@@ -29,7 +29,7 @@ public enum TokenType {
 
     tok_greater, // >
     tok_greater_equal, // >=
-    
+
     tok_less, // <
     tok_less_equal, // <=
     tok_not_equal, // <>

@@ -24,7 +24,7 @@ public class UnaryFunc implements ast {
      * Unary Function Call Constructor
      * 
      * @param funcType, the function type
-     * @param expr, the expression to be calculated before function call
+     * @param expr,     the expression to be calculated before function call
      */
     public UnaryFunc(TokenType funcType, ArithExpr expr) {
         this.funcType = funcType;
@@ -35,8 +35,7 @@ public class UnaryFunc implements ast {
     public double eval() throws ExpressionException {
         if (this.funcType == TokenType.tok_sin) {
             return Math.sin(this.expr.eval());
-        }
-        else if (this.funcType == TokenType.tok_cos) {
+        } else if (this.funcType == TokenType.tok_cos) {
             return Math.cos(this.expr.eval());
         }
         throw new FunctionCallException();

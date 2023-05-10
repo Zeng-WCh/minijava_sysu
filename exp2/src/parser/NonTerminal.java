@@ -20,7 +20,7 @@ public class NonTerminal extends StackElement {
     /**
      * Construct a NonTerminal
      * 
-     * @param type, is not used actually, but the supertype need it to construct
+     * @param type,  is not used actually, but the supertype need it to construct
      * @param value, the ast node
      */
     public NonTerminal(TokenType type, ast value) {

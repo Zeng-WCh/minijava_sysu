@@ -17,8 +17,10 @@ public class BoolExpr implements ast {
     private boolean value = false;
     /**
      * type 1, BoolExpr ::= ( BoolExpr ), which will assigned to left
-     * type 2, BoolExpr ::= BoolExpr op BoolExpr, which will assigned to left, op, right
-     * also type2 BoolExpr ::= ArithExpr op ArithExpr, which will assigned to left, op, right
+     * type 2, BoolExpr ::= BoolExpr op BoolExpr, which will assigned to left, op,
+     * right
+     * also type2 BoolExpr ::= ArithExpr op ArithExpr, which will assigned to left,
+     * op, right
      * type 3, BoolExpr ::= ! BoolExpr, which will assigned to left
      */
     private ast left = null, right = null;
@@ -31,7 +33,6 @@ public class BoolExpr implements ast {
      */
     private int type = -1;
 
-    
     /**
      * type 0 constructor
      * 
@@ -55,8 +56,8 @@ public class BoolExpr implements ast {
     /**
      * type 2 constructor
      * 
-     * @param left, left ExprNode
-     * @param op, operator
+     * @param left,  left ExprNode
+     * @param op,    operator
      * @param right, right ExprNode
      */
     public BoolExpr(ast left, TokenType op, ast right) {
@@ -70,7 +71,8 @@ public class BoolExpr implements ast {
      * type 3 constructor
      * 
      * @param left, the BoolExpr that will be negated
-     * @param op, given that unary bool operator is only '!', so it is not quite necessary, just to make it more general
+     * @param op,   given that unary bool operator is only '!', so it is not quite
+     *              necessary, just to make it more general
      */
     public BoolExpr(ast left, TokenType op) {
         this.left = left;
@@ -79,7 +81,8 @@ public class BoolExpr implements ast {
     }
 
     /**
-     * In BoolExpr, to reuse the field, we do not specify the type of the field(we use ast instead), so we need to check the type before eval
+     * In BoolExpr, to reuse the field, we do not specify the type of the field(we
+     * use ast instead), so we need to check the type before eval
      * 
      * @throws TypeMismatchedException if type not matched
      */
@@ -87,7 +90,8 @@ public class BoolExpr implements ast {
         /**
          * Bool relation operator
          */
-        if (this.op == TokenType.tok_greater || this.op == TokenType.tok_less || this.op == TokenType.tok_greater_equal || this.op == TokenType.tok_less_equal || this.op == TokenType.tok_not_equal) {
+        if (this.op == TokenType.tok_greater || this.op == TokenType.tok_less || this.op == TokenType.tok_greater_equal
+                || this.op == TokenType.tok_less_equal || this.op == TokenType.tok_not_equal) {
             if (this.left instanceof ArithExpr && this.right instanceof ArithExpr) {
                 return;
             }
@@ -118,44 +122,34 @@ public class BoolExpr implements ast {
         checkType();
         if (this.type == 0) {
             return this.value ? 1 : 0;
-        }
-        else if (this.type == 1) {
+        } else if (this.type == 1) {
             return this.left.eval();
-        }
-        else if (this.type == 2) {
+        } else if (this.type == 2) {
             double left = this.left.eval();
             double right = this.right.eval();
 
             if (this.op == TokenType.tok_greater) {
                 return left > right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_greater_equal) {
+            } else if (this.op == TokenType.tok_greater_equal) {
                 return left >= right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_less) {
+            } else if (this.op == TokenType.tok_less) {
                 return left < right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_less_equal) {
+            } else if (this.op == TokenType.tok_less_equal) {
                 return left <= right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_equal) {
+            } else if (this.op == TokenType.tok_equal) {
                 return left == right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_not_equal) {
+            } else if (this.op == TokenType.tok_not_equal) {
                 return left != right ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_and) {
+            } else if (this.op == TokenType.tok_and) {
                 boolean l = left == 1 ? true : false;
                 boolean r = right == 1 ? true : false;
                 return l && r ? 1 : 0;
-            }
-            else if (this.op == TokenType.tok_or) {
+            } else if (this.op == TokenType.tok_or) {
                 boolean l = left == 1 ? true : false;
                 boolean r = right == 1 ? true : false;
                 return l || r ? 1 : 0;
             }
-        }
-        else if (this.type == 3) {
+        } else if (this.type == 3) {
             if (this.op == TokenType.tok_not) {
                 boolean v = (this.left.eval() == 1 ? true : false);
                 return !v ? 1 : 0;
@@ -171,12 +165,10 @@ public class BoolExpr implements ast {
         }
         if (this.type == 0) {
             System.out.printf("`-- BoolExpr: %s\n", this.value);
-        }
-        else if (this.type == 1) {
+        } else if (this.type == 1) {
             System.out.printf("`-- BoolExpr: ( BoolExpr )\n");
             this.left.print(depth + 1);
-        }
-        else if (this.type == 2) {
+        } else if (this.type == 2) {
             try {
                 checkType();
             } catch (Exception e) {
@@ -186,40 +178,31 @@ public class BoolExpr implements ast {
             String operator = "";
             if (this.op == TokenType.tok_or) {
                 operator = "|";
-            }
-            else if (this.op == TokenType.tok_and) {
+            } else if (this.op == TokenType.tok_and) {
                 operator = "&";
-            }
-            else if (this.op == TokenType.tok_greater) {
+            } else if (this.op == TokenType.tok_greater) {
                 operator = ">";
-            }
-            else if (this.op == TokenType.tok_greater_equal) {
+            } else if (this.op == TokenType.tok_greater_equal) {
                 operator = ">=";
-            }
-            else if (this.op == TokenType.tok_less) {
+            } else if (this.op == TokenType.tok_less) {
                 operator = "<";
-            }
-            else if (this.op == TokenType.tok_less_equal) {
+            } else if (this.op == TokenType.tok_less_equal) {
                 operator = "<=";
-            }
-            else if (this.op == TokenType.tok_equal) {
+            } else if (this.op == TokenType.tok_equal) {
                 operator = "=";
-            }
-            else if (this.op == TokenType.tok_not_equal) {
+            } else if (this.op == TokenType.tok_not_equal) {
                 operator = "!=";
             }
             if (this.op == TokenType.tok_not || this.op == TokenType.tok_or || this.op == TokenType.tok_and) {
                 System.out.printf("`-- BoolExpr: BoolExpr %s BoolExpr\n", operator);
                 this.left.print(depth + 1);
                 this.right.print(depth + 1);
-            }
-            else {
+            } else {
                 System.out.printf("`-- BoolExpr: ArithExpr %s ArithExpr\n", operator);
                 this.left.print(depth + 1);
                 this.right.print(depth + 1);
             }
-        }
-        else if (this.type == 3) {
+        } else if (this.type == 3) {
             System.out.printf("`-- BoolExpr: ! BoolExpr\n");
             this.left.print(depth + 1);
         }

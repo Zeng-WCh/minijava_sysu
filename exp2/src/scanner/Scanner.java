@@ -38,8 +38,7 @@ public class Scanner {
     }
 
     /**
-     * Methods used to parse Integer part of a number, can be used in string like "123.456".
-     * First it will return 123, then 456
+     * Methods used to parse Integer part of a number, can be used in string like "123"
      * 
      * @return Integer String that have been parsed
      */

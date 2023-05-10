@@ -12,7 +12,7 @@ public class Terminal extends StackElement {
     /**
      * Construct a Terminal
      * 
-     * @param type token type
+     * @param type  token type
      * @param value token value
      */
     public Terminal(TokenType type, String value) {
