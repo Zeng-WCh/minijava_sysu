@@ -183,8 +183,8 @@ public class Parser {
         return type == TokenType.tok_plus || type == TokenType.tok_minus || type == TokenType.tok_star
                 || type == TokenType.tok_slash || type == TokenType.tok_greater || type == TokenType.tok_greater_equal
                 || type == TokenType.tok_less || type == TokenType.tok_less_equal || type == TokenType.tok_equal
-                || type == TokenType.tok_comma
-                || type == TokenType.tok_not_equal || type == TokenType.tok_eof;
+                || type == TokenType.tok_comma || type == TokenType.tok_unary_minus
+                || type == TokenType.tok_not_equal || type == TokenType.tok_eof || type == TokenType.tok_comma;
     }
 
     /**
@@ -194,9 +194,20 @@ public class Parser {
      * @return true if is
      */
     private static boolean isRelation(TokenType type) {
-        return type == TokenType.tok_and || type == TokenType.tok_or || type == TokenType.tok_greater
+        return type == TokenType.tok_and || type == TokenType.tok_or || type == TokenType.tok_not || type == TokenType.tok_greater
                 || type == TokenType.tok_less || type == TokenType.tok_equal || type == TokenType.tok_not_equal
                 || type == TokenType.tok_greater_equal || type == TokenType.tok_less_equal;
+    }
+
+    /**
+     * To check is type is a function call token
+     * 
+     * @param type token needs to be check
+     * @return true if type is a function call
+     */
+    private static boolean isFunction(TokenType type) {
+        return type == TokenType.tok_sin || type == TokenType.tok_cos || type == TokenType.tok_max
+                || type == TokenType.tok_min;
     }
 
     /**
@@ -208,29 +219,44 @@ public class Parser {
      * @throws ExpressionException if error occurs
      */
     private static void errorHandler(TokenType stackToken, TokenType readIn) throws ExpressionException {
-        if (stackToken == TokenType.tok_lparen && readIn == TokenType.tok_colon)
-            throw new TrinaryOperationException();
-        if (stackToken == TokenType.tok_lparen && readIn != TokenType.tok_rparen)
-            throw new MissingRightParenthesisException();
-        if (stackToken == TokenType.tok_rparen && (readIn == TokenType.tok_decimal || readIn == TokenType.tok_lparen))
-            throw new MissingOperatorException();
-        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_rparen)
-            throw new MissingLeftParenthesisException();
-        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_colon)
-            throw new TrinaryOperationException();
-        if (stackToken == TokenType.tok_comma && readIn == TokenType.tok_eof)
-            throw new MissingOperandException();
-        if (stackToken == TokenType.tok_sin || stackToken == TokenType.tok_cos || stackToken == TokenType.tok_min
-                || stackToken == TokenType.tok_max)
-            throw new FunctionCallException();
-        if (isRelation(stackToken) && (readIn == TokenType.tok_eof || readIn == TokenType.tok_colon))
-            throw new TypeMismatchedException();
         // For example like min(1, 2) the stack will have at least a terminal named '('
         // when meet ',', so should throw MissingOprand
         // So I consider to throw a Missing LeftParen Exception given that ',' can only
         // present between '(' and ')'
         if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_comma)
             throw new MissingLeftParenthesisException();
+        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_rparen)
+            throw new MissingLeftParenthesisException();
+        if (stackToken == TokenType.tok_eof && readIn == TokenType.tok_colon)
+            throw new TrinaryOperationException();
+
+        if (stackToken == TokenType.tok_decimal
+                && (readIn == TokenType.tok_not || readIn == TokenType.tok_true || readIn == TokenType.tok_false
+                        || readIn == TokenType.tok_decimal || readIn == TokenType.tok_lparen || isFunction(readIn)))
+            throw new MissingOperatorException();
+
+        if (stackToken == TokenType.tok_lparen && readIn == TokenType.tok_eof)
+            throw new MissingRightParenthesisException();
+        if (stackToken == TokenType.tok_lparen && readIn == TokenType.tok_colon)
+            throw new TrinaryOperationException();
+
+        // if (stackToken == TokenType.tok_lparen && readIn != TokenType.tok_rparen)
+        // throw new MissingRightParenthesisException();
+        if (stackToken == TokenType.tok_rparen
+                && (readIn == TokenType.tok_not || readIn == TokenType.tok_true || readIn == TokenType.tok_false
+                        || readIn == TokenType.tok_decimal || readIn == TokenType.tok_lparen || isFunction(readIn)))
+            throw new MissingOperatorException();
+
+        if (stackToken == TokenType.tok_question
+                && (readIn == TokenType.tok_eof || readIn == TokenType.tok_rparen || readIn == TokenType.tok_comma))
+            throw new TrinaryOperationException();
+
+        if (isFunction(stackToken) && readIn != TokenType.tok_lparen)
+            throw new FunctionCallException("Require '(' to enable function call");
+
+        if (stackToken == TokenType.tok_comma)
+            throw new MissingOperandException();
+
         if (stackToken == TokenType.tok_true || stackToken == TokenType.tok_false) {
             if (requireDecimal(readIn))
                 throw new TypeMismatchedException();
@@ -238,6 +264,13 @@ public class Parser {
                 throw new MissingOperatorException();
             }
         }
+
+        // EOF would be like 1>=2, due to we can not convert boolean to decimal, so should throw TypeMismatchedException
+        // : would be like true?1>=2:23, same as above
+        // , min(!true, 1, 2)
+        if (isRelation(stackToken)) 
+            throw new TypeMismatchedException();
+
         throw new ExpressionException();
     }
 
