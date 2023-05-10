@@ -2,6 +2,20 @@
 
 <center>20308003 曾伟超</center>
 
+## 实验环境
+
+```
+Ubuntu 22.04.2 LTS (Jammy Jellyfish)
+```
+
+java 环境
+
+```
+openjdk 17.0.6 2023-01-17
+OpenJDK Runtime Environment (build 17.0.6+10-Ubuntu-0ubuntu122.04)
+OpenJDK 64-Bit Server VM (build 17.0.6+10-Ubuntu-0ubuntu122.04, mixed mode, sharing)
+```
+
 ## 语法的二义性
 
 可以很容易的看出来，语法是存在二义性的，例如，对于表达式 `5*7+1` 来说，以下的两个语法树都是合法的
@@ -1078,7 +1092,9 @@ private void checkType() throws TypeMismatchedException {
 
 首先是所提供的 `test_simple.sh` 和 `test_standard.sh`，如下
 
+之后，还额外编写了一些测试例子，分别测试 `Scanner` 的异常和 `Parser` 的异常，可以使用 `./test.py scanner` 和 `./test.py parser` 来进行测试，结果如下
 
+可以看到，都能够完全的通过测试用例，表明实验成功的完成
 
 ## 参考文献
 
