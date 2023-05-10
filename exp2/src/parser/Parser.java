@@ -252,7 +252,7 @@ public class Parser {
         Terminal top = null;
         while (this.ExprAst == null) {
             top = this.getTopTerminal();
-            printStack();
+            // printStack();
             // System.out.println("Current Top: " + top.getType());
             // System.out.println("Current Lookahead: " + lookahead.toString());
             int op = OPPTable.OPPTable[OPPTable.opToToken(top.getType())][OPPTable.opToToken(lookahead.getType())];
@@ -577,7 +577,7 @@ public class Parser {
         // } else
         // throw new ExpressionException();
         // }
-        ast node = buildParam2(s, stType);
+        ast node = buildParam(s, stType);
 
         if (stType == TokenType.tok_sin || stType == TokenType.tok_cos) {
             this.stack.pop();
@@ -603,6 +603,8 @@ public class Parser {
             }
             this.stack.push(new NonTerminal(stType, new ArithExpr(exp)));
         } else {
+            if (node instanceof VariablFunc)
+                throw new SyntacticException();
             // if (node instanceof BoolExpr)
             // this.stack.push(new NonTerminal(stType, new BoolExpr(node)));
             // else if (node instanceof ArithExpr)
@@ -613,88 +615,6 @@ public class Parser {
     }
 
     /**
-     * Build a () expression
-     * 
-     * @param st   stack contains all elements
-     * @param type function call type, if not cos, sin, min, max, then we will
-     *             ignore it
-     * @return the ast node
-     * @throws ExpressionException if error occurs
-     */
-    // private ast buildParam(Stack<StackElement> st, TokenType type) throws
-    // ExpressionException {
-    // if ((type == TokenType.tok_sin || type == TokenType.tok_cos) && st.size() !=
-    // 1) {
-    // throw new FunctionCallException();
-    // }
-
-    // if ((type == TokenType.tok_min || type == TokenType.tok_max) && st.size() <
-    // 3) {
-    // throw new MissingOperandException();
-    // }
-
-    // if (st.size() == 1) {
-    // if (st.peek().isTerminal())
-    // throw new MissingOperandException();
-    // return ((NonTerminal) st.peek()).genAST();
-    // } else {
-    // ArithExpr right = null;
-    // ArithExpr left = null;
-    // ArithExprList r = null;
-    // if (st.size() == 3) {
-    // if (st.peek().isTerminal())
-    // throw new MissingOperandException();
-    // try {
-    // right = (ArithExpr) ((NonTerminal) st.pop()).genAST();
-    // } catch (Exception e) {
-    // throw new TypeMismatchedException();
-    // }
-
-    // StackElement comma = st.pop();
-    // if (!comma.isTerminal() || comma.getType() != TokenType.tok_comma)
-    // throw new ExpressionException();
-    // if (st.peek().isTerminal())
-    // throw new MissingOperandException();
-    // try {
-    // left = (ArithExpr) ((NonTerminal) st.pop()).genAST();
-    // } catch (Exception e) {
-    // throw new TypeMismatchedException();
-    // }
-
-    // return new ArithExpr(new VariablFunc(type, left, new ArithExprList(right,
-    // type)));
-    // }
-    // while (st.size() != 3) {
-    // if (r == null) {
-    // if (st.lastElement().isTerminal())
-    // throw new MissingOperandException();
-    // right = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    // r = new ArithExprList(right, type);
-    // st.add(new NonTerminal(type, r));
-    // } else {
-    // if (st.lastElement().isTerminal())
-    // throw new MissingOperandException();
-    // r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    // st.remove(st.size() - 1);
-    // if (st.lastElement().isTerminal())
-    // throw new MissingOperandException();
-    // left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    // r = new ArithExprList(left, r, type);
-    // st.add(new NonTerminal(type, r));
-    // }
-    // }
-    // if (st.lastElement().isTerminal())
-    // throw new MissingOperandException();
-    // r = (ArithExprList) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    // st.remove(st.size() - 1);
-    // if (st.lastElement().isTerminal())
-    // throw new MissingOperandException();
-    // left = (ArithExpr) ((NonTerminal) st.remove(st.size() - 1)).genAST();
-    // return new ArithExpr(new VariablFunc(type, left, r));
-    // }
-    // }
-
-    /**
      * Build a '()' expression
      * 
      * @param st       stack contains all elements
@@ -703,7 +623,7 @@ public class Parser {
      * @return the ast node
      * @throws ExpressionException if error occurs
      */
-    private ast buildParam2(Stack<StackElement> st, TokenType function) throws ExpressionException {
+    private ast buildParam(Stack<StackElement> st, TokenType function) throws ExpressionException {
         boolean init = true;
         boolean func = false;
         if (function == TokenType.tok_sin || function == TokenType.tok_cos || function == TokenType.tok_min
@@ -825,7 +745,7 @@ public class Parser {
         if (ret instanceof ArithExprList) {
             if (func)
                 return new VariablFunc(function, ((ArithExprList) ret).getExpr(), ((ArithExprList) ret).getExprList());
-            throw new FunctionCallException();
+            throw new SyntacticException();
         }
         if (ret instanceof BoolExpr) {
             return new BoolExpr((BoolExpr) ret);
