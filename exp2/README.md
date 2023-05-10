@@ -1092,7 +1092,15 @@ private void checkType() throws TypeMismatchedException {
 
 首先是所提供的 `test_simple.sh` 和 `test_standard.sh`，如下
 
+![](./img/1.png)
+
+![](./img/2.png)
+
 之后，还额外编写了一些测试例子，分别测试 `Scanner` 的异常和 `Parser` 的异常，可以使用 `./test.py scanner` 和 `./test.py parser` 来进行测试，结果如下
+
+![](./img/3.png)
+
+![](./img/4.png)
 
 可以看到，都能够完全的通过测试用例，表明实验成功的完成
 
