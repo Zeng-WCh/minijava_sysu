@@ -438,7 +438,7 @@ decimal tok_decimal
 
 文件使用 `##` 作为区分，第一部分为文法，第二部分为优先级对应的 `Token` 表示 (用来自动生成 `OPPTable`) 以及结合性，当然脚本也设计了对应的读取，第三部分为非运算符，后面为其 `Token` 表示，同时也注意到，这里为了便于区分一元取负和二元减法，将一元取负的符号改成了 `~`，但是由于第一步 `scanner` 已经做了区分，且能够正确的返回不同的 `-` 的含义，所以这里并无特别的影响
 
-之后使用 `./generateOPPTable.py grammar.txt`，就能在 `table.csv` 中看到对应的优先级信息，同时也会自动生成一个 `OPPTable` 的 `Java` 类，如下
+之后使用 `./generateOPPTable.py grammar.txt`，就能在 `table.csv` 中看到对应的优先级信息，列中的元素表示当前栈顶的终结符，行中的元素表示输入的终结符，表格对应位置即为优先级，`>` 或者 `=` 表示栈的要大于输入的，采取移入动作，`<` 表示栈的优先级要小于输入的，进行规约，而空则表示出现错误，需要抛出异常；与此同时也会自动生成一个 `OPPTable` 的 `Java` 类，如下
 
 ```java
 /**
@@ -1103,6 +1103,27 @@ private void checkType() throws TypeMismatchedException {
 ![](./img/4.png)
 
 可以看到，都能够完全的通过测试用例，表明实验成功的完成
+
+## 实验心得
+
+本次实验算是对编译原理所学内容的一次较好的实践，自行实现了一个较为完善的编译器工作的完整流程，从词法输入开始，手动构建一个有限状态自动机，并通过这个自动机来完成词法分析的过程，将输入的字符串转换为 `token` 序列输入给 `parser` 部分进行语法分析；而在语法分析部分，本次实验的文法为 OPP 文法，属于移入-规约文法，和 LR 文法十分类似，但是要更为容易进行处理，重点在于如何得到算符优先级表，这里参考了龙书以及部分文章，提取出文法本身的优先级，之后按照设定的优先级进行重新调整，得到了本次实验所需要的算符优先级表，后续过程就是根据表格采取移入/规约/报错的处理；语义分析的部分则是采取了先生成 AST，再进行 AST 遍历的操作来完成，当然部分的语义已经嵌入在语法分析过程中了，例如 `1?2:3`，在规约的过程中，`1` 是不可能规约成一个 `BoolExpr` 的，从而在语法分析阶段就会报出语义错误 (`TypeMismatched`)；在最后的求值部分，则是进行了 AST 遍历，通过接口类的 `eval` 接口，进行打印，同时还提供另一个用于 `debug` 的接口 `print` 用来打印 AST，代码在 `test/test.java` 中，同时可以通过 `./ast.sh <expr>` 来调用这个测试，例如 `./ast.sh "true?false?1:2:3"` 会得到如下的结果
+
+```text
+The expression is: true?false?1:7:9
+The result is: 7.0
+|-- Expr: ArithExpr
+ `-- ArithExpr: BoolExpr ? ArithExpr : ArithExpr
+  `-- BoolExpr: true
+  `-- ArithExpr: BoolExpr ? ArithExpr : ArithExpr
+   `-- BoolExpr: false
+   `-- ArithExpr: 1.0
+   `-- ArithExpr: 7.0
+  `-- ArithExpr: 9.0
+```
+
+通过这种方式，能够以一个较为方便的方式查看 AST，来检查代码的正确性
+
+
 
 ## 参考文献
 
