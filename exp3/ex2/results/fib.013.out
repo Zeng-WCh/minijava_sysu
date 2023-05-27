@@ -1,0 +1,280 @@
+line: 1 col: 1 match: --(* Illegal Integer *)--
+action [94] { return TokenType.tok_comment; }
+tok_comment
+line: 1 col: 22 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 2 col: 1 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 3 col: 1 match: --MODULE--
+action [56] { return TokenType.tok_module; }
+tok_module
+line: 3 col: 7 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 3 col: 8 match: --Fib--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 3 col: 11 match: --;--
+action [64] { return TokenType.tok_semicolon; }
+tok_semicolon
+line: 3 col: 12 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 5 match: --VAR--
+action [45] { return TokenType.tok_var; }
+tok_var
+line: 4 col: 8 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 4 col: 9 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 5 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 6 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 7 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 8 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 9 match: --n--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 5 col: 10 match: --:--
+action [63] { return TokenType.tok_colon; }
+tok_colon
+line: 5 col: 11 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 5 col: 12 match: --INTEGER--
+action [37] { return TokenType.tok_integer; }
+tok_integer
+line: 5 col: 19 match: --;--
+action [64] { return TokenType.tok_semicolon; }
+tok_semicolon
+line: 5 col: 20 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 5 match: --PROCEDURE--
+action [46] { return TokenType.tok_procedure; }
+tok_procedure
+line: 6 col: 14 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 15 match: --Fib--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 6 col: 18 match: --(--
+action [65] { return TokenType.tok_lparen; }
+tok_lparen
+line: 6 col: 19 match: --n--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 6 col: 20 match: --:--
+action [63] { return TokenType.tok_colon; }
+tok_colon
+line: 6 col: 21 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 22 match: --INTEGER--
+action [37] { return TokenType.tok_integer; }
+tok_integer
+line: 6 col: 29 match: --,--
+action [61] { return TokenType.tok_comma; }
+tok_comma
+line: 6 col: 30 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 31 match: --var--
+action [45] { return TokenType.tok_var; }
+tok_var
+line: 6 col: 34 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 35 match: --result--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 6 col: 41 match: --:--
+action [63] { return TokenType.tok_colon; }
+tok_colon
+line: 6 col: 42 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 6 col: 43 match: --INTEGER--
+action [37] { return TokenType.tok_integer; }
+tok_integer
+line: 6 col: 50 match: --)--
+action [66] { return TokenType.tok_rparen; }
+tok_rparen
+line: 6 col: 51 match: --;--
+action [64] { return TokenType.tok_semicolon; }
+tok_semicolon
+line: 6 col: 52 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 5 match: --VAR--
+action [45] { return TokenType.tok_var; }
+tok_var
+line: 7 col: 8 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 9 match: --i--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 7 col: 10 match: --,--
+action [61] { return TokenType.tok_comma; }
+tok_comma
+line: 7 col: 11 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 12 match: --j--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 7 col: 13 match: --:--
+action [63] { return TokenType.tok_colon; }
+tok_colon
+line: 7 col: 14 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 7 col: 15 match: --INTEGER--
+action [37] { return TokenType.tok_integer; }
+tok_integer
+line: 7 col: 22 match: --;--
+action [64] { return TokenType.tok_semicolon; }
+tok_semicolon
+line: 7 col: 23 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 8 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 8 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 8 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 8 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 8 col: 5 match: --BEGIN--
+action [47] { return TokenType.tok_begin; }
+tok_begin
+line: 8 col: 10 match: --\u000A--
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 1 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 2 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 3 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 4 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 5 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 6 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 7 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 8 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 9 match: --IF--
+action [49] { return TokenType.tok_if; }
+tok_if
+line: 9 col: 11 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 12 match: --n--
+action [99] { if (yylength() > 24)
+                throw new IllegalIdentifierLengthException();
+                return TokenType.tok_identifier; }
+tok_identifier
+line: 9 col: 13 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 14 match: --=--
+action [70] { return TokenType.tok_equal; }
+tok_equal
+line: 9 col: 15 match: -- --
+action [95] { return TokenType.tok_space; }
+tok_space
+line: 9 col: 16 match: --0b--
+action [91] { throw new IllegalIntegerException(); }
+Unexpected exception:

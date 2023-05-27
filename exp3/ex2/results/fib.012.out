@@ -1,0 +1,6 @@
+line: 1 col: 1 match: --(* Unmatched comment *)--
+action [94] { return TokenType.tok_comment; }
+tok_comment
+line: 1 col: 24 match: --\u000A\u000AA Fib Calculate Program which is used to show how to write program in Oberon0 *)--
+action [97] { throw new MismatchedCommentException(); }
+Unexpected exception:

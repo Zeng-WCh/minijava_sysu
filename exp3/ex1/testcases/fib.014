@@ -1,0 +1,68 @@
+(* Illegal Integer Range *)
+
+MODULE Fib;
+    VAR 
+        n: INTEGER;
+    PROCEDURE Fib(n: INTEGER, var result: INTEGER);
+    VAR i, j: INTEGER;
+    BEGIN
+        IF n = 1234545667889 THEN
+            result := 0;
+        ELSIF n = 1 THEN
+            result := n;
+        ELSE
+            Fib(n-1, i);
+            Fib(n-2, j);
+            result := i + j;
+        END;
+    END Fib;
+
+    PROCEDURE Fib2(VAR n: INTEGER);
+    CONST 
+        c = 012; (* OCT 012 MEANS 10 IN DEC *)
+    TYPE
+        int = INTEGER;
+        rec = RECORD
+            val: int;
+            flag: BOOLEAN;
+        END;
+    VAR 
+        tmp: ARRAY 10 OF REC;
+        i1: INTEGER;
+    BEGIN
+        tmp[0].val := 1;
+        tmp[1].val := 1;
+        
+        i1 := 2;
+
+        WHILE i1 < c DO
+            tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
+            i1 := i1 + 1;
+        END;
+
+        IF n < c THEN
+            n := tmp[n].val
+        ELSIF n >= c & n < c + 1 THEN
+            n := tmp[c-1].val + tmp[c-2].val
+        ELSIF n <= c + 1 THEN
+            n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
+        ELSE
+            Fib(n, n)
+        END
+    END Fib2;
+
+    BEGIN:
+        read(n);
+        IF n # 0 THEN
+            Fib(n, n);
+            Fib2(n);
+            write(n);
+            writeline
+        ELSIF n > 0 THEN
+            write(n);
+            writeline;
+        ELSE
+            write(n);
+            writeline;
+        END
+END Fib.;
