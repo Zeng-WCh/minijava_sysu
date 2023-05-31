@@ -3,7 +3,7 @@
 MODULE Fib;
     VAR 
         n: INTEGER;
-    PROCEDURE Fib(n: INTEGER, var result: INTEGER);
+    PROCEDURE Fib1(n: INTEGER, var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
         IF n = 0 THEN
@@ -15,7 +15,7 @@ MODULE Fib;
             Fib(n-2, j);
             result := i + j;
         END;
-    END Fib;
+    END Fib1;
 
     PROCEDURE Fib2(VAR n: INTEGER);
     CONST 
@@ -51,18 +51,20 @@ MODULE Fib;
         END
     END Fib2;
 
-    BEGIN:
+    PROCEDURE Main();
+    BEGIN
         read(n);
         IF n # 0 THEN
             Fib(n, n);
             Fib2(n);
             write(n);
-            writeline
+            writeln
         ELSIF n > 0 THEN
             write(n);
-            writeline;
+            writeln;
         ELSE
             write(n);
-            writeline;
+            writeln;
         END
+    END Main;
 END Fib.;

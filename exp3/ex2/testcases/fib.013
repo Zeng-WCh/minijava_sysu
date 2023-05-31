@@ -57,12 +57,12 @@ MODULE Fib;
             Fib(n, n);
             Fib2(n);
             write(n);
-            writeline
+            writeln
         ELSIF n > 0 THEN
             write(n);
-            writeline;
+            writeln;
         ELSE
             write(n);
-            writeline;
+            writeln;
         END
 END Fib.;

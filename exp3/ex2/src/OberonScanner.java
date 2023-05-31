@@ -14,7 +14,6 @@ public class OberonScanner {
 
   /** Initial size of the lookahead buffer. */
   private static final int ZZ_BUFFERSIZE = 16384;
-  private static final String ZZ_NL = System.getProperty("line.separator");
 
   // Lexical states.
   public static final int YYINITIAL = 0;
@@ -102,23 +101,22 @@ public class OberonScanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\0\1\2\1\3\1\4\1\5"+
-    "\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15"+
-    "\1\16\1\17\1\20\1\21\1\22\16\23\1\24\1\25"+
-    "\1\26\1\1\3\0\2\27\1\30\1\31\1\30\1\32"+
-    "\1\33\1\34\5\23\1\35\1\0\2\23\1\36\2\23"+
-    "\1\37\1\40\7\23\1\36\2\0\2\30\4\23\2\41"+
-    "\1\23\1\0\1\42\1\23\1\43\5\23\1\44\1\23"+
-    "\1\0\1\23\2\0\1\45\1\27\2\23\1\0\2\23"+
-    "\1\0\1\46\1\23\1\0\1\46\3\23\1\47\1\23"+
-    "\1\50\1\51\1\23\1\0\1\23\2\0\1\45\1\52"+
-    "\2\53\1\23\2\54\2\55\4\23\2\56\2\57\1\0"+
-    "\1\27\1\0\2\23\1\60\1\23\1\61\1\23\2\0"+
-    "\1\27\1\62\1\63\2\23\1\0\1\63\2\23\1\0"+
-    "\1\64\2\65";
+    "\1\0\1\1\1\2\1\3\1\2\1\4\1\5\1\6"+
+    "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
+    "\1\17\1\20\1\21\1\22\1\23\16\24\1\25\1\26"+
+    "\1\27\1\1\4\0\2\30\1\31\1\32\1\31\1\33"+
+    "\1\34\1\35\5\24\1\36\1\0\2\24\1\37\2\24"+
+    "\1\40\1\41\7\24\1\37\2\0\2\31\4\24\2\42"+
+    "\1\24\1\0\1\43\1\24\1\44\5\24\1\45\1\24"+
+    "\1\0\1\24\2\0\1\46\1\30\2\24\1\0\2\24"+
+    "\1\0\1\47\1\24\1\0\1\47\3\24\1\50\1\24"+
+    "\1\51\1\52\1\24\1\0\1\24\2\0\1\46\1\53"+
+    "\2\54\1\24\2\55\2\56\4\24\2\57\2\60\1\0"+
+    "\1\30\1\0\2\24\1\61\1\24\1\62\1\24\2\0"+
+    "\1\30\1\63\1\64\1\24\2\65\1\64\1\24\1\66";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[163];
+    int [] result = new int[160];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -147,26 +145,25 @@ public class OberonScanner {
     "\0\62\0\310\0\62\0\62\0\62\0\62\0\372\0\u012c"+
     "\0\u015e\0\62\0\u0190\0\62\0\u01c2\0\u01f4\0\u0226\0\u0258"+
     "\0\u028a\0\u02bc\0\u02ee\0\u0320\0\u0352\0\u0384\0\u03b6\0\u03e8"+
-    "\0\u041a\0\u044c\0\u047e\0\62\0\62\0\62\0\u04b0\0\u04e2"+
-    "\0\310\0\u0514\0\u0546\0\62\0\u0578\0\u05aa\0\u05dc\0\62"+
-    "\0\62\0\62\0\u060e\0\u0640\0\u0672\0\u06a4\0\u06d6\0\u02ee"+
-    "\0\u0708\0\u073a\0\u076c\0\u02ee\0\u079e\0\u07d0\0\u02ee\0\u02ee"+
-    "\0\u0802\0\u0834\0\u0866\0\u0898\0\u08ca\0\u08fc\0\u092e\0\62"+
-    "\0\u0960\0\u0992\0\u09c4\0\u09f6\0\u0a28\0\u0a5a\0\u0a8c\0\u0abe"+
-    "\0\u02ee\0\62\0\u0af0\0\u0b22\0\u02ee\0\u0b54\0\u0b86\0\u0bb8"+
-    "\0\u0bea\0\u0c1c\0\u0c4e\0\u0c80\0\u02ee\0\u0cb2\0\u0ce4\0\u0d16"+
-    "\0\u0d48\0\u0d7a\0\u0dac\0\u0dde\0\u0e10\0\u0e42\0\u0e74\0\u0ea6"+
-    "\0\u0ed8\0\u0f0a\0\u02ee\0\u0f3c\0\u0f6e\0\62\0\u0fa0\0\u0fd2"+
-    "\0\u1004\0\u02ee\0\u1036\0\u02ee\0\u02ee\0\u1068\0\u109a\0\u10cc"+
-    "\0\u10fe\0\u1130\0\u1162\0\u02ee\0\u02ee\0\62\0\u1194\0\u02ee"+
-    "\0\62\0\u02ee\0\62\0\u11c6\0\u11f8\0\u122a\0\u125c\0\u02ee"+
-    "\0\62\0\u128e\0\u12c0\0\u12f2\0\u1162\0\u1324\0\u1356\0\u1388"+
-    "\0\u02ee\0\u13ba\0\u02ee\0\u13ec\0\u141e\0\u1450\0\u1482\0\u02ee"+
-    "\0\u02ee\0\u14b4\0\u14e6\0\u1518\0\62\0\u154a\0\u157c\0\u15ae"+
-    "\0\u02ee\0\u02ee\0\62";
+    "\0\u041a\0\u044c\0\u047e\0\62\0\62\0\62\0\u04b0\0\62"+
+    "\0\u04e2\0\310\0\u0514\0\u0546\0\62\0\u0578\0\u05aa\0\u05dc"+
+    "\0\62\0\62\0\62\0\u060e\0\u0640\0\u0672\0\u06a4\0\u06d6"+
+    "\0\u02ee\0\u0708\0\u073a\0\u076c\0\u02ee\0\u079e\0\u07d0\0\u02ee"+
+    "\0\u02ee\0\u0802\0\u0834\0\u0866\0\u0898\0\u08ca\0\u08fc\0\u092e"+
+    "\0\62\0\u0960\0\u0992\0\u09c4\0\u09f6\0\u0a28\0\u0a5a\0\u0a8c"+
+    "\0\u0abe\0\u02ee\0\62\0\u0af0\0\u0b22\0\u02ee\0\u0b54\0\u0b86"+
+    "\0\u0bb8\0\u0bea\0\u0c1c\0\u0c4e\0\u0c80\0\u02ee\0\u0cb2\0\u0ce4"+
+    "\0\u0d16\0\u0d48\0\u0d7a\0\u0dac\0\u0dde\0\u0e10\0\u0e42\0\u0e74"+
+    "\0\u0ea6\0\u0ed8\0\u0f0a\0\u02ee\0\u0f3c\0\u0f6e\0\62\0\u0fa0"+
+    "\0\u0fd2\0\u1004\0\u02ee\0\u1036\0\u02ee\0\u02ee\0\u1068\0\u109a"+
+    "\0\u10cc\0\u10fe\0\u1130\0\u1162\0\u02ee\0\u02ee\0\62\0\u1194"+
+    "\0\u02ee\0\62\0\u02ee\0\62\0\u11c6\0\u11f8\0\u122a\0\u125c"+
+    "\0\u02ee\0\62\0\u128e\0\u12c0\0\u12f2\0\u1162\0\u1324\0\u1356"+
+    "\0\u1388\0\u02ee\0\u13ba\0\u02ee\0\u13ec\0\u141e\0\u1450\0\u1482"+
+    "\0\u02ee\0\u02ee\0\u14b4\0\u02ee\0\62\0\62\0\u14e6\0\u02ee";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[163];
+    int [] result = new int[160];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -194,149 +191,144 @@ public class OberonScanner {
     "\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31"+
     "\1\32\3\33\1\34\2\33\1\35\1\33\1\36\1\37"+
     "\1\40\1\33\1\41\1\33\1\42\1\43\1\33\1\44"+
-    "\1\45\1\2\1\46\1\47\1\2\7\4\1\50\1\4"+
-    "\1\51\52\4\1\3\4\4\1\50\1\4\1\51\57\4"+
-    "\1\52\1\4\1\53\57\4\1\50\1\54\1\51\57\4"+
-    "\1\50\1\4\1\51\4\4\2\17\1\55\5\4\26\56"+
-    "\2\4\1\57\12\4\1\50\1\4\1\51\4\4\3\20"+
-    "\5\4\26\56\15\4\1\50\1\4\1\51\12\4\1\60"+
-    "\44\4\1\50\1\4\1\51\12\4\1\61\44\4\1\50"+
-    "\1\4\1\51\12\4\1\62\44\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\17\33\1\63\6\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\4\4\3\33\5\4\4\33"+
-    "\1\64\10\33\1\65\10\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\15\33\1\66\10\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\10\33\1\67\4\33\1\70\10\33\2\4\1\33"+
-    "\1\4\1\71\10\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\12\33\1\72\1\33\1\73\11\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\4\4\3\33\5\4\26\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\5\33\1\74\6\33\1\75\11\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\4\4\3\33\5\4\15\33"+
-    "\1\76\10\33\2\4\1\33\12\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\5\33\1\77\11\33\1\100\6\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\17\33\1\101\6\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\4\33\1\102\21\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\7\33\1\103\15\33\1\104\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\1\105\25\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\7\33\1\106\7\33\1\107\6\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\21\4\1\110\6\4\1\111"+
-    "\26\4\1\52\1\4\1\0\57\4\1\52\1\4\1\51"+
-    "\50\4\11\53\1\112\50\53\7\4\1\50\1\4\1\51"+
-    "\4\4\2\113\1\55\5\4\26\56\2\4\1\57\12\4"+
-    "\1\50\1\4\1\51\4\4\3\56\5\4\26\56\2\4"+
-    "\1\56\12\4\1\50\1\4\1\51\4\4\2\114\1\57"+
-    "\35\4\1\57\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\17\33\1\115\6\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\6\33\1\116\17\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\15\33\1\117\10\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\14\33\1\120\11\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\23\33\1\121\2\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\37\4\1\122\17\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\20\33\1\123\5\33\2\4\1\33"+
-    "\2\4\1\124\7\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\3\33\1\125\22\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\21\33\1\126\4\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\3\33\1\127\22\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\15\33\1\130\10\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\1\131\1\33\1\132\23\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\4\33\1\133"+
-    "\21\33\2\4\1\33\12\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\16\33\1\134\7\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\17\33\1\135"+
-    "\6\33\2\4\1\33\12\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\10\33\1\136\15\33\2\4\1\33\1\4"+
-    "\1\137\10\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\10\33\1\140\15\33\2\4\1\33\1\4\1\141\10\4"+
-    "\1\50\1\4\1\51\35\4\1\142\12\4\10\53\1\143"+
-    "\1\144\50\53\7\4\1\50\1\4\1\51\4\4\3\113"+
-    "\5\4\26\56\15\4\1\50\1\4\1\51\4\4\3\114"+
-    "\50\4\1\50\1\4\1\51\4\4\3\33\5\4\1\145"+
-    "\25\33\2\4\1\33\12\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\10\33\1\146\15\33\2\4\1\33\1\4"+
-    "\1\147\10\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\12\33\1\150\13\33\2\4\1\33\12\4\1\50\1\4"+
-    "\1\51\4\4\3\33\5\4\20\33\1\151\5\33\2\4"+
-    "\1\33\2\4\1\152\7\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\4\33\1\153\3\33\1\154\15\33\2\4"+
-    "\1\33\1\4\1\155\10\4\1\50\1\4\1\51\20\4"+
-    "\1\156\3\4\1\155\21\4\1\155\10\4\1\50\1\4"+
-    "\1\51\4\4\3\33\5\4\4\33\1\157\21\33\2\4"+
-    "\1\33\12\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\22\33\1\160\3\33\2\4\1\33\12\4\1\50\1\4"+
-    "\1\51\4\4\3\33\5\4\2\33\1\161\23\33\2\4"+
-    "\1\33\12\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\3\33\1\162\22\33\2\4\1\33\12\4\1\50\1\4"+
-    "\1\51\4\4\3\33\5\4\15\33\1\163\10\33\2\4"+
-    "\1\33\12\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\14\33\1\164\11\33\2\4\1\33\12\4\1\50\1\4"+
-    "\1\51\4\4\3\33\5\4\4\33\1\165\21\33\2\4"+
-    "\1\33\12\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\12\33\1\166\13\33\2\4\1\33\12\4\1\50\1\4"+
-    "\1\51\26\4\1\167\30\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\21\33\1\170\4\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\35\4\1\171\21\4\1\50\1\4"+
-    "\1\51\20\4\1\172\27\4\62\0\10\53\1\173\1\144"+
-    "\50\53\7\4\1\50\1\4\1\51\4\4\3\33\5\4"+
-    "\25\33\1\174\2\4\1\33\12\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\14\33\1\175\11\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\30\4\1\176\26\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\4\33\1\177\21\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\21\33\1\200\4\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\35\4\1\201\21\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\5\33\1\202\20\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\21\4\1\203\35\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\6\33\1\204\17\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\12\33\1\205\13\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\4\33\1\206\21\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\17\33\1\207\6\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\4\33\1\210\21\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\20\4\1\211"+
-    "\36\4\1\50\1\4\1\51\4\4\3\33\5\4\4\33"+
-    "\1\212\21\33\2\4\1\33\12\4\1\50\1\4\1\51"+
-    "\20\4\1\213\36\4\1\50\1\4\1\51\22\4\1\214"+
-    "\25\4\11\215\1\216\50\215\7\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\1\217\25\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\4\33\1\220"+
-    "\21\33\2\4\1\33\12\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\4\33\1\221\21\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\3\33\1\222"+
-    "\22\33\2\4\1\33\12\4\1\50\1\4\1\51\4\4"+
-    "\3\33\5\4\3\33\1\223\22\33\2\4\1\33\12\4"+
-    "\1\50\1\4\1\51\4\4\3\33\5\4\12\33\1\224"+
-    "\13\33\2\4\1\33\12\4\1\50\1\4\1\51\26\4"+
-    "\1\225\30\4\1\50\1\4\1\51\20\4\1\226\27\4"+
-    "\10\215\1\0\1\227\50\215\7\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\14\33\1\230\11\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\4\4\3\33\5\4\17\33"+
-    "\1\231\6\33\2\4\1\33\12\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\22\33\1\232\3\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\4\4\3\33\5\4\10\33"+
-    "\1\233\15\33\2\4\1\33\1\4\1\234\10\4\1\50"+
-    "\1\4\1\51\24\4\1\234\21\4\1\234\10\4\1\50"+
-    "\1\4\1\51\33\4\1\235\14\4\11\215\1\227\50\215"+
-    "\7\4\1\50\1\4\1\51\4\4\3\33\5\4\17\33"+
-    "\1\236\6\33\2\4\1\33\12\4\1\50\1\4\1\51"+
-    "\4\4\3\33\5\4\14\33\1\237\11\33\2\4\1\33"+
-    "\12\4\1\50\1\4\1\51\30\4\1\240\26\4\1\50"+
-    "\1\4\1\51\4\4\3\33\5\4\4\33\1\241\21\33"+
-    "\2\4\1\33\12\4\1\50\1\4\1\51\4\4\3\33"+
-    "\5\4\4\33\1\242\21\33\2\4\1\33\12\4\1\50"+
-    "\1\4\1\51\20\4\1\243\27\4";
+    "\1\45\1\2\1\46\1\47\1\2\7\50\1\51\1\50"+
+    "\1\52\52\50\1\3\4\50\1\51\1\50\1\52\57\50"+
+    "\1\53\1\50\1\54\57\50\1\51\1\55\1\52\57\50"+
+    "\1\51\1\50\1\52\4\50\2\17\1\56\5\50\26\57"+
+    "\2\50\1\60\12\50\1\51\1\50\1\52\4\50\3\20"+
+    "\5\50\26\57\15\50\1\51\1\50\1\52\12\50\1\61"+
+    "\44\50\1\51\1\50\1\52\12\50\1\62\44\50\1\51"+
+    "\1\50\1\52\12\50\1\63\44\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\17\33\1\64\6\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\4\33"+
+    "\1\65\10\33\1\66\10\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\15\33\1\67\10\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\10\33\1\70\4\33\1\71\10\33\2\50\1\33"+
+    "\1\50\1\72\10\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\12\33\1\73\1\33\1\74\11\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\26\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\5\33\1\75\6\33\1\76\11\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\15\33"+
+    "\1\77\10\33\2\50\1\33\12\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\5\33\1\100\11\33\1\101\6\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\17\33\1\102\6\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\4\33\1\103\21\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\7\33\1\104\15\33\1\105\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\1\106\25\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\7\33\1\107\7\33\1\110\6\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\21\50\1\111\6\50\1\112"+
+    "\26\50\1\53\1\50\1\0\57\50\1\53\1\50\1\52"+
+    "\50\50\11\54\1\113\50\54\7\50\1\51\1\50\1\52"+
+    "\4\50\2\114\1\56\5\50\26\57\2\50\1\60\12\50"+
+    "\1\51\1\50\1\52\4\50\3\57\5\50\26\57\2\50"+
+    "\1\57\12\50\1\51\1\50\1\52\4\50\2\115\1\60"+
+    "\35\50\1\60\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\17\33\1\116\6\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\6\33\1\117\17\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\15\33\1\120\10\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\14\33\1\121\11\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\23\33\1\122\2\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\37\50\1\123\17\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\20\33\1\124\5\33\2\50\1\33"+
+    "\2\50\1\125\7\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\3\33\1\126\22\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\21\33\1\127\4\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\3\33\1\130\22\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\15\33\1\131\10\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\1\132\1\33\1\133\23\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\4\33\1\134"+
+    "\21\33\2\50\1\33\12\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\16\33\1\135\7\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\17\33\1\136"+
+    "\6\33\2\50\1\33\12\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\10\33\1\137\15\33\2\50\1\33\1\50"+
+    "\1\140\10\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\10\33\1\141\15\33\2\50\1\33\1\50\1\142\10\50"+
+    "\1\51\1\50\1\52\35\50\1\143\12\50\10\54\1\144"+
+    "\1\145\50\54\7\50\1\51\1\50\1\52\4\50\3\114"+
+    "\5\50\26\57\15\50\1\51\1\50\1\52\4\50\3\115"+
+    "\50\50\1\51\1\50\1\52\4\50\3\33\5\50\1\146"+
+    "\25\33\2\50\1\33\12\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\10\33\1\147\15\33\2\50\1\33\1\50"+
+    "\1\150\10\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\12\33\1\151\13\33\2\50\1\33\12\50\1\51\1\50"+
+    "\1\52\4\50\3\33\5\50\20\33\1\152\5\33\2\50"+
+    "\1\33\2\50\1\153\7\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\4\33\1\154\3\33\1\155\15\33\2\50"+
+    "\1\33\1\50\1\156\10\50\1\51\1\50\1\52\20\50"+
+    "\1\157\3\50\1\156\21\50\1\156\10\50\1\51\1\50"+
+    "\1\52\4\50\3\33\5\50\4\33\1\160\21\33\2\50"+
+    "\1\33\12\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\22\33\1\161\3\33\2\50\1\33\12\50\1\51\1\50"+
+    "\1\52\4\50\3\33\5\50\2\33\1\162\23\33\2\50"+
+    "\1\33\12\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\3\33\1\163\22\33\2\50\1\33\12\50\1\51\1\50"+
+    "\1\52\4\50\3\33\5\50\15\33\1\164\10\33\2\50"+
+    "\1\33\12\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\14\33\1\165\11\33\2\50\1\33\12\50\1\51\1\50"+
+    "\1\52\4\50\3\33\5\50\4\33\1\166\21\33\2\50"+
+    "\1\33\12\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\12\33\1\167\13\33\2\50\1\33\12\50\1\51\1\50"+
+    "\1\52\26\50\1\170\30\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\21\33\1\171\4\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\35\50\1\172\21\50\1\51\1\50"+
+    "\1\52\20\50\1\173\27\50\62\0\10\54\1\174\1\145"+
+    "\50\54\7\50\1\51\1\50\1\52\4\50\3\33\5\50"+
+    "\25\33\1\175\2\50\1\33\12\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\14\33\1\176\11\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\30\50\1\177\26\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\4\33\1\200\21\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\21\33\1\201\4\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\35\50\1\202\21\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\5\33\1\203\20\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\21\50\1\204\35\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\6\33\1\205\17\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\12\33\1\206\13\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\4\33\1\207\21\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\4\50\3\33"+
+    "\5\50\17\33\1\210\6\33\2\50\1\33\12\50\1\51"+
+    "\1\50\1\52\4\50\3\33\5\50\4\33\1\211\21\33"+
+    "\2\50\1\33\12\50\1\51\1\50\1\52\20\50\1\212"+
+    "\36\50\1\51\1\50\1\52\4\50\3\33\5\50\4\33"+
+    "\1\213\21\33\2\50\1\33\12\50\1\51\1\50\1\52"+
+    "\20\50\1\214\36\50\1\51\1\50\1\52\22\50\1\215"+
+    "\25\50\11\216\1\217\50\216\7\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\1\220\25\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\4\33\1\221"+
+    "\21\33\2\50\1\33\12\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\4\33\1\222\21\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\3\33\1\223"+
+    "\22\33\2\50\1\33\12\50\1\51\1\50\1\52\4\50"+
+    "\3\33\5\50\3\33\1\224\22\33\2\50\1\33\12\50"+
+    "\1\51\1\50\1\52\4\50\3\33\5\50\12\33\1\225"+
+    "\13\33\2\50\1\33\12\50\1\51\1\50\1\52\26\50"+
+    "\1\226\30\50\1\51\1\50\1\52\20\50\1\227\27\50"+
+    "\10\216\1\0\1\230\50\216\7\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\14\33\1\231\11\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\17\33"+
+    "\1\232\6\33\2\50\1\33\12\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\22\33\1\233\3\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\14\33"+
+    "\1\234\11\33\2\50\1\33\12\50\1\51\1\50\1\52"+
+    "\30\50\1\235\26\50\1\51\1\50\1\52\33\50\1\236"+
+    "\14\50\11\216\1\230\50\216\7\50\1\51\1\50\1\52"+
+    "\4\50\3\33\5\50\17\33\1\237\6\33\2\50\1\33"+
+    "\12\50\1\51\1\50\1\52\4\50\3\33\5\50\4\33"+
+    "\1\240\21\33\2\50\1\33\3\50";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[5600];
+    int [] result = new int[5400];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -379,14 +371,13 @@ public class OberonScanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\2\1\1\0\43\1\3\0\16\1\1\0\17\1"+
-    "\2\0\11\1\1\0\12\1\1\0\1\1\2\0\1\11"+
-    "\3\1\1\0\2\1\1\0\2\1\1\0\11\1\1\0"+
-    "\1\1\2\0\21\1\1\0\1\1\1\0\6\1\2\0"+
-    "\5\1\1\0\3\1\1\0\3\1";
+    "\1\0\46\1\4\0\16\1\1\0\17\1\2\0\11\1"+
+    "\1\0\12\1\1\0\1\1\2\0\1\11\3\1\1\0"+
+    "\2\1\1\0\2\1\1\0\11\1\1\0\1\1\2\0"+
+    "\21\1\1\0\1\1\1\0\6\1\2\0\11\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[163];
+    int [] result = new int[160];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -473,23 +464,6 @@ public class OberonScanner {
     this.zzReader = in;
   }
 
-
-  private static String zzToPrintable(String str) {
-    StringBuilder builder = new StringBuilder();
-    for (int n = 0 ; n < str.length() ; ) {
-      int ch = str.codePointAt(n);
-      int charCount = Character.charCount(ch);
-      n += charCount;
-      if (ch > 31 && ch < 127) {
-        builder.append((char)ch);
-      } else if (charCount == 1) {
-        builder.append(String.format("\\u%04X", ch));
-      } else {
-        builder.append(String.format("\\U%06X", ch));
-      }
-    }
-    return builder.toString();
-  }
 
   /** Returns the maximum size of the scanner buffer, which limits the size of tokens. */
   private int zzMaxBufferLen() {
@@ -894,382 +868,329 @@ public class OberonScanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [103] { throw new IllegalSymbolException(); }");
             { throw new IllegalSymbolException();
             }
           // fall through
-          case 54: break;
-          case 2:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [95] { return TokenType.tok_space; }");
-            { return TokenType.tok_space;
-            }
-          // fall through
           case 55: break;
-          case 3:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [71] { return TokenType.tok_not_equal; }");
-            { return TokenType.tok_not_equal;
+          case 2:
+            { 
             }
           // fall through
           case 56: break;
-          case 4:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [81] { return TokenType.tok_and; }");
-            { return TokenType.tok_and;
+          case 3:
+            { System.out.print(yytext());
             }
           // fall through
           case 57: break;
-          case 5:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [65] { return TokenType.tok_lparen; }");
-            { return TokenType.tok_lparen;
+          case 4:
+            { System.out.printf("notequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_not_equal;
             }
           // fall through
           case 58: break;
-          case 6:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [66] { return TokenType.tok_rparen; }");
-            { return TokenType.tok_rparen;
+          case 5:
+            { System.out.printf("and: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_and;
             }
           // fall through
           case 59: break;
-          case 7:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [78] { return TokenType.tok_multiply; }");
-            { return TokenType.tok_multiply;
+          case 6:
+            { System.out.printf("lparen: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_lparen;
             }
           // fall through
           case 60: break;
-          case 8:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [76] { return TokenType.tok_plus; }");
-            { return TokenType.tok_plus;
+          case 7:
+            { System.out.printf("rparen: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_rparen;
             }
           // fall through
           case 61: break;
-          case 9:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [61] { return TokenType.tok_comma; }");
-            { return TokenType.tok_comma;
+          case 8:
+            { System.out.printf("multiply: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_multiply;
             }
           // fall through
           case 62: break;
-          case 10:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [77] { return TokenType.tok_minus; }");
-            { return TokenType.tok_minus;
+          case 9:
+            { System.out.printf("plus: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_plus;
             }
           // fall through
           case 63: break;
-          case 11:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [62] { return TokenType.tok_dot; }");
-            { return TokenType.tok_dot;
+          case 10:
+            { System.out.printf("comma: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_comma;
             }
           // fall through
           case 64: break;
-          case 12:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [85] { if (yylength() > 12)"+ZZ_NL+"            throw new IllegalIntegerRangeException();"+ZZ_NL+"            return TokenType.tok_octal; }");
-            { if (yylength() > 12)
-            throw new IllegalIntegerRangeException();
-            return TokenType.tok_octal;
+          case 11:
+            { System.out.printf("minus: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_minus;
             }
           // fall through
           case 65: break;
-          case 13:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [88] { if (yylength() > 12)"+ZZ_NL+"            throw new IllegalIntegerRangeException();"+ZZ_NL+"            return TokenType.tok_decimal; }");
-            { if (yylength() > 12)
-            throw new IllegalIntegerRangeException();
-            return TokenType.tok_decimal;
+          case 12:
+            { System.out.printf("dot: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_dot;
             }
           // fall through
           case 66: break;
-          case 14:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [63] { return TokenType.tok_colon; }");
-            { return TokenType.tok_colon;
+          case 13:
+            { if (yylength() > 12)
+        throw new IllegalIntegerRangeException();
+    System.out.printf("Octal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_octal;
             }
           // fall through
           case 67: break;
-          case 15:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [64] { return TokenType.tok_semicolon; }");
-            { return TokenType.tok_semicolon;
+          case 14:
+            { if (yylength() > 12)
+        throw new IllegalIntegerRangeException();
+    System.out.printf("decimal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_decimal;
             }
           // fall through
           case 68: break;
-          case 16:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [72] { return TokenType.tok_less; }");
-            { return TokenType.tok_less;
+          case 15:
+            { System.out.printf("colon: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_colon;
             }
           // fall through
           case 69: break;
-          case 17:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [70] { return TokenType.tok_equal; }");
-            { return TokenType.tok_equal;
+          case 16:
+            { System.out.printf("semicolon: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_semicolon;
             }
           // fall through
           case 70: break;
-          case 18:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [74] { return TokenType.tok_greater; }");
-            { return TokenType.tok_greater;
+          case 17:
+            { System.out.printf("less: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_less;
             }
           // fall through
           case 71: break;
-          case 19:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [99] { if (yylength() > 24)"+ZZ_NL+"                throw new IllegalIdentifierLengthException();"+ZZ_NL+"                return TokenType.tok_identifier; }");
-            { if (yylength() > 24)
-                throw new IllegalIdentifierLengthException();
-                return TokenType.tok_identifier;
+          case 18:
+            { System.out.printf("equal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_equal;
             }
           // fall through
           case 72: break;
-          case 20:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [67] { return TokenType.tok_lbracket; }");
-            { return TokenType.tok_lbracket;
+          case 19:
+            { System.out.printf("greater: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_greater;
             }
           // fall through
           case 73: break;
-          case 21:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [68] { return TokenType.tok_rbracket; }");
-            { return TokenType.tok_rbracket;
+          case 20:
+            { if (yylength() > 24)
+        throw new IllegalIdentifierLengthException();
+    System.out.printf("identifier: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_identifier;
             }
           // fall through
           case 74: break;
-          case 22:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [83] { return TokenType.tok_not; }");
-            { return TokenType.tok_not;
+          case 21:
+            { System.out.printf("lbracket: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_lbracket;
             }
           // fall through
           case 75: break;
-          case 23:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [97] { throw new MismatchedCommentException(); }");
-            { throw new MismatchedCommentException();
+          case 22:
+            { System.out.printf("rbracket: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_rbracket;
             }
           // fall through
           case 76: break;
-          case 24:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [92] { throw new IllegalOctalException(); }");
-            { throw new IllegalOctalException();
+          case 23:
+            { System.out.printf("not: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_not;
             }
           // fall through
           case 77: break;
-          case 25:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [91] { throw new IllegalIntegerException(); }");
-            { throw new IllegalIntegerException();
+          case 24:
+            { throw new MismatchedCommentException();
             }
           // fall through
           case 78: break;
-          case 26:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [59] { return TokenType.tok_assign; }");
-            { return TokenType.tok_assign;
+          case 25:
+            { throw new IllegalOctalException();
             }
           // fall through
           case 79: break;
-          case 27:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [73] { return TokenType.tok_less_equal; }");
-            { return TokenType.tok_less_equal;
+          case 26:
+            { throw new IllegalIntegerException();
             }
           // fall through
           case 80: break;
-          case 28:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [75] { return TokenType.tok_greater_equal; }");
-            { return TokenType.tok_greater_equal;
+          case 27:
+            { System.out.printf("assign: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_assign;
             }
           // fall through
           case 81: break;
-          case 29:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [53] { return TokenType.tok_do; }");
-            { return TokenType.tok_do;
+          case 28:
+            { System.out.printf("lessequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_less_equal;
             }
           // fall through
           case 82: break;
-          case 30:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [49] { return TokenType.tok_if; }");
-            { return TokenType.tok_if;
+          case 29:
+            { System.out.printf("greaterequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_greater_equal;
             }
           // fall through
           case 83: break;
-          case 31:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [43] { return TokenType.tok_of; }");
-            { return TokenType.tok_of;
+          case 30:
+            { System.out.printf("do: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_do;
             }
           // fall through
           case 84: break;
-          case 32:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [82] { return TokenType.tok_or; }");
-            { return TokenType.tok_or;
+          case 31:
+            { System.out.printf("if: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_if;
             }
           // fall through
           case 85: break;
-          case 33:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [79] { return TokenType.tok_divide; }");
-            { return TokenType.tok_divide;
+          case 32:
+            { System.out.printf("of: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_of;
             }
           // fall through
           case 86: break;
-          case 34:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [48] { return TokenType.tok_end; }");
-            { return TokenType.tok_end;
+          case 33:
+            { System.out.printf("or: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_or;
             }
           // fall through
           case 87: break;
-          case 35:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [80] { return TokenType.tok_mod; }");
-            { return TokenType.tok_mod;
+          case 34:
+            { System.out.printf("divide: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_divide;
             }
           // fall through
           case 88: break;
-          case 36:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [45] { return TokenType.tok_var; }");
-            { return TokenType.tok_var;
+          case 35:
+            { System.out.printf("end: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_end;
             }
           // fall through
           case 89: break;
-          case 37:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [94] { return TokenType.tok_comment; }");
-            { return TokenType.tok_comment;
+          case 36:
+            { System.out.printf("mod: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_mod;
             }
           // fall through
           case 90: break;
-          case 38:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [51] { return TokenType.tok_else; }");
-            { return TokenType.tok_else;
+          case 37:
+            { System.out.printf("var: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_var;
             }
           // fall through
           case 91: break;
-          case 39:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [39] { return TokenType.tok_read; }");
-            { return TokenType.tok_read;
+          case 38:
+            { System.out.printf("comment: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_comment;
             }
           // fall through
           case 92: break;
-          case 40:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [50] { return TokenType.tok_then; }");
-            { return TokenType.tok_then;
+          case 39:
+            { System.out.printf("else: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_else;
             }
           // fall through
           case 93: break;
-          case 41:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [57] { return TokenType.tok_type; }");
-            { return TokenType.tok_type;
+          case 40:
+            { System.out.printf("read: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_read;
             }
           // fall through
           case 94: break;
-          case 42:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [42] { return TokenType.tok_array; }");
-            { return TokenType.tok_array;
+          case 41:
+            { System.out.printf("then: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_then;
             }
           // fall through
           case 95: break;
-          case 43:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [47] { return TokenType.tok_begin; }");
-            { return TokenType.tok_begin;
+          case 42:
+            { System.out.printf("type: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_type;
             }
           // fall through
           case 96: break;
-          case 44:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [55] { return TokenType.tok_const; }");
-            { return TokenType.tok_const;
+          case 43:
+            { System.out.printf("array: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_array;
             }
           // fall through
           case 97: break;
-          case 45:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [54] { return TokenType.tok_elsif; }");
-            { return TokenType.tok_elsif;
+          case 44:
+            { System.out.printf("begin: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_begin;
             }
           // fall through
           case 98: break;
-          case 46:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [52] { return TokenType.tok_while; }");
-            { return TokenType.tok_while;
+          case 45:
+            { System.out.printf("const: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_const;
             }
           // fall through
           case 99: break;
-          case 47:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [38] { return TokenType.tok_write; }");
-            { return TokenType.tok_write;
+          case 46:
+            { System.out.printf("elsif: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_elsif;
             }
           // fall through
           case 100: break;
-          case 48:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [56] { return TokenType.tok_module; }");
-            { return TokenType.tok_module;
+          case 47:
+            { System.out.printf("while: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_while;
             }
           // fall through
           case 101: break;
-          case 49:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [44] { return TokenType.tok_record; }");
-            { return TokenType.tok_record;
+          case 48:
+            { System.out.printf("write: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_write;
             }
           // fall through
           case 102: break;
-          case 50:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [36] { return TokenType.tok_boolean; }");
-            { return TokenType.tok_boolean;
+          case 49:
+            { System.out.printf("module: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_module;
             }
           // fall through
           case 103: break;
-          case 51:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [37] { return TokenType.tok_integer; }");
-            { return TokenType.tok_integer;
+          case 50:
+            { System.out.printf("record: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_record;
             }
           // fall through
           case 104: break;
-          case 52:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [46] { return TokenType.tok_procedure; }");
-            { return TokenType.tok_procedure;
+          case 51:
+            { System.out.printf("boolean: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_boolean;
             }
           // fall through
           case 105: break;
-          case 53:
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [40] { return TokenType.tok_writeln; }");
-            { return TokenType.tok_writeln;
+          case 52:
+            { System.out.printf("integer: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_integer;
             }
           // fall through
           case 106: break;
+          case 53:
+            { System.out.printf("writeln: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_writeln;
+            }
+          // fall through
+          case 107: break;
+          case 54:
+            { System.out.printf("procedure: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
+    return TokenType.tok_procedure;
+            }
+          // fall through
+          case 108: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
@@ -1280,9 +1201,8 @@ public class OberonScanner {
   /**
    * Runs the scanner on input files.
    *
-   * This main method is the debugging routine for the scanner.
-   * It prints debugging information about each returned token to
-   * System.out until the end of file is reached, or an error occured.
+   * This is a standalone scanner, it will print any unmatched
+   * text to System.out unchanged.
    *
    * @param argv   the command line, contains the filenames to run
    *               the scanner on.
@@ -1313,10 +1233,7 @@ public class OberonScanner {
           stream = new java.io.FileInputStream(argv[i]);
           reader = new java.io.InputStreamReader(stream, encodingName);
           scanner = new OberonScanner(reader);
-          do {
-            System.out.println(scanner.yylex());
-          } while (!scanner.zzAtEOF);
-
+          while ( !scanner.zzAtEOF ) scanner.yylex();
         }
         catch (java.io.FileNotFoundException e) {
           System.out.println("File not found : \""+argv[i]+"\"");

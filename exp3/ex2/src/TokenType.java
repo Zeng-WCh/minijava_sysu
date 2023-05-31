@@ -66,5 +66,4 @@ public enum TokenType {
     tok_colon, // :
 
     tok_comment,
-    tok_space,
 }
