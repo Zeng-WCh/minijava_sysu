@@ -523,7 +523,7 @@ class CUP$Parser$actions {
           case 4: // modules_tail ::= 
             {
               stmts RESULT =null;
-		RESULT = null; 
+		 RESULT = null; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("modules_tail",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

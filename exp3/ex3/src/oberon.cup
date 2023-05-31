@@ -129,7 +129,7 @@ modules ::= MODULE IDENTIFIER:id SEMICOLON declaration:d modules_tail:s END IDEN
 
 modules_tail ::= BEGIN statement_sequence:s 
 {: RESULT = s; :}
-| {:RESULT = null; :};
+| {: RESULT = null; :};
 
 declaration ::= const_declaration:c type_declaration:t var_declaration:v procedure_declarations:p
 {:

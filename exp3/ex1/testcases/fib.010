@@ -3,19 +3,19 @@
 MODULE Fib;
     VAR 
         n: INTEGER;
-    PROCEDURE Fib(n: INTEGER, var result: INTEGER);
+    PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
         IF n = 0 THEN
-            result := 0;
+            result := 0
         ELSIF n = 1 THEN
-            result := n;
+            result := n
         ELSE
             Fib(n-1, i);
             Fib(n-2, j);
-            result := i + j;
-        END;
-    END Fib;
+            result := i + j
+        END
+    END Fib1;
 
     PROCEDURE Fib2(VAR n: INTEGER);
     CONST 
@@ -37,32 +37,38 @@ MODULE Fib;
 
         WHILE i1 < c DO
             tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
-            i1 := i1 + 1;
+            i1 := i1 + 1
         END;
 
         IF n < c THEN
-            n := tmp[n].val;
-        ELSIF n >= c & n < c + 1 THEN
-            n := tmp[c-1].val + tmp[c-2].val;
+            n := tmp[n].val
+        ELSIF n >= c & (n < c + 1) THEN
+            n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
-            n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val;
+            n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
         ELSE
-            Fib(n, n);
-        END;
+            Fib(n-1, n)
+        END
     END Fib2;
 
-    BEGIN:
+    PROCEDURE Main();
+    BEGIN
         read(n);
         IF n # 0 THEN
-            Fib1(n, n);
+            Fib(n, n);
             Fib2(n);
             write(n);
             writeln
         ELSIF n > 0 THEN
             write(n);
-            writeln;
+            writeln
         ELSE
             write(n);
-            writeln;
-        END;
-END Fib.;
+            writeln
+        END
+    END Main;
+
+    BEGIN
+        m1()
+    
+END Fib.
