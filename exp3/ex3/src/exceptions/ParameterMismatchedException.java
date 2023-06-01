@@ -7,10 +7,18 @@ package exceptions;
  * @version 1.0 (Last Update 2023/06/01)
  */
 public class ParameterMismatchedException extends SemanticException {
+    /**
+     * Used to show more information about the error.
+     * 
+     * @param message, the message to be shown.
+     */
     public ParameterMismatchedException(String message) {
         super(message);
     }
 
+    /**
+     * Default constructor.
+     */
     public ParameterMismatchedException() {
         super("Parameter mismatched");
     }
