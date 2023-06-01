@@ -1,3 +1,9 @@
+/**
+ * TokenType is an enum class that contains all the token types, use as the ret value of the scanner.
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last Update 2023/06/01)
+ */
 public enum TokenType {
     // END OF FILE
     tok_eof,
