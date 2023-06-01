@@ -111,21 +111,28 @@ precedence left EQUAL, NOT_EQUAL, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
 precedence left ADD, MINUS;
 precedence left MUL, DIV, MOD;
 precedence left LPAREN;
+precedence left IDENTIFIER, NUMBER;
 
 start with program;
 
 program ::= modules:m 
-{: 
+{:
     root = m;
     root.convert();
-:};
+:}
+| error:e {:
+    if (true) throw new SyntacticException(String.format("Syntax Error at: <%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
+:}
+| LPAREN error {::}
+;
 
 modules ::= MODULE IDENTIFIER:id SEMICOLON declaration:d modules_tail:s END IDENTIFIER:id1 DOT
 {:
     if (!id.equals(id1))
         throw new SemanticException("module name mismatch");
     RESULT = new moduleBlock(id, d, s);
-:};
+:}
+;
 
 modules_tail ::= BEGIN statement_sequence:s 
 {: RESULT = s; :}
@@ -147,6 +154,11 @@ const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
         RESULT = ct;
     RESULT.add(new constDec(id, e));
 :}
+| IDENTIFIER:id expression:e SEMICOLON const_dectail:ct
+{:
+    if (true)
+        throw new MissingOperatorException("Missing ':=' for const declaration.");
+:}
 | {: RESULT = null; :};
 
 type_declaration ::= TYPE type_dectail:tt
@@ -160,6 +172,11 @@ type_dectail ::= IDENTIFIER:id EQUAL type:t SEMICOLON type_dectail:tt
         RESULT = tt;
     RESULT.add(new typeDec(id, t));
 :}
+| IDENTIFIER:id type:t SEMICOLON type_dectail:tt
+{:
+    if (true)
+        throw new MissingOperatorException("Missing '=' for type declaration.");
+:} 
 | {: RESULT = null; :};
 
 var_declaration ::= VAR var_dectail:vt
@@ -173,6 +190,11 @@ var_dectail ::= identifier_list:il COLON type:t SEMICOLON var_dectail:vt
     else
         RESULT = vt;
     RESULT.add(new varDec(il, t));
+:}
+| identifier_list:il COLON SEMICOLON var_dectail
+{:
+    if(true)
+        throw new SyntacticException("Type Missed for variable declaration.");
 :}
 | {: RESULT = null; :};
 
@@ -222,7 +244,16 @@ formal_parameters ::= LPAREN fp_section:fp fp_section_tail:fpt RPAREN
 | LPAREN RPAREN
 {:
     RESULT = new formalParameters();
-:};
+:}
+| LPAREN error {:
+    if (true) 
+        throw new MissingRightParenthesisException();
+:}
+| error RPAREN {:
+    if (true)
+        throw new MissingLeftParenthesisException();
+:}
+;
 
 fp_section_tail ::= SEMICOLON fp_section:fp fp_section_tail:fpt
 {:
@@ -234,13 +265,19 @@ fp_section_tail ::= SEMICOLON fp_section:fp fp_section_tail:fpt
 :}
 | {: RESULT = null; :};
 
-
 fp_section ::= var_if:isvar identifier_list:il COLON type:t
 {:
     RESULT = new fpSection(isvar, il, t);
-:};
+:}
+| var_if identifier_list COLON
+{:
+    if(true)
+        throw new SyntacticException("Type Missed for formal parameters.");
+:}
+;
 
-var_if ::= VAR {: RESULT = true; :}
+var_if ::= 
+VAR {: RESULT = true; :}
 | {: RESULT = false; :};
 
 type ::= IDENTIFIER:id
@@ -281,11 +318,21 @@ field_list ::= identifier_list:il COLON type:t
 {:
     RESULT = new fieldList(il, t);
 :}
+| identifier_list COLON 
+{:
+    if (true)
+        throw new SyntacticException("Type Missed in field list.");
+:}
 | {: RESULT = null; :};
 
 array_type ::= ARRAY expression:e OF type:t
 {:
     RESULT = new arrayType(e, t);
+:}
+| ARRAY OF type
+{:
+    if (true)
+        throw new SyntacticException("Undefined Array Length.");
 :};
 
 identifier_list ::= IDENTIFIER:id identifier_list_tail:ilt
@@ -314,7 +361,8 @@ statement_sequence ::= statement:s statement_sequence_tail:sst
     else
         RESULT = new stmts(sst);
     RESULT.statements.add(s);
-:};
+:}
+;
 
 statement_sequence_tail ::= SEMICOLON statement:s statement_sequence_tail:sst
 {:
@@ -376,8 +424,7 @@ procedure_call ::= IDENTIFIER:id procedure_call_tail:pct
 :};
 
 procedure_call_tail ::= actual_parameters:ap
-{: RESULT = ap; :}
-| {: RESULT = null; :};
+{: RESULT = ap; :};
 
 actual_parameters ::= LPAREN RPAREN
 {:
@@ -390,7 +437,10 @@ actual_parameters ::= LPAREN RPAREN
     else
         RESULT = new actualParameters(apt);
     RESULT.exprs.add(e);
-:};
+:}
+| {: RESULT = null; :}
+| LPAREN expression:e actual_parameters_tail:apt {: if(true) throw new MissingRightParenthesisException(); :}
+| expression:e actual_parameters_tail:apt RPAREN {: if (true) throw new MissingLeftParenthesisException(); :};
 
 actual_parameters_tail ::= COMMA expression:e actual_parameters_tail:apt
 {:
@@ -407,7 +457,7 @@ assignment ::= IDENTIFIER:id selector:s ASSIGN expression:e
     RESULT = new assignmentStmt(id, s, e);
 :};
 
-expression ::= simple_expression:se expr_tail:et 
+expression ::= simple_expression:se expr_tail:et
 {:
     if (et == null)
         RESULT = new expr(se);
@@ -420,6 +470,16 @@ expr_tail ::= tail_op:top simple_expression:se
     RESULT = new expr();
     RESULT.op = top;
     RESULT.rhs = se;
+:}
+| tail_op:top 
+{:
+    if(true)
+        throw new MissingOperandException();
+:}
+| simple_expression 
+{:
+    if (true)
+        throw new MissingOperatorException();
 :}
 | {: RESULT = null; :};
 
@@ -455,6 +515,16 @@ simple_expression_tail ::= simple_tail_op:stop term:t simple_expression_tail:set
     RESULT.op.add(stop);
     RESULT.rhs.add(t);
 :}
+| simple_tail_op:stop
+{:
+    if(true)
+        throw new MissingOperandException();
+:}
+| term:t
+{:
+    if (true)
+        throw new MissingOperatorException();
+:}
 | {: RESULT = null; :};
 
 simple_tail_op ::= ADD {: RESULT = "+"; :}
@@ -480,6 +550,14 @@ term_tail ::= term_tail_op:ttop factor:f term_tail:tt
     RESULT.op.add(ttop);
     RESULT.rhs.add(f);
 :}
+| factor {:
+    if (true)
+        throw new MissingOperatorException();
+:}
+| term_tail_op {:
+    if (true)
+        throw new MissingOperandException();
+:}
 | {: RESULT = null; :};
 
 term_tail_op ::= MUL {: RESULT = "*"; :}
@@ -503,7 +581,8 @@ factor ::= IDENTIFIER:id selector:s
 | LPAREN expression:e RPAREN
 {:
     RESULT = new factorAST(e, false);
-:};
+:}
+;
 
 selector ::= DOT IDENTIFIER:id selector:s 
 {:
