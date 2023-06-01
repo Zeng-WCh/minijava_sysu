@@ -1,0 +1,4 @@
+testcases/fib.004:
+Syntax error for input symbol "begin" spanning from unknown:8/5(-1) to unknown:8/9(-1)
+instead expected token classes are []
+Missing right parenthesis

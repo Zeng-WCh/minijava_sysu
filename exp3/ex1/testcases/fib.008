@@ -1,4 +1,4 @@
-(* Missing END for IF STMT *)
+(* Missing Operator *)
 
 MODULE Fib;
     VAR 
@@ -14,12 +14,12 @@ MODULE Fib;
             Fib(n-1, i);
             Fib(n-2, j);
             result := i + j
-
+        END
     END Fib1;
 
     PROCEDURE Fib2(VAR n: INTEGER);
     CONST 
-        c = 012; (* OCT 012 MEANS 10 IN DEC *)
+        c  012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
         rec = RECORD

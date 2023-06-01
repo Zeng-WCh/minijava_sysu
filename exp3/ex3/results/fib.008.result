@@ -1,0 +1,2 @@
+testcases/fib.008:
+Missing ':=' for const declaration.

@@ -12,15 +12,12 @@ public class Main {
 			for (int i = 0; i < argv.length; i++) {
 				int id = 0;
 				ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
-				// ScannerBuffer scanner = new ScannerBuffer(
-						// new OberonScanner(new BufferedReader(new FileReader(argv[i])), symbolFactory));
 				OberonScanner scanner = new OberonScanner(new BufferedReader(new FileReader(argv[i])), symbolFactory);
 				Parser p = new Parser(scanner, symbolFactory);
 				System.out.println(argv[i] + ":");
 				try {
 					p.parse();
 				} catch (Exception ex) {
-					// System.out.printf("<%d, %d>\n", scanner.getLine(), scanner.getColumn());
 					System.out.println(ex.getMessage());
 					System.exit(1);
 				}

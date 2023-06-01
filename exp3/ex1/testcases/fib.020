@@ -1,4 +1,4 @@
-(* Missing Operator for const decl *)
+(* Missing SEMICOLON *)
 
 MODULE Fib;
     VAR 
@@ -12,7 +12,7 @@ MODULE Fib;
             result := n
         ELSE
             Fib(n-1, i);
-            Fib(n-2, j);
+            Fib(n-2, j)
             result := i + j
         END
     END Fib1;
@@ -22,7 +22,7 @@ MODULE Fib;
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec  RECORD
+        rec = RECORD
             val: int;
             flag: BOOLEAN;
         END;

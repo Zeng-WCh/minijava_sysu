@@ -1,4 +1,4 @@
-(* Call an non-exist procedure *)
+(* Missing ')' when call *)
 
 MODULE Fib;
     VAR 
@@ -12,7 +12,7 @@ MODULE Fib;
             result := n
         ELSE
             Fib(n-1, i);
-            Fib(n-2, j);
+            Fib(n-2, j;
             result := i + j
         END
     END Fib1;

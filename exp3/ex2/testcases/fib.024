@@ -1,4 +1,4 @@
-(* Missing Operator for const decl *)
+(* Missing '(' *)
 
 MODULE Fib;
     VAR 
@@ -22,7 +22,7 @@ MODULE Fib;
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec  RECORD
+        rec = RECORD
             val: int;
             flag: BOOLEAN;
         END;
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF n >= c & n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val

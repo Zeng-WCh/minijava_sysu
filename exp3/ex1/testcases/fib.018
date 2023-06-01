@@ -1,4 +1,4 @@
-(* Missing Operator for const decl *)
+(* Missing type info for field list *)
 
 MODULE Fib;
     VAR 
@@ -22,8 +22,8 @@ MODULE Fib;
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec  RECORD
-            val: int;
+        rec = RECORD
+            val: ;
             flag: BOOLEAN;
         END;
     VAR 

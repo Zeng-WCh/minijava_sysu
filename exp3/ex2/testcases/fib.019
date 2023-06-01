@@ -1,4 +1,4 @@
-(* Missing Operator for const decl *)
+(* Undefined Array Length *)
 
 MODULE Fib;
     VAR 
@@ -22,12 +22,12 @@ MODULE Fib;
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec  RECORD
+        rec = RECORD
             val: int;
             flag: BOOLEAN;
         END;
     VAR 
-        tmp: ARRAY 10 OF REC;
+        tmp: ARRAY  OF REC;
         i1: INTEGER;
     BEGIN
         tmp[0].val := 1;

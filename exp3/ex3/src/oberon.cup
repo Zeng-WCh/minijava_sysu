@@ -103,6 +103,7 @@ non terminal String simple_tail_op;
 non terminal termAST term_tail;
 non terminal String term_tail_op;
 
+precedence left LPAREN, RPAREN;
 precedence right ASSIGN;
 precedence left OR;
 precedence left AND;
@@ -110,7 +111,6 @@ precedence right NOT;
 precedence left EQUAL, NOT_EQUAL, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
 precedence left ADD, MINUS;
 precedence left MUL, DIV, MOD;
-precedence left LPAREN;
 precedence left IDENTIFIER, NUMBER;
 
 start with program;
@@ -121,9 +121,9 @@ program ::= modules:m
     root.convert();
 :}
 | error:e {:
-    if (true) throw new SyntacticException(String.format("Syntax Error at: <%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
+    if (true) 
+        throw new SyntacticException();
 :}
-| LPAREN error {::}
 ;
 
 modules ::= MODULE IDENTIFIER:id SEMICOLON declaration:d modules_tail:s END IDENTIFIER:id1 DOT
@@ -463,6 +463,10 @@ expression ::= simple_expression:se expr_tail:et
         RESULT = new expr(se);
     else
         RESULT = new expr(se, et.op, et.rhs);
+:}
+| error {:
+    if (true)
+        throw new MissingLeftParenthesisException();
 :};
 
 expr_tail ::= tail_op:top simple_expression:se
@@ -581,6 +585,10 @@ factor ::= IDENTIFIER:id selector:s
 | LPAREN expression:e RPAREN
 {:
     RESULT = new factorAST(e, false);
+:}
+| LPAREN expression error {:
+    if (true)
+        throw new MissingRightParenthesisException();
 :}
 ;
 

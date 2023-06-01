@@ -1,4 +1,4 @@
-(* MISSING ';' at END *)
+(* Missing Operator for const decl *)
 
 MODULE Fib;
     VAR 
@@ -15,14 +15,14 @@ MODULE Fib;
             Fib(n-2, j);
             result := i + j
         END
-    END Fib1
+    END Fib1;
 
     PROCEDURE Fib2(VAR n: INTEGER);
     CONST 
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec = RECORD
+        rec  RECORD
             val: int;
             flag: BOOLEAN;
         END;

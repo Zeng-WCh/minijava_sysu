@@ -1,8 +1,8 @@
-(* Missing Operator for const decl *)
+(* Missing type info for var decl *)
 
 MODULE Fib;
     VAR 
-        n: INTEGER;
+        n: ;
     PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
@@ -22,7 +22,7 @@ MODULE Fib;
         c = 012; (* OCT 012 MEANS 10 IN DEC *)
     TYPE
         int = INTEGER;
-        rec  RECORD
+        rec = RECORD
             val: int;
             flag: BOOLEAN;
         END;

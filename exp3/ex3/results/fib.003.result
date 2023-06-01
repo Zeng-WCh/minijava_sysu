@@ -1,0 +1,4 @@
+testcases/fib.003:
+Syntax error for input symbol "identifier" spanning from unknown:6/20(-1) to unknown:6/20(-1)
+instead expected token classes are [LPAREN]
+Missing left parenthesis
