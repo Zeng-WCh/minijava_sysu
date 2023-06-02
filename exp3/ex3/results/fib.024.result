@@ -1,3 +1,5 @@
 testcases/fib.024:
-Exception occured when parsing near by <45:26>: 
-Type mismatched
+Syntax error for input symbol ")" spanning from unknown:45/21(-1) to unknown:45/21(-1)
+instead expected token classes are []
+Exception occured when parsing near by <46:18>: 
+Missing left parenthesis

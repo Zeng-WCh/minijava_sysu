@@ -822,7 +822,7 @@ class CUP$Parser$actions {
 		ArrayList<constDec> ct = (ArrayList<constDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
     if (true)
-        throw new MissingOperatorException("Missing ':=' for const declaration.");
+        throw new MissingOperatorException("Missing '=' for const declaration.");
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_dectail",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

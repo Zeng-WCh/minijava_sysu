@@ -24,8 +24,6 @@ public class Main {
 	public static boolean checkArg(fp formal, expr actual) {
 		if (formal.isVar && !actual.isVar())
 			return false;
-		if (!formal.isVar && actual.isVar())
-			return false;
 		typeAST formalType = formal.type;
 		typeAST actualType = actual.getType();
 
@@ -75,7 +73,6 @@ public class Main {
 					System.exit(1);
 				}
 				moduleBlock mb = p.getAST();
-				System.out.println("SUCCESS");
 
 				CallGraph graph = new CallGraph();
 				
@@ -129,7 +126,7 @@ public class Main {
 						StringBuilder callerId = new StringBuilder(func.head.name);
 						callerId.append(begin.toString());
 						begin = begin + 1;
-						graph.addCallSite(callerId.toString().toLowerCase(), call.name.toLowerCase() + "()", actuaP.toString().toLowerCase());
+						graph.addCallSite(callerId.toString().toLowerCase(), func.head.name.toLowerCase() + "()", actuaP.toString().toLowerCase());
 						graph.addEdge(callerId.toString().toLowerCase(), call.name.toLowerCase());
 					}
 				}

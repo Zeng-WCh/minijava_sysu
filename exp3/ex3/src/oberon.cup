@@ -239,7 +239,7 @@ const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
 | IDENTIFIER:id expression:e SEMICOLON const_dectail:ct
 {:
     if (true)
-        throw new MissingOperatorException("Missing ':=' for const declaration.");
+        throw new MissingOperatorException("Missing '=' for const declaration.");
 :}
 | {: RESULT = null; :};
 

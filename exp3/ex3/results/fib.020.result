@@ -1,5 +1,3 @@
 testcases/fib.020:
-Syntax error for input symbol "identifier" spanning from unknown:16/13(-1) to unknown:16/18(-1)
-instead expected token classes are [SEMICOLON]
-Exception occured when parsing near by <18:13>: 
-Missing left parenthesis
+Exception occured when parsing near by <11:20>: 
+Missing operand
