@@ -27,6 +27,8 @@ parser code {:
 
     private HashMap<String, typeAST> unsolvedTypes;
 
+    private ArrayList<callStmt> callStmts;
+
     public moduleBlock getAST() {
         return root;
     }
@@ -48,6 +50,7 @@ init with {:
     localVarMap = null;
     localVars = null;
     fpMap = null;
+    callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
 :}
 
@@ -417,6 +420,8 @@ procedure_declaration ::= procedure_head:h SEMICOLON procedure_body:b
     if (!h.name.equals(b.name))
         throw new SemanticException("procedure name mismatch");
     RESULT = new procedureDec(h, b);
+    RESULT.body.calls = callStmts;
+    callStmts = new ArrayList<>();
 :};
 
 procedure_body ::= declaration:d procedure_body_tail:pbd END IDENTIFIER:id
@@ -648,20 +653,21 @@ else_part ::= ELSE statement_sequence:ss
 | {: RESULT = null; :};
 
 procedure_call ::= IDENTIFIER:id procedure_call_tail:pct
-{:
+{:  
     RESULT = new callStmt(id.toUpperCase(), pct);
+    callStmts.add(RESULT);
 :}
 | WRITE:w procedure_call_tail:pct
 {:
-    RESULT = new callStmt("write", pct);
+    RESULT = new callStmt("WRITE", pct);
 :}
 | READ:r procedure_call_tail:pct 
 {:
-    RESULT = new callStmt("read", pct);
+    RESULT = new callStmt("READ", pct);
 :}
 | WRITELN:wl procedure_call_tail:pct
 {:
-    RESULT = new callStmt("writeln", pct);
+    RESULT = new callStmt("WRITELN", pct);
 :};
 
 procedure_call_tail ::= actual_parameters:ap

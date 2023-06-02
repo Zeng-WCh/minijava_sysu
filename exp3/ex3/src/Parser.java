@@ -538,6 +538,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     localVarMap = null;
     localVars = null;
     fpMap = null;
+    callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
 
     }
@@ -573,6 +574,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, typeAST> fpMap;
 
     private HashMap<String, typeAST> unsolvedTypes;
+
+    private ArrayList<callStmt> callStmts;
 
     public moduleBlock getAST() {
         return root;
@@ -1147,6 +1150,8 @@ class CUP$Parser$actions {
     if (!h.name.equals(b.name))
         throw new SemanticException("procedure name mismatch");
     RESULT = new procedureDec(h, b);
+    RESULT.body.calls = callStmts;
+    callStmts = new ArrayList<>();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declaration",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1840,8 +1845,9 @@ class CUP$Parser$actions {
 		int pctleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		
+		  
     RESULT = new callStmt(id.toUpperCase(), pct);
+    callStmts.add(RESULT);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1858,7 +1864,7 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new callStmt("write", pct);
+    RESULT = new callStmt("WRITE", pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1875,7 +1881,7 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new callStmt("read", pct);
+    RESULT = new callStmt("READ", pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1892,7 +1898,7 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new callStmt("writeln", pct);
+    RESULT = new callStmt("WRITELN", pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

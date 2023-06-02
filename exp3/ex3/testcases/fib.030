@@ -1,9 +1,9 @@
-(* Illegal Identifier(n@) *)
+(* Call a non-exist procedure *)
 
 MODULE Fib;
     VAR 
         n: INTEGER;
-    PROCEDURE Fib1(n@: INTEGER; var result: INTEGER);
+    PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
         IF n = 0 THEN
@@ -47,7 +47,7 @@ MODULE Fib;
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
         ELSE
-            Fib1(n-1, n)
+            Fib9(n-1, n)
         END
     END Fib2;
 

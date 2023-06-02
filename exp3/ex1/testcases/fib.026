@@ -11,8 +11,8 @@ MODULE Fib;
         ELSIF n = 1 THEN
             result := n
         ELSE
-            Fib(n-1, i);
-            Fib(n-2, j);
+            Fib1(n-1, i);
+            Fib1(n-2, j);
             result := i + j
         END
     END Fib1;
@@ -47,7 +47,7 @@ MODULE Fib;
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
         ELSE
-            Fib(n-1, 11)
+            Fib1(n-1, 11)
         END
     END Fib2;
 
@@ -55,7 +55,7 @@ MODULE Fib;
     BEGIN
         read(n);
         IF n # 0 THEN
-            Fib(n, n);
+            Fib1(n, n);
             Fib2(n);
             write(n);
             writeln
