@@ -1,2 +1,3 @@
 testcases/fib.010:
+Exception occured when parsing near by <15:23>: 
 Missing right parenthesis

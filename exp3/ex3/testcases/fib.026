@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: int;
+            val, useless: int;
             flag: BOOLEAN;
         END;
     VAR 
@@ -42,12 +42,12 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF (n >= c) & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
         ELSE
-            Fib(n-1, n)
+            Fib(n-1, 11)
         END
     END Fib2;
 
@@ -55,7 +55,7 @@ MODULE Fib;
     BEGIN
         read(n);
         IF n # 0 THEN
-            Fib(n, 1);
+            Fib(n, n);
             Fib2(n);
             write(n);
             writeln

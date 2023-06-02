@@ -23,8 +23,8 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: ;
-            flag: BOOLEAN;
+            val, useless: int;
+            flag: ;
         END;
     VAR 
         tmp: ARRAY 10 OF REC;
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF (n >= c) & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val

@@ -1,4 +1,3 @@
 testcases/fib.024:
-Syntax error for input symbol "<" spanning from unknown:45/26(-1) to unknown:45/26(-1)
-instead expected token classes are []
-Missing left parenthesis
+Exception occured when parsing near by <45:26>: 
+Type mismatched

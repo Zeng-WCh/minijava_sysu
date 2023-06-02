@@ -1,2 +1,3 @@
 testcases/fib.018:
+Exception occured when parsing near by <26:18>: 
 Type Missed in field list.

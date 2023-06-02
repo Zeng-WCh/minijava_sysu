@@ -1,4 +1,4 @@
-(* Use a undefined vars *)
+(* Unknown types *)
 
 MODULE Fib;
     VAR 
@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: int;
+            val, useless: int1;
             flag: BOOLEAN;
         END;
     VAR 

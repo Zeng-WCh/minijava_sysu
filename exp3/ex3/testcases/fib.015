@@ -1,9 +1,9 @@
 (* Illegal Identifier Length *)
 
-MODULE Fib;
+MODULE Fib11111111111111111111111111111111111111;
     VAR 
         n: INTEGER;
-    PROCEDURE Fib11111111111111111111111111111111111111(n: INTEGER; var result: INTEGER);
+    PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
         IF n = 0 THEN
@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: int;
+            val, useless: int;
             flag: BOOLEAN;
         END;
     VAR 
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF (n >= c) & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
@@ -71,4 +71,4 @@ MODULE Fib;
     BEGIN
         Main()
     
-END Fib.
+END Fib11111111111111111111111111111111111111.

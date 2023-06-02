@@ -538,6 +538,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     localVarMap = null;
     localVars = null;
     fpMap = null;
+    unsolvedTypes = new HashMap<>();
 
     }
 
@@ -570,6 +571,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, Integer> localTypesMap;
 
     private HashMap<String, typeAST> fpMap;
+
+    private HashMap<String, typeAST> unsolvedTypes;
 
     public moduleBlock getAST() {
         return root;
@@ -661,6 +664,8 @@ class CUP$Parser$actions {
 		int id1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String id1 = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
+    id = id.toUpperCase();
+    id1 = id1.toUpperCase();
     if (!id.equals(id1))
         throw new SemanticException("module name mismatch");
     RESULT = new moduleBlock(id, d, s);
@@ -788,6 +793,7 @@ class CUP$Parser$actions {
 		int ctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		ArrayList<constDec> ct = (ArrayList<constDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    id = id.toUpperCase();
     if (ct == null)
         RESULT = new ArrayList<>();
     else
@@ -835,7 +841,7 @@ class CUP$Parser$actions {
 		int ttleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int ttright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		ArrayList<typeDec> tt = (ArrayList<typeDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 
+		
     if (isGlobal) {
         if (tt != null) {
             globalTypes = new ArrayList<>(tt);
@@ -865,7 +871,48 @@ class CUP$Parser$actions {
             localTypesMap = new HashMap<>();
         }
     }
-    RESULT = tt; 
+
+    RESULT = tt;
+
+    for (String typeName : unsolvedTypes.keySet()) {
+        Integer idx = null;
+        if (localTypes != null) {
+            idx = localTypesMap.get(typeName);
+            if (idx == null) {
+                idx = globalTypesMap.get(typeName);
+                if (idx == null) {
+                    throw new SemanticException("Type " + typeName + " is not defined.");
+                }
+                else {
+                    // found at global
+                    typeDec td = globalTypes.get(idx);
+                    unsolvedTypes.get(typeName).name = td.type.name;
+                    unsolvedTypes.get(typeName).type = td.type.type;
+                    unsolvedTypes.remove(typeName);
+                }
+            }
+            else {
+                // found at local
+                typeDec td = localTypes.get(idx);
+                unsolvedTypes.get(typeName).name = td.type.name;
+                unsolvedTypes.get(typeName).type = td.type.type;
+                unsolvedTypes.remove(typeName);
+            }
+        }
+        else {
+            idx = globalTypesMap.get(typeName);
+            if (idx == null) {
+                throw new SemanticException("Type " + typeName + " is not defined.");
+            }
+            else {
+                // found at global
+                typeDec td = globalTypes.get(idx);
+                unsolvedTypes.get(typeName).name = td.type.name;
+                unsolvedTypes.get(typeName).type = td.type.type;
+                unsolvedTypes.remove(typeName);
+            }
+        }
+    }
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_declaration",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -909,7 +956,7 @@ class CUP$Parser$actions {
         RESULT = new ArrayList<>();
     else
         RESULT = tt;
-    RESULT.add(new typeDec(id, t));
+    RESULT.add(new typeDec(id.toUpperCase(), t));
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_dectail",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1119,7 +1166,7 @@ class CUP$Parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new procedureBody(d, pbd, id);
+    RESULT = new procedureBody(d, pbd, id.toUpperCase());
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_body",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1159,7 +1206,7 @@ class CUP$Parser$actions {
 		
     if (isGlobal)
         isGlobal = false;
-    RESULT = new procedureHead(id, fp);
+    RESULT = new procedureHead(id.toUpperCase(), fp);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1342,7 +1389,30 @@ class CUP$Parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new typeAST(id);
+    id = id.toUpperCase();
+    // try to find out the type
+    Integer idx = globalTypesMap.get(id);
+    typeAST type = null;
+    if (idx == null) {
+        idx = localTypesMap.get(id);
+        if (idx == null) {
+            unsolvedTypes.put(id, new typeAST());
+            // throw new SemanticException("Type " + id + " not found.");
+        }
+        else
+            type = localTypes.get(idx).type;
+    }
+    else {
+        type = globalTypes.get(idx).type;
+    }
+    if (idx == null) {
+        RESULT = unsolvedTypes.get(id);
+    }
+    else {
+        RESULT = new typeAST();
+        RESULT.name = type.name;
+        RESULT.type = type.type;
+    }
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1430,7 +1500,8 @@ class CUP$Parser$actions {
         RESULT = new ArrayList<>();
     else
         RESULT = rt;
-    RESULT.add(f);
+    if (f != null)
+        RESULT.add(f);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("record_tail",38, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1527,7 +1598,7 @@ class CUP$Parser$actions {
         RESULT = new identifierList();
     else
         RESULT = new identifierList(ilt);
-    RESULT.identifiers.add(id);
+    RESULT.identifiers.add(id.toUpperCase());
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("identifier_list",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1548,7 +1619,7 @@ class CUP$Parser$actions {
         RESULT = new ArrayList<>();
     else
         RESULT = ilt;
-    RESULT.add(id);
+    RESULT.add(id.toUpperCase());
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("identifier_list_tail",39, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1770,7 +1841,7 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new callStmt(id, pct);
+    RESULT = new callStmt(id.toUpperCase(), pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1954,16 +2025,20 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		expr e = (expr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    id = id.toUpperCase();
     // local vars
     Integer idx = localVarMap.get(id);
+    typeAST type = null;
     if (idx == null) {
         // try parameters
-        typeAST type = fpMap.get(id);
+        type = fpMap.get(id);
         if (type == null) {
             // try to global vars
             idx = globalVarsMap.get(id);
             if (idx == null) {
                 // try local const
+                // but it is not allowed to assign to const
+                // so just to throw exceptions
                 idx = localConstantsMap.get(id);
                 if (idx == null) {
                     // try global const
@@ -1972,19 +2047,222 @@ class CUP$Parser$actions {
                         // can not found
                         throw new SemanticException(String.format("%s is not defined.", id));
                     }
+                    throw new SemanticException(String.format("%s is a global constant, can not be assigned.", id));
                 }
                 else {
                     // local const
+                    throw new SemanticException(String.format("%s is a local constant, can not be assigned.", id));
                 }
             }
             else {
                 // global vars
+                type = globalVars.get(idx).type;
             }
         }
     }
     else {
         // local vars
+        type = localVars.get(idx).type;
     }
+
+    // type checking
+    if (type.name.equals("INTEGER")) {
+        if (s != null) {
+            throw new TypeMismatchedException("INTEGER does not support selector.");
+        }
+        if (!e.getType().name.equals("INTEGER")) {
+            throw new TypeMismatchedException("INTEGER can only be assigned with INTEGER.");
+        }
+    }
+    else if (type.name.equals("BOOLEAN")) {
+        if (s != null) {
+            throw new TypeMismatchedException("BOOLEAN does not support selector.");
+        }
+        if (!e.getType().name.equals("BOOLEAN")) {
+            throw new TypeMismatchedException("BOOLEAN can only be assigned with BOOLEAN.");
+        }
+
+    }
+    else if (type.name.equals("ARRAY")) {
+        if (s == null) {
+            throw new TypeMismatchedException("ARRAY must have selector.");
+        }
+
+        arrayType artype = (arrayType)type.type;
+        recordType rectype = null;
+        typeAST tmp = null;
+        typeAST finalType = null;
+
+        for (int i = s.types.size() - 1; i >= 0; --i) {
+            // selector is array
+            if (s.types.get(i) == 1) {
+                if (artype == null) {
+                    throw new TypeMismatchedException("ARRAY selector do not match.");
+                }
+                tmp = artype.type;
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+            // record selector
+            else if (s.types.get(i) == 0) {
+                if (rectype == null) {
+                    throw new TypeMismatchedException("RECORD selector do not match.");
+                }
+
+                typeAST tmpType = null;
+                for (fieldList fl : rectype.fieldLists) {
+                    tmpType = fl.type;
+                    for (String name : fl.ids.identifiers) {
+                        if (name.equals(((String) s.selectors.get(i)))) {
+                            tmp = tmpType;
+                            break;
+                        }
+                    }
+                }
+
+                if (tmp == null) {
+                    // can not find the field
+                    throw new TypeMismatchedException(String.format("%s can not be found in RECORD.", s.selectors.get(i)));
+                }
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+        }
+
+        if (finalType == null) {
+            throw new TypeMismatchedException("ARRAY/RECORD selector do not match.");
+        }
+
+        if (!finalType.name.equals(e.getType().name)) {
+            throw new TypeMismatchedException(String.format("%s can only be assigned with %s.", finalType.name, e.getType().name));
+        }
+    }
+    else if (type.name.equals("RECORD")) {
+        if (s == null) {
+            throw new TypeMismatchedException("ARRAY must have selector.");
+        }
+
+        arrayType artype = null;
+        recordType rectype = (recordType)type.type;
+        typeAST tmp = null;
+        typeAST finalType = null;
+
+        for (int i = s.types.size() - 1; i >= 0; --i) {
+            // selector is array
+            if (s.types.get(i) == 1) {
+                if (artype == null) {
+                    throw new TypeMismatchedException("ARRAY selector do not match.");
+                }
+                tmp = artype.type;
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+            // record selector
+            else if (s.types.get(i) == 0) {
+                if (rectype == null) {
+                    throw new TypeMismatchedException("RECORD selector do not match.");
+                }
+
+                typeAST tmpType = null;
+                for (fieldList fl : rectype.fieldLists) {
+                    tmpType = fl.type;
+                    for (String name : fl.ids.identifiers) {
+                        if (name.equals(((String) s.selectors.get(i)))) {
+                            tmp = tmpType;
+                            break;
+                        }
+                    }
+                }
+
+                if (tmp == null) {
+                    // can not find the field
+                    throw new TypeMismatchedException(String.format("%s can not be found in RECORD.", s.selectors.get(i)));
+                }
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+        }
+
+        if (finalType == null) {
+            throw new TypeMismatchedException("ARRAY/RECORD selector do not match.");
+        }
+
+        if (!finalType.name.equals(e.getType().name)) {
+            throw new TypeMismatchedException(String.format("%s can only be assigned with %s.", finalType.name, e.getType().name));
+        }
+    }
+    else {
+        throw new SemanticException(String.format("Type %s is not supported.", type.name));
+    }
+
     RESULT = new assignmentStmt(id, s, e);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("assignment",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -2428,38 +2706,258 @@ class CUP$Parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-		int sleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
-		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
-		selectorAST s = (selectorAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		int selectleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int selectright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		selectorAST select = (selectorAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    id = id.toUpperCase();
+    varDec var = null;
+    constDec constant = null;
     // local vars
     Integer idx = localVarMap.get(id);
+    typeAST type = null;
     if (idx == null) {
-        // try to global vars
-        idx = globalVarsMap.get(id);
-        if (idx == null) {
-            // try local const
-            idx = localConstantsMap.get(id);
+        // try parameters
+        type = fpMap.get(id);
+        if (type == null) {
+            // try to global vars
+            idx = globalVarsMap.get(id);
             if (idx == null) {
-                // try global const
-                idx = globalConstantsMap.get(id);
+                // try local const
+                idx = localConstantsMap.get(id);
                 if (idx == null) {
-                    // can not found
-                    throw new SemanticException(String.format("%s is not defined.", id));
+                    // try global const
+                    idx = globalConstantsMap.get(id);
+                    if (idx == null) {
+                        // can not found
+                        throw new SemanticException(String.format("%s is not defined.", id));
+                    }
+                    // global constant
+                    constant = globalConstants.get(idx);
+                    if (constant.type == 0) {
+                        type = new typeAST("INTEGER");
+                    }
+                    else {
+                        type = new typeAST("BOOLEAN");
+                    }
+                }
+                else {
+                    // local constant
+                    constant = localConstants.get(idx);
+                    if (constant.type == 0) {
+                        type = new typeAST("INTEGER");
+                    }
+                    else {
+                        type = new typeAST("BOOLEAN");
+                    }
                 }
             }
             else {
-                // local const
+                // global vars
+                var = globalVars.get(idx);
+                type = var.type;
             }
         }
         else {
-            // global vars
+            // parameters
+            // we have assigned the type, so do nothing here
         }
     }
     else {
         // local vars
+        var = localVars.get(idx);
+        type = var.type;
     }
-    RESULT = new factorAST(id, s, false);
+
+    RESULT = new factorAST(id, select, false);
+
+    if (type.name.equals("INTEGER")) {
+        if (select != null) {
+            throw new TypeMismatchedException("INTEGER does not support selector.");
+        }
+        RESULT.typeGenerate = new typeAST("INTEGER");
+    } 
+    else if (type.name.equals("BOOLEAN")) {
+        if (select != null) {
+            throw new TypeMismatchedException("BOOLEAN does not support selector.");
+        }
+        RESULT.typeGenerate = new typeAST("BOOLEAN");
+    }
+    else if (type.name.equals("ARRAY")) {
+        if (select == null) {
+            throw new TypeMismatchedException("ARRAY must have selector.");
+        }
+
+        arrayType artype = (arrayType)type.type;
+        recordType rectype = null;
+        typeAST tmp = null;
+        typeAST finalType = null;
+
+        for (int i = select.types.size() - 1; i >= 0; --i) {
+            // selector is array
+            if (select.types.get(i) == 1) {
+                if (artype == null) {
+                    throw new TypeMismatchedException("ARRAY selector do not match.");
+                }
+                tmp = artype.type;
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+            // record selector
+            else if (select.types.get(i) == 0) {
+                if (rectype == null) {
+                    throw new TypeMismatchedException("RECORD selector do not match.");
+                }
+
+                typeAST tmpType = null;
+                for (fieldList fl : rectype.fieldLists) {
+                    tmpType = fl.type;
+                    for (String name : fl.ids.identifiers) {
+                        if (name.equals(((String) select.selectors.get(i)))) {
+                            tmp = tmpType;
+                            break;
+                        }
+                    }
+                }
+
+                if (tmp == null) {
+                    // can not find the field
+                    throw new TypeMismatchedException(String.format("%s can not be found in RECORD.", select.selectors.get(i)));
+                }
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+        }
+
+        if (finalType == null) {
+            throw new TypeMismatchedException("ARRAY/RECORD selector do not match.");
+        }
+
+        RESULT.typeGenerate = new typeAST(finalType.name, finalType.type);
+    }
+    else if (type.name.equals("RECORD")) {
+        if (select == null) {
+            throw new TypeMismatchedException("ARRAY must have selector.");
+        }
+
+        arrayType artype = null;
+        recordType rectype = (recordType)type.type;
+        typeAST tmp = null;
+        typeAST finalType = null;
+
+        for (int i = select.types.size() - 1; i >= 0; --i) {
+            // selector is array
+            if (select.types.get(i) == 1) {
+                if (artype == null) {
+                    throw new TypeMismatchedException("ARRAY selector do not match.");
+                }
+                tmp = artype.type;
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+            // record selector
+            else if (select.types.get(i) == 0) {
+                if (rectype == null) {
+                    throw new TypeMismatchedException("RECORD selector do not match.");
+                }
+
+                typeAST tmpType = null;
+                for (fieldList fl : rectype.fieldLists) {
+                    tmpType = fl.type;
+                    for (String name : fl.ids.identifiers) {
+                        if (name.equals(((String) select.selectors.get(i)))) {
+                            tmp = tmpType;
+                            break;
+                        }
+                    }
+                }
+
+                if (tmp == null) {
+                    // can not find the field
+                    throw new TypeMismatchedException(String.format("%s can not be found in RECORD.", select.selectors.get(i)));
+                }
+
+                if (tmp.type == null) {
+                    finalType = tmp;
+                    rectype = null;
+                    tmp = null;
+                    artype = null;
+                }
+                else {
+                    if (tmp.type instanceof arrayType) {
+                        artype = (arrayType) tmp.type;
+                        rectype = null;
+                        tmp = null;
+                    }
+                    else if (tmp.type instanceof recordType) {
+                        artype = null;
+                        rectype = (recordType) tmp.type;
+                        tmp = null;
+                    }
+                }
+            }
+        }
+
+        if (finalType == null) {
+            throw new TypeMismatchedException("ARRAY/RECORD selector do not match.");
+        }
+
+        RESULT.typeGenerate = new typeAST(finalType.name, finalType.type);
+    }
+    else {
+        throw new SyntacticException("Unknown type: " + type.name);
+    }
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",23, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2540,7 +3038,7 @@ class CUP$Parser$actions {
     else
         RESULT = s;
     RESULT.types.add(0);
-    RESULT.selectors.add(id);
+    RESULT.selectors.add(id.toUpperCase());
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("selector",25, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

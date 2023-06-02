@@ -1,0 +1,3 @@
+testcases/fib.029:
+Exception occured when parsing near by <13:9>: 
+INTEGER can only be assigned with INTEGER.

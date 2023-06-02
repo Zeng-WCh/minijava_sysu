@@ -161,7 +161,7 @@ public class Main {
 				try {
 					p.parse();
 				} catch (Exception ex) {
-					System.err.println(String.format("Exception occured when parsing near by <%d:%d>: ", scanner.getLine(), scanner.getCol()));
+					System.err.println(String.format("Exception occured when parsing near by <%d:%d>: ", scanner.getLine() + 1, scanner.getCol() + 1));
 					System.err.println(ex.getMessage());
 					System.exit(1);
 				}

@@ -1,0 +1,3 @@
+testcases/fib.027:
+Exception occured when parsing near by <29:5>: 
+Type INT1 is not defined.
