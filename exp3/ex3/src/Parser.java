@@ -537,6 +537,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     localConstantsMap = null;
     localVarMap = null;
     localVars = null;
+    fpMap = null;
 
     }
 
@@ -567,6 +568,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, Integer> localVarMap;
     private HashMap<String, Integer> localConstantsMap;
     private HashMap<String, Integer> localTypesMap;
+
+    private HashMap<String, typeAST> fpMap;
 
     public moduleBlock getAST() {
         return root;
@@ -1169,7 +1172,19 @@ class CUP$Parser$actions {
 		int fpleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int fpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		formalParameters fp = (formalParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = fp; 
+		
+    fpMap = new HashMap<>();
+
+    for (fpSection f : fp.fpList) {
+        identifierList list = f.identifierList;
+        typeAST type = f.type;
+        for (String s : list.identifiers) {
+            fpMap.put(s, type);
+        }
+    }
+
+    RESULT = fp; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head_tail",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1939,6 +1954,37 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		expr e = (expr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    // local vars
+    Integer idx = localVarMap.get(id);
+    if (idx == null) {
+        // try parameters
+        typeAST type = fpMap.get(id);
+        if (type == null) {
+            // try to global vars
+            idx = globalVarsMap.get(id);
+            if (idx == null) {
+                // try local const
+                idx = localConstantsMap.get(id);
+                if (idx == null) {
+                    // try global const
+                    idx = globalConstantsMap.get(id);
+                    if (idx == null) {
+                        // can not found
+                        throw new SemanticException(String.format("%s is not defined.", id));
+                    }
+                }
+                else {
+                    // local const
+                }
+            }
+            else {
+                // global vars
+            }
+        }
+    }
+    else {
+        // local vars
+    }
     RESULT = new assignmentStmt(id, s, e);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("assignment",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -2386,6 +2432,33 @@ class CUP$Parser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		selectorAST s = (selectorAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    // local vars
+    Integer idx = localVarMap.get(id);
+    if (idx == null) {
+        // try to global vars
+        idx = globalVarsMap.get(id);
+        if (idx == null) {
+            // try local const
+            idx = localConstantsMap.get(id);
+            if (idx == null) {
+                // try global const
+                idx = globalConstantsMap.get(id);
+                if (idx == null) {
+                    // can not found
+                    throw new SemanticException(String.format("%s is not defined.", id));
+                }
+            }
+            else {
+                // local const
+            }
+        }
+        else {
+            // global vars
+        }
+    }
+    else {
+        // local vars
+    }
     RESULT = new factorAST(id, s, false);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",23, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

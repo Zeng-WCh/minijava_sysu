@@ -23,6 +23,8 @@ parser code {:
     private HashMap<String, Integer> localConstantsMap;
     private HashMap<String, Integer> localTypesMap;
 
+    private HashMap<String, typeAST> fpMap;
+
     public moduleBlock getAST() {
         return root;
     }
@@ -43,6 +45,7 @@ init with {:
     localConstantsMap = null;
     localVarMap = null;
     localVars = null;
+    fpMap = null;
 :}
 
 scan with {:
@@ -386,7 +389,19 @@ procedure_head ::= PROCEDURE IDENTIFIER:id procedure_head_tail:fp
 :};
 
 procedure_head_tail ::= formal_parameters:fp
-{: RESULT = fp; :}
+{:
+    fpMap = new HashMap<>();
+
+    for (fpSection f : fp.fpList) {
+        identifierList list = f.identifierList;
+        typeAST type = f.type;
+        for (String s : list.identifiers) {
+            fpMap.put(s, type);
+        }
+    }
+
+    RESULT = fp; 
+:}
 | {: RESULT = null; :};
 
 formal_parameters ::= LPAREN fp_section:fp fp_section_tail:fpt RPAREN
@@ -432,11 +447,10 @@ fp_section ::= var_if:isvar identifier_list:il COLON type:t
 :}
 ;
 
-var_if ::= 
-VAR {: RESULT = true; :}
+var_if ::= VAR {: RESULT = true; :}
 | {: RESULT = false; :};
 
-type ::= IDENTIFIER:id
+type ::= IDENTIFIER:id 
 {:
     RESULT = new typeAST(id);
 :}
@@ -610,6 +624,37 @@ actual_parameters_tail ::= COMMA expression:e actual_parameters_tail:apt
 
 assignment ::= IDENTIFIER:id selector:s ASSIGN expression:e
 {:
+    // local vars
+    Integer idx = localVarMap.get(id);
+    if (idx == null) {
+        // try parameters
+        typeAST type = fpMap.get(id);
+        if (type == null) {
+            // try to global vars
+            idx = globalVarsMap.get(id);
+            if (idx == null) {
+                // try local const
+                idx = localConstantsMap.get(id);
+                if (idx == null) {
+                    // try global const
+                    idx = globalConstantsMap.get(id);
+                    if (idx == null) {
+                        // can not found
+                        throw new SemanticException(String.format("%s is not defined.", id));
+                    }
+                }
+                else {
+                    // local const
+                }
+            }
+            else {
+                // global vars
+            }
+        }
+    }
+    else {
+        // local vars
+    }
     RESULT = new assignmentStmt(id, s, e);
 :};
 
@@ -755,6 +800,33 @@ term_tail_op ::= MUL {: RESULT = "*"; :}
 
 factor ::= IDENTIFIER:id selector:s
 {:
+    // local vars
+    Integer idx = localVarMap.get(id);
+    if (idx == null) {
+        // try to global vars
+        idx = globalVarsMap.get(id);
+        if (idx == null) {
+            // try local const
+            idx = localConstantsMap.get(id);
+            if (idx == null) {
+                // try global const
+                idx = globalConstantsMap.get(id);
+                if (idx == null) {
+                    // can not found
+                    throw new SemanticException(String.format("%s is not defined.", id));
+                }
+            }
+            else {
+                // local const
+            }
+        }
+        else {
+            // global vars
+        }
+    }
+    else {
+        // local vars
+    }
     RESULT = new factorAST(id, s, false);
 :}
 | numbers:n

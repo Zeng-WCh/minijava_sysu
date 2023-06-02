@@ -19,7 +19,6 @@ public class Main {
 	 */
 	public static void generateTypeInfo(moduleBlock mb) throws SyntacticException {
 		ArrayList<varDec> globalVars = mb.declarations.varDecs;
-		System.out.println(globalVars);
 		ArrayList<constDec> globalConstants = mb.declarations.constDecs;
 		ArrayList<typeDec> globalTypes = mb.declarations.typeDecs;
 		ArrayList<procedureDec> funcs = mb.declarations.procDecs;
