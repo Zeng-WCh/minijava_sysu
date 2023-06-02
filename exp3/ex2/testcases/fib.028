@@ -1,4 +1,4 @@
-(* Missing Operator *)
+(* Type Mismatched when try to use selecor on an INTEGER *)
 
 MODULE Fib;
     VAR 
@@ -6,7 +6,7 @@ MODULE Fib;
     PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
-        IF n = 0 THEN
+        IF n.val = 0 THEN
             result := 0
         ELSIF n = 1 THEN
             result := n
@@ -35,7 +35,7 @@ MODULE Fib;
         
         i1 := 2;
 
-        WHILE i1   c DO
+        WHILE i1 < c DO
             tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
             i1 := i1 + 1
         END;

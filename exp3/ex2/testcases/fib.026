@@ -1,4 +1,4 @@
-(* Missing Operator *)
+(* fp require left val, but get right val *)
 
 MODULE Fib;
     VAR 
@@ -35,7 +35,7 @@ MODULE Fib;
         
         i1 := 2;
 
-        WHILE i1   c DO
+        WHILE i1 < c DO
             tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
             i1 := i1 + 1
         END;
@@ -47,7 +47,7 @@ MODULE Fib;
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
         ELSE
-            Fib(n-1, n)
+            Fib(n-1, 11)
         END
     END Fib2;
 

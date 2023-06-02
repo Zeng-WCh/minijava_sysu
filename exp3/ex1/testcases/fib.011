@@ -1,4 +1,4 @@
-(* Missing Missing '(' *)
+(* Missing '(' when call *)
 
 MODULE Fib;
     VAR 
@@ -6,13 +6,13 @@ MODULE Fib;
     PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
     VAR i, j: INTEGER;
     BEGIN
-        IF n2 = 0 THEN
+        IF n = 0 THEN
             result := 0
         ELSIF n = 1 THEN
             result := n
         ELSE
             Fib(n-1, i);
-            Fib n-2, j);
+            Fib(n-2, j);
             result := i + j
         END
     END Fib1;
@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: int;
+            val, useless: int;
             flag: BOOLEAN;
         END;
     VAR 
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF (n >= c) & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
@@ -55,7 +55,7 @@ MODULE Fib;
     BEGIN
         read(n);
         IF n # 0 THEN
-            Fib(n, n);
+            Fib n, n);
             Fib2(n);
             write(n);
             writeln

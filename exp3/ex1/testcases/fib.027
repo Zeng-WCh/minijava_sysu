@@ -1,4 +1,4 @@
-(* Missing Operator *)
+(* Unknown types *)
 
 MODULE Fib;
     VAR 
@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val, useless: int;
+            val, useless: int1;
             flag: BOOLEAN;
         END;
     VAR 
@@ -35,7 +35,7 @@ MODULE Fib;
         
         i1 := 2;
 
-        WHILE i1   c DO
+        WHILE i1 < c DO
             tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
             i1 := i1 + 1
         END;

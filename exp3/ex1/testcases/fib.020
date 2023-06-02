@@ -1,4 +1,4 @@
-(* Missing SEMICOLON *)
+(* Missing Operand *)
 
 MODULE Fib;
     VAR 
@@ -8,11 +8,11 @@ MODULE Fib;
     BEGIN
         IF n = 0 THEN
             result := 0
-        ELSIF n = 1 THEN
+        ELSIF n =  THEN
             result := n
         ELSE
             Fib(n-1, i);
-            Fib(n-2, j)
+            Fib(n-2, j);
             result := i + j
         END
     END Fib1;
@@ -23,7 +23,7 @@ MODULE Fib;
     TYPE
         int = INTEGER;
         rec = RECORD
-            val: int;
+            val, useless: int;
             flag: BOOLEAN;
         END;
     VAR 
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF n >= c & (n < c + 1) THEN
+        ELSIF (n >= c) & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
