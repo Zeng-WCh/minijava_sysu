@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Collections;
 
 public class declarations implements ast {
@@ -9,11 +10,20 @@ public class declarations implements ast {
     public ArrayList<varDec> varDecs;
     public ArrayList<procedureDec> procDecs;
 
+    public HashMap<String, Integer> constant;
+    public HashMap<String, Integer> types;
+    public HashMap<String, Integer> vars;
+    public HashMap<String, Integer> pros;
+
     public declarations() {
         this.constDecs = new ArrayList<>();
         this.typeDecs = new ArrayList<>();
         this.varDecs = new ArrayList<>();
         this.procDecs = new ArrayList<>();
+        this.constant = new HashMap<>();
+        this.types = new HashMap<>();
+        this.vars = new HashMap<>();
+        this.pros = new HashMap<>();
     }
 
     public declarations(ArrayList<constDec> constDecs, ArrayList<typeDec> typeDecs, ArrayList<varDec> varDecs, ArrayList<procedureDec> procDecs) {
@@ -21,6 +31,10 @@ public class declarations implements ast {
         this.typeDecs = typeDecs;
         this.varDecs = varDecs;
         this.procDecs = procDecs;
+        this.constant = new HashMap<>();
+        this.types = new HashMap<>();
+        this.vars = new HashMap<>();
+        this.pros = new HashMap<>();
     }
 
     public void convert() {
@@ -29,14 +43,24 @@ public class declarations implements ast {
             for (constDec cd : constDecs) {
                 cd.convert();
             }
+            for (int i = 0; i < constDecs.size(); ++i) {
+                this.constant.put(constDecs.get(i).name, i);
+            }
         }
         if(typeDecs != null && !typeDecs.isEmpty()) {
             Collections.reverse(typeDecs);
+
+            for (int i = 0; i < typeDecs.size(); ++i) {
+                types.put(typeDecs.get(i).name, i);
+            }
         }
         if(varDecs != null && !varDecs.isEmpty()) {
             Collections.reverse(varDecs);
-            for (varDec vd : varDecs) {
-                vd.convert();
+            
+            for (int i = 0; i < varDecs.size(); ++i) {
+                for (String name : varDecs.get(i).idList.identifiers) {
+                    vars.put(name, i);
+                }
             }
         }
         
@@ -45,6 +69,12 @@ public class declarations implements ast {
             for (procedureDec pd : procDecs) {
                 pd.convert();
             }
+
+            for (int i = 0; i < procDecs.size(); ++i) {
+                pros.put(procDecs.get(i).head.name, i);
+            }
         }
+
+        
     }
 }

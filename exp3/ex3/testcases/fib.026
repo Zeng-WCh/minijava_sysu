@@ -1,4 +1,4 @@
-(* A Fib Calculate Program which is used to show how to write program in Oberon0 *)
+(* fp require left val, but get right val *)
 
 MODULE Fib;
     VAR 
@@ -42,7 +42,7 @@ MODULE Fib;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF (n >= c) & (n < c + 1) THEN
+        ELSIF n >= c & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
@@ -55,7 +55,7 @@ MODULE Fib;
     BEGIN
         read(n);
         IF n # 0 THEN
-            Fib(n, n);
+            Fib(n, 1);
             Fib2(n);
             write(n);
             writeln

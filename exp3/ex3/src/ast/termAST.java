@@ -27,7 +27,7 @@ public class termAST implements ast {
     }
 
     public boolean isVar() {
-        if (!op.isEmpty() && !rhs.isEmpty()) {
+        if (!op.isEmpty() || !rhs.isEmpty()) {
             return false;
         }
         return lhs.isVar();
@@ -54,5 +54,35 @@ public class termAST implements ast {
             strbd.append(rhs.get(i));
         }
         return strbd.toString();
+    }
+
+    public typeAST getType() {
+        if (this.rhs == null || this.rhs.isEmpty()) {
+            if (this.lhs == null)
+                return null;
+
+            return lhs.getType();
+        }
+        boolean isNumber = false;
+        boolean isLogical = false;
+        
+        for (int i = 0; i < op.size(); ++i) {
+            if (op.get(i).equals("&")) {
+                isLogical = true;
+            }
+            else {
+                isNumber = true;
+            }
+        }
+
+        if (isNumber) {
+            return new typeAST("INTEGER", null);
+        }
+        else if (isLogical) {
+            return new typeAST("BOOLEAN", null);
+        }
+        else {
+            return null;
+        }
     }
 }

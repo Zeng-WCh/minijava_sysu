@@ -31,7 +31,7 @@ public class simpleExpr implements ast {
     }
 
     public boolean isVar() {
-        if (!op.isEmpty() && !rhs.isEmpty()) {
+        if (!op.isEmpty() || !rhs.isEmpty()) {
             return false;
         }
         return lhs.isVar();
@@ -65,5 +65,35 @@ public class simpleExpr implements ast {
             return;
         Collections.reverse(op);
         Collections.reverse(rhs);
+    }
+
+    public typeAST getType(){
+        if (this.signed != null && this.signed != "") {
+            return new typeAST("INTEGER");
+        }
+
+        boolean isLogical = false;
+        boolean isNumber = false;
+
+        if (this.op == null || this.op.isEmpty()) {
+            return lhs.getType();
+        }
+
+        for (int i = 0; i < op.size(); ++i) {
+            if (op.get(i).equals("OR")) {
+                isLogical = true;
+            }
+            if (op.get(i).equals("+") || op.get(i).equals("-")) {
+                isNumber = true;
+            }
+        }
+
+        if (isNumber) {
+            return new typeAST("INTEGER");
+        } else if (isLogical) {
+            return new typeAST("BOOLEAN");
+        } else {
+            return null;
+        }
     }
 }

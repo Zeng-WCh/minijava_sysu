@@ -44,4 +44,14 @@ public class expr implements ast {
             rhs.convert();
         }
     }
+
+    public typeAST getType() {
+        if (this.rhs == null) {
+            if (this.lhs == null)
+                return null;
+
+            return lhs.getType();
+        }
+        return new typeAST("BOOLEAN", null);
+    }
 }

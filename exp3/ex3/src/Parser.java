@@ -6,6 +6,7 @@
 import java_cup.runtime.*;
 import exceptions.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import ast.*;
 import java_cup.runtime.XMLElement;
 
@@ -523,6 +524,19 @@ public class Parser extends java_cup.runtime.lr_parser {
     {
 
     root = null;
+    isGlobal = true;
+    globalVars = null;
+    globalConstants = null;
+    globalTypes = null;
+    globalVarsMap = null;
+    globalConstantsMap = null;
+    globalTypesMap = null;
+    localTypes = null;
+    localTypesMap = null;
+    localConstants = null;
+    localConstantsMap = null;
+    localVarMap = null;
+    localVars = null;
 
     }
 
@@ -536,7 +550,23 @@ public class Parser extends java_cup.runtime.lr_parser {
     }
 
 
-    public moduleBlock root;
+    private moduleBlock root;
+
+    private boolean isGlobal;
+
+    private ArrayList<varDec> globalVars;
+    private ArrayList<constDec> globalConstants;
+    private ArrayList<typeDec> globalTypes;
+    private HashMap<String, Integer> globalVarsMap;
+    private HashMap<String, Integer> globalConstantsMap;
+    private HashMap<String, Integer> globalTypesMap;
+
+    private ArrayList<varDec> localVars;
+    private ArrayList<constDec> localConstants;
+    private ArrayList<typeDec> localTypes;
+    private HashMap<String, Integer> localVarMap;
+    private HashMap<String, Integer> localConstantsMap;
+    private HashMap<String, Integer> localTypesMap;
 
     public moduleBlock getAST() {
         return root;
@@ -687,7 +717,37 @@ class CUP$Parser$actions {
 		int ctleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int ctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		ArrayList<constDec> ct = (ArrayList<constDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = ct; 
+		 
+    if (isGlobal) {
+        if (ct != null) {
+            globalConstants = new ArrayList<>(ct);
+            globalConstantsMap = new HashMap<>();
+
+            for (int i = 0; i < globalConstants.size(); ++i) {
+                globalConstantsMap.put(globalConstants.get(i).name, i);
+            }
+        }
+        else {
+            globalConstants = new ArrayList<>();
+            globalConstantsMap = new HashMap<>();
+        }
+    }
+    else {
+        if (ct != null) {
+            localConstants = new ArrayList<>(ct);
+            localConstantsMap = new HashMap<>();
+
+            for (int i = 0; i < localConstants.size(); ++i) {
+                localConstantsMap.put(localConstants.get(i).name, i);
+            }
+        }
+        else {
+            localConstants = new ArrayList<>();
+            localConstantsMap = new HashMap<>();
+        }
+    }
+    RESULT = ct; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_declaration",27, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -696,7 +756,17 @@ class CUP$Parser$actions {
           case 8: // const_declaration ::= 
             {
               ArrayList<constDec> RESULT =null;
-		 RESULT = null; 
+		 
+    if (isGlobal) {
+        globalConstants = new ArrayList<>();
+        globalConstantsMap = new HashMap<>();
+    }
+    else {
+        localConstants = new ArrayList<>();
+        localConstantsMap = new HashMap<>();
+    }
+    RESULT = null; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_declaration",27, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -762,7 +832,38 @@ class CUP$Parser$actions {
 		int ttleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int ttright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		ArrayList<typeDec> tt = (ArrayList<typeDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = tt; 
+		 
+    if (isGlobal) {
+        if (tt != null) {
+            globalTypes = new ArrayList<>(tt);
+            globalTypesMap = new HashMap<>();
+
+            for (int i = 0; i < globalTypes.size(); ++i) {
+                globalTypesMap.put(globalTypes.get(i).name, i);
+            }
+        }
+
+        else {
+            globalTypes = new ArrayList<>();
+            globalTypesMap = new HashMap<>();
+        }
+    }
+    else {
+        if (tt != null) {
+            localTypes = new ArrayList<>(tt);
+            localTypesMap = new HashMap<>();
+
+            for (int i = 0; i < localTypes.size(); ++i) {
+                localTypesMap.put(localTypes.get(i).name, i);
+            }
+        }
+        else {
+            localTypes = new ArrayList<>();
+            localTypesMap = new HashMap<>();
+        }
+    }
+    RESULT = tt; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_declaration",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -771,7 +872,18 @@ class CUP$Parser$actions {
           case 13: // type_declaration ::= 
             {
               ArrayList<typeDec> RESULT =null;
-		RESULT = null; 
+		
+    if (isGlobal) {
+        globalTypes = new ArrayList<>();
+        globalTypesMap = new HashMap<>();
+    }
+    else {
+        localTypes = new ArrayList<>();
+        localTypesMap = new HashMap<>();
+    }
+
+    RESULT = null; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_declaration",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -837,7 +949,39 @@ class CUP$Parser$actions {
 		int vtleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int vtright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		ArrayList<varDec> vt = (ArrayList<varDec>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = vt; 
+		 
+    if (isGlobal) {
+        if (vt != null) {
+            globalVars = new ArrayList<>(vt);
+            globalVarsMap = new HashMap<>();
+            for (int i = 0; i < globalVars.size(); ++i) {
+                for (String ident : globalVars.get(i).idList.identifiers) {
+                    globalVarsMap.put(ident, i);
+                }
+            }
+        }
+        else {
+            globalVars = new ArrayList<>();
+            globalVarsMap = new HashMap<>();
+        }
+    }
+    else {
+        if (vt != null) {
+            localVars = new ArrayList<>(vt);
+            localVarMap = new HashMap<>();
+            for (int i = 0; i < localVars.size(); ++i) {
+                for (String ident : localVars.get(i).idList.identifiers) {
+                    localVarMap.put(ident, i);
+                }
+            }
+        }
+        else {
+            localVars = new ArrayList<>();
+            localVarMap = new HashMap<>();
+        }
+    }
+    RESULT = vt; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_declaration",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -846,7 +990,17 @@ class CUP$Parser$actions {
           case 18: // var_declaration ::= 
             {
               ArrayList<varDec> RESULT =null;
-		RESULT = null; 
+		
+    if (isGlobal) {
+        globalVars = new ArrayList<>();
+        globalVarsMap = new HashMap<>();
+    }
+    else {
+        localVars = new ArrayList<>();
+        localVarMap = new HashMap<>();
+    }
+    RESULT = null; 
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_declaration",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1000,6 +1154,8 @@ class CUP$Parser$actions {
 		int fpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		formalParameters fp = (formalParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (isGlobal)
+        isGlobal = false;
     RESULT = new procedureHead(id, fp);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1203,7 +1359,7 @@ class CUP$Parser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		arrayType a = (arrayType)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new typeAST("array", a);
+    RESULT = new typeAST("ARRAY", a);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1217,7 +1373,7 @@ class CUP$Parser$actions {
 		int rright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		recordType r = (recordType)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-    RESULT = new typeAST("record", r);
+    RESULT = new typeAST("RECORD", r);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1832,6 +1988,8 @@ class CUP$Parser$actions {
 		int seright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		simpleExpr se = (simpleExpr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (se.getType().name.equals("BOOLEAN"))
+        throw new TypeMismatchedException();
     RESULT = new expr();
     RESULT.op = top;
     RESULT.rhs = se;
@@ -1944,6 +2102,11 @@ class CUP$Parser$actions {
 		int setright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		simpleExpr set = (simpleExpr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (hop != null) {
+        // must be arithmetic
+        if (t.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (set != null) {
         RESULT = set;
         RESULT.lhs = t;
@@ -1951,7 +2114,6 @@ class CUP$Parser$actions {
     }
     else
         RESULT = new simpleExpr(hop, t);
-
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_expression",21, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1998,6 +2160,16 @@ class CUP$Parser$actions {
 		int setright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		simpleExpr set = (simpleExpr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (stop.equals("or")) {
+        // boolean
+        if (t.getType().name.equals("INTEGER"))
+            throw new TypeMismatchedException();
+    }
+    else {
+        // arithmetic
+        if (t.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (set == null)
         RESULT = new simpleExpr();
     else
@@ -2070,7 +2242,7 @@ class CUP$Parser$actions {
           case 105: // simple_tail_op ::= OR 
             {
               String RESULT =null;
-		 RESULT = "or"; 
+		 RESULT = "OR"; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_tail_op",49, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2111,6 +2283,18 @@ class CUP$Parser$actions {
 		int ttright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		termAST tt = (termAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (ttop == "&") {
+        // logical
+        typeAST type = f.getType();
+        if (type.name.equals("INTEGER")) {
+            throw new TypeMismatchedException();
+        }
+    }
+    else {
+        // arithmetic
+        if (f.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (tt == null)
         RESULT = new termAST();
     else
@@ -2168,7 +2352,7 @@ class CUP$Parser$actions {
           case 112: // term_tail_op ::= DIV 
             {
               String RESULT =null;
-		 RESULT = "div"; 
+		 RESULT = "DIV"; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_tail_op",51, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2177,7 +2361,7 @@ class CUP$Parser$actions {
           case 113: // term_tail_op ::= MOD 
             {
               String RESULT =null;
-		 RESULT = "mod"; 
+		 RESULT = "MOD"; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_tail_op",51, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2230,6 +2414,10 @@ class CUP$Parser$actions {
 		int fright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		factorAST f = (factorAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    typeAST type = f.getType();
+    if (type.name.equals("INTEGER")) {
+        throw new TypeMismatchedException();
+    }
     RESULT = f;
     RESULT.negated = true;
 

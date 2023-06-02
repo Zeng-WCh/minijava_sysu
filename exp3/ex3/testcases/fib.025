@@ -1,4 +1,4 @@
-(* A Fib Calculate Program which is used to show how to write program in Oberon0 *)
+(* Type Mismatched in expression *)
 
 MODULE Fib;
     VAR 
@@ -35,14 +35,14 @@ MODULE Fib;
         
         i1 := 2;
 
-        WHILE i1 < c DO
+        WHILE i1 & c DO
             tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
             i1 := i1 + 1
         END;
 
         IF n < c THEN
             n := tmp[n].val
-        ELSIF (n >= c) & (n < c + 1) THEN
+        ELSIF n >= c & (n < c + 1) THEN
             n := tmp[c-1].val + tmp[c-2].val
         ELSIF n <= c + 1 THEN
             n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val

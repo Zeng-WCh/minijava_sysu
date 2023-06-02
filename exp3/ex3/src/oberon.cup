@@ -1,10 +1,27 @@
 import java_cup.runtime.*;
 import exceptions.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import ast.*;
 
 parser code {:
-    public moduleBlock root;
+    private moduleBlock root;
+
+    private boolean isGlobal;
+
+    private ArrayList<varDec> globalVars;
+    private ArrayList<constDec> globalConstants;
+    private ArrayList<typeDec> globalTypes;
+    private HashMap<String, Integer> globalVarsMap;
+    private HashMap<String, Integer> globalConstantsMap;
+    private HashMap<String, Integer> globalTypesMap;
+
+    private ArrayList<varDec> localVars;
+    private ArrayList<constDec> localConstants;
+    private ArrayList<typeDec> localTypes;
+    private HashMap<String, Integer> localVarMap;
+    private HashMap<String, Integer> localConstantsMap;
+    private HashMap<String, Integer> localTypesMap;
 
     public moduleBlock getAST() {
         return root;
@@ -13,6 +30,19 @@ parser code {:
 
 init with {:
     root = null;
+    isGlobal = true;
+    globalVars = null;
+    globalConstants = null;
+    globalTypes = null;
+    globalVarsMap = null;
+    globalConstantsMap = null;
+    globalTypesMap = null;
+    localTypes = null;
+    localTypesMap = null;
+    localConstants = null;
+    localConstantsMap = null;
+    localVarMap = null;
+    localVars = null;
 :}
 
 scan with {:
@@ -144,8 +174,48 @@ declaration ::= const_declaration:c type_declaration:t var_declaration:v procedu
 :};
 
 const_declaration ::= CONST const_dectail:ct
-{: RESULT = ct; :}
-| {: RESULT = null; :};
+{: 
+    if (isGlobal) {
+        if (ct != null) {
+            globalConstants = new ArrayList<>(ct);
+            globalConstantsMap = new HashMap<>();
+
+            for (int i = 0; i < globalConstants.size(); ++i) {
+                globalConstantsMap.put(globalConstants.get(i).name, i);
+            }
+        }
+        else {
+            globalConstants = new ArrayList<>();
+            globalConstantsMap = new HashMap<>();
+        }
+    }
+    else {
+        if (ct != null) {
+            localConstants = new ArrayList<>(ct);
+            localConstantsMap = new HashMap<>();
+
+            for (int i = 0; i < localConstants.size(); ++i) {
+                localConstantsMap.put(localConstants.get(i).name, i);
+            }
+        }
+        else {
+            localConstants = new ArrayList<>();
+            localConstantsMap = new HashMap<>();
+        }
+    }
+    RESULT = ct; 
+:}
+| {: 
+    if (isGlobal) {
+        globalConstants = new ArrayList<>();
+        globalConstantsMap = new HashMap<>();
+    }
+    else {
+        localConstants = new ArrayList<>();
+        localConstantsMap = new HashMap<>();
+    }
+    RESULT = null; 
+:};
 const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
 {:
     if (ct == null)
@@ -162,8 +232,50 @@ const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
 | {: RESULT = null; :};
 
 type_declaration ::= TYPE type_dectail:tt
-{: RESULT = tt; :}
-| {:RESULT = null; :};
+{: 
+    if (isGlobal) {
+        if (tt != null) {
+            globalTypes = new ArrayList<>(tt);
+            globalTypesMap = new HashMap<>();
+
+            for (int i = 0; i < globalTypes.size(); ++i) {
+                globalTypesMap.put(globalTypes.get(i).name, i);
+            }
+        }
+
+        else {
+            globalTypes = new ArrayList<>();
+            globalTypesMap = new HashMap<>();
+        }
+    }
+    else {
+        if (tt != null) {
+            localTypes = new ArrayList<>(tt);
+            localTypesMap = new HashMap<>();
+
+            for (int i = 0; i < localTypes.size(); ++i) {
+                localTypesMap.put(localTypes.get(i).name, i);
+            }
+        }
+        else {
+            localTypes = new ArrayList<>();
+            localTypesMap = new HashMap<>();
+        }
+    }
+    RESULT = tt; 
+:}
+| {:
+    if (isGlobal) {
+        globalTypes = new ArrayList<>();
+        globalTypesMap = new HashMap<>();
+    }
+    else {
+        localTypes = new ArrayList<>();
+        localTypesMap = new HashMap<>();
+    }
+
+    RESULT = null; 
+:};
 type_dectail ::= IDENTIFIER:id EQUAL type:t SEMICOLON type_dectail:tt
 {:
     if (tt == null)
@@ -180,8 +292,50 @@ type_dectail ::= IDENTIFIER:id EQUAL type:t SEMICOLON type_dectail:tt
 | {: RESULT = null; :};
 
 var_declaration ::= VAR var_dectail:vt
-{: RESULT = vt; :}
-| {:RESULT = null; :};
+{: 
+    if (isGlobal) {
+        if (vt != null) {
+            globalVars = new ArrayList<>(vt);
+            globalVarsMap = new HashMap<>();
+            for (int i = 0; i < globalVars.size(); ++i) {
+                for (String ident : globalVars.get(i).idList.identifiers) {
+                    globalVarsMap.put(ident, i);
+                }
+            }
+        }
+        else {
+            globalVars = new ArrayList<>();
+            globalVarsMap = new HashMap<>();
+        }
+    }
+    else {
+        if (vt != null) {
+            localVars = new ArrayList<>(vt);
+            localVarMap = new HashMap<>();
+            for (int i = 0; i < localVars.size(); ++i) {
+                for (String ident : localVars.get(i).idList.identifiers) {
+                    localVarMap.put(ident, i);
+                }
+            }
+        }
+        else {
+            localVars = new ArrayList<>();
+            localVarMap = new HashMap<>();
+        }
+    }
+    RESULT = vt; 
+:}
+| {:
+    if (isGlobal) {
+        globalVars = new ArrayList<>();
+        globalVarsMap = new HashMap<>();
+    }
+    else {
+        localVars = new ArrayList<>();
+        localVarMap = new HashMap<>();
+    }
+    RESULT = null; 
+:};
 
 var_dectail ::= identifier_list:il COLON type:t SEMICOLON var_dectail:vt
 {:
@@ -226,6 +380,8 @@ procedure_body_tail ::= BEGIN statement_sequence:s
 
 procedure_head ::= PROCEDURE IDENTIFIER:id procedure_head_tail:fp
 {:
+    if (isGlobal)
+        isGlobal = false;
     RESULT = new procedureHead(id, fp);
 :};
 
@@ -288,11 +444,11 @@ type ::= IDENTIFIER:id
 | BOOLEAN {: RESULT = new typeAST("BOOLEAN"); :}
 | array_type:a
 {:
-    RESULT = new typeAST("array", a);
+    RESULT = new typeAST("ARRAY", a);
 :}
 | record_type:r
 {:
-    RESULT = new typeAST("record", r);
+    RESULT = new typeAST("RECORD", r);
 :};
 
 record_type ::= RECORD field_list:f record_tail:rt END
@@ -471,6 +627,8 @@ expression ::= simple_expression:se expr_tail:et
 
 expr_tail ::= tail_op:top simple_expression:se
 {:
+    if (se.getType().name.equals("BOOLEAN"))
+        throw new TypeMismatchedException();
     RESULT = new expr();
     RESULT.op = top;
     RESULT.rhs = se;
@@ -496,6 +654,11 @@ tail_op ::= EQUAL {: RESULT = "="; :}
 
 simple_expression ::= head_op:hop term:t simple_expression_tail:set
 {:
+    if (hop != null) {
+        // must be arithmetic
+        if (t.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (set != null) {
         RESULT = set;
         RESULT.lhs = t;
@@ -503,7 +666,6 @@ simple_expression ::= head_op:hop term:t simple_expression_tail:set
     }
     else
         RESULT = new simpleExpr(hop, t);
-
 :};
 
 head_op ::= ADD {: RESULT = "+"; :}
@@ -512,6 +674,16 @@ head_op ::= ADD {: RESULT = "+"; :}
 
 simple_expression_tail ::= simple_tail_op:stop term:t simple_expression_tail:set
 {:
+    if (stop.equals("or")) {
+        // boolean
+        if (t.getType().name.equals("INTEGER"))
+            throw new TypeMismatchedException();
+    }
+    else {
+        // arithmetic
+        if (t.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (set == null)
         RESULT = new simpleExpr();
     else
@@ -533,7 +705,7 @@ simple_expression_tail ::= simple_tail_op:stop term:t simple_expression_tail:set
 
 simple_tail_op ::= ADD {: RESULT = "+"; :}
 | MINUS {: RESULT = "-"; :}
-| OR {: RESULT = "or"; :};
+| OR {: RESULT = "OR"; :};
 
 term ::= factor:f term_tail:tt
 {:
@@ -547,6 +719,18 @@ term ::= factor:f term_tail:tt
 
 term_tail ::= term_tail_op:ttop factor:f term_tail:tt
 {:
+    if (ttop == "&") {
+        // logical
+        typeAST type = f.getType();
+        if (type.name.equals("INTEGER")) {
+            throw new TypeMismatchedException();
+        }
+    }
+    else {
+        // arithmetic
+        if (f.getType().name.equals("BOOLEAN"))
+            throw new TypeMismatchedException();
+    }
     if (tt == null)
         RESULT = new termAST();
     else
@@ -565,8 +749,8 @@ term_tail ::= term_tail_op:ttop factor:f term_tail:tt
 | {: RESULT = null; :};
 
 term_tail_op ::= MUL {: RESULT = "*"; :}
-| DIV {: RESULT = "div"; :}
-| MOD {: RESULT = "mod"; :}
+| DIV {: RESULT = "DIV"; :}
+| MOD {: RESULT = "MOD"; :}
 | AND {: RESULT = "&"; :};
 
 factor ::= IDENTIFIER:id selector:s
@@ -579,6 +763,10 @@ factor ::= IDENTIFIER:id selector:s
 :}
 | NOT factor:f
 {:
+    typeAST type = f.getType();
+    if (type.name.equals("INTEGER")) {
+        throw new TypeMismatchedException();
+    }
     RESULT = f;
     RESULT.negated = true;
 :}
