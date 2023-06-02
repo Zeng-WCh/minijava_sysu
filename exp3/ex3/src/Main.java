@@ -51,6 +51,12 @@ public class Main {
 		return true;
 	}
 
+	/**
+	 * Main entry for the oberon-1 parser
+	 * 
+	 * @param argv, the input file
+	 * @throws Exception, if the input file is not found or the parser failed to parse
+	 */
 	public static void main(String argv[]) throws Exception {
 		if (argv.length == 0) {
 			System.out.println("Usage : java Main <inputfile>");

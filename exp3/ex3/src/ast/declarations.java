@@ -4,12 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
 
+/**
+ * the declarations class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class declarations implements ast {
+    /**
+     * list of all declarations
+     */
     public ArrayList<constDec> constDecs;
     public ArrayList<typeDec> typeDecs;
     public ArrayList<varDec> varDecs;
     public ArrayList<procedureDec> procDecs;
-
+    
     public HashMap<String, Integer> constant;
     public HashMap<String, Integer> types;
     public HashMap<String, Integer> vars;

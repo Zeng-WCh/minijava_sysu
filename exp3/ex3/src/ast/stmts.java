@@ -3,6 +3,12 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * statement list AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class stmts implements ast {
     public ArrayList<stmt> statements;
 

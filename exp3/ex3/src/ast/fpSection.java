@@ -1,5 +1,11 @@
 package ast;
 
+/**
+ * fpSection class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class fpSection implements ast {
     public boolean isVar;
     public identifierList identifierList;

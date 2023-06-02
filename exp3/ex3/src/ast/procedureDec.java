@@ -1,5 +1,11 @@
 package ast;
 
+/**
+ * procedure declaration AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class procedureDec implements ast {
     public procedureHead head;
     public procedureBody body;

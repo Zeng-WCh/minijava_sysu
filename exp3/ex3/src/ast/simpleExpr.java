@@ -3,6 +3,12 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * simple expression AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class simpleExpr implements ast {
     public String signed;
     public termAST lhs;

@@ -1,15 +1,36 @@
 package ast;
 
+/**
+ * factor AST node in the oberon-0 AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class factorAST implements ast {
+    /**
+     * the identifier 
+     */
     public String identifier;
     public selectorAST sel;
 
+    /**
+     * the number
+     */
     public numberAST number;
     
+    /**
+     * the expression, used in (expr)
+     */
     public expr exp;
 
+    /**
+     * if the factor is negated
+     */
     public boolean negated;
 
+    /**
+     * Used to do type checking
+     */
     public typeAST typeGenerate;
 
     public factorAST(String identifier, selectorAST sel, boolean negated) {

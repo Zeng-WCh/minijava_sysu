@@ -3,6 +3,12 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * formal parameters AST, used when a procedure is declared
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class formalParameters implements ast {
     public ArrayList<fpSection> fpList;
     public ArrayList<fp> fps;

@@ -3,6 +3,12 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * record type AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class recordType implements ast {
     public ArrayList<fieldList> fieldLists;
 

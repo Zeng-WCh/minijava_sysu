@@ -3,6 +3,12 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * the procedure body AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class procedureBody implements ast {
     public declarations declarations;
     public stmts stmts;

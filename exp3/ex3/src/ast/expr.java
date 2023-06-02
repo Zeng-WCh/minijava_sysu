@@ -1,7 +1,19 @@
 package ast;
 
+/**
+ * the expression class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class expr implements ast {
+    /**
+     * the left hand side of the expression
+     */
     public simpleExpr lhs, rhs;
+    /**
+     * the operator of the expression
+     */
     public String op;
 
     public expr() {

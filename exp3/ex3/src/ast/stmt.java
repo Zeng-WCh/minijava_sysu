@@ -1,5 +1,12 @@
 package ast;
 
+
+/**
+ * statement AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class stmt implements ast {
     public assignmentStmt asg;
     public callStmt call;

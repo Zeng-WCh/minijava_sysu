@@ -1,5 +1,11 @@
 package ast;
 
+/**
+ * moduleBlock class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class moduleBlock implements ast {
     public String name;
     public declarations declarations;

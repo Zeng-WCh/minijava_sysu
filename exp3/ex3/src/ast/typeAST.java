@@ -1,5 +1,11 @@
 package ast;
 
+/**
+ * type AST
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class typeAST implements ast {
     public String name;
     // type can be like arrayType or recordType

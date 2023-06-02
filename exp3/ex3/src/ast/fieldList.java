@@ -1,5 +1,11 @@
 package ast;
 
+/**
+ * fieldList class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class fieldList implements ast {
     public identifierList ids;
     public typeAST type;

@@ -3,11 +3,32 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * the if statement class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last updated: 2023/06/03)
+ */
 public class ifStmt implements ast {
+    /**
+     * the condition of the if statement
+     */
     public expr condition;
+    /**
+     * if condition is true, execute the body
+     */
     public stmts body;
+    /**
+     * else if statements
+     */
     public ArrayList<ifStmt> elseIfs;
+    /**
+     * if none of the conditions are true, execute the else body
+     */
     public stmts elseBody;
+    /**
+     * to define if this node is an else if statement
+     */
     public boolean isElseIf;
 
     public ifStmt() {
