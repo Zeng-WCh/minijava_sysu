@@ -68,7 +68,4 @@ MODULE Fib;
         END
     END Main;
 
-    BEGIN
-        Main()
-    
 END Fib.

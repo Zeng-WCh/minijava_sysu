@@ -67,8 +67,5 @@ MODULE Fib;
             writeln
         END
     END Main;
-
-    BEGIN
-        Main()
     
 END Fib.
