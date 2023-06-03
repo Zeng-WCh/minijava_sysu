@@ -1,10 +1,9 @@
 import exceptions.*;
-import java.io.*;
-import java_cup.runtime.ComplexSymbolFactory;
-import java_cup.runtime.ComplexSymbolFactory.Location;
+
 
 %%
 
+%type TokenType
 %line
 %column
 %ignorecase
@@ -12,49 +11,10 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %class OberonScanner
 %standalone
 %public
-%cup
-%char
-%implements Symbol
 %yylexthrow LexicalException
 
-%{
-    public OberonScanner(java.io.Reader in, ComplexSymbolFactory csf) {
-        this(in);
-        symbolFactory = csf;
-    }
-
-    ComplexSymbolFactory symbolFactory;
-
-    public int getLine() { return yyline; }
-    public int getCol() { return yycolumn; }
-
-    // public java_cup.runtime.Symbol toSymbol(int type) {
-    //     return new java_cup.runtime.Symbol(type);
-    // }    
-
-    // public java_cup.runtime.Symbol toSymbol(int type, Object value) {
-    //     return new java_cup.runtime.Symbol(type, value);
-    // }
-
-    private java_cup.runtime.Symbol symbol(String ident, int type) {
-        return symbolFactory.newSymbol(ident, type, new Location(yyline+1,yycolumn+1), new Location(yyline+1,yycolumn+yylength()));
-    }
-
-    private java_cup.runtime.Symbol symbol(String ident, int type, Object value) {
-        Location left = new Location(yyline+1,yycolumn+1);
-        Location right= new Location(yyline+1,yycolumn+yylength());
-        return symbolFactory.newSymbol(ident, type, left, right, value);
-    }
-
-    private java_cup.runtime.Symbol symbol(String ident, int type, Object val, int buflength) {
-        Location left = new Location(yyline+1,yycolumn+yylength()-buflength);
-        Location right= new Location(yyline+1,yycolumn+yylength());
-        return symbolFactory.newSymbol(ident, type, left, right, val);
-    }
-%}
-
 LineTerminator = \r|\n|\r\n
-WhiteSpace = [ \t\f] | {LineTerminator}
+Ignore = [ \t\f] | {LineTerminator}
 
 Comment = "(*"~"*)"
 UnMatchedComment = "(*" ([^\*] | "*"+[^\)])* | ([^\(]|"("+[^\*])* "*)"
@@ -68,8 +28,7 @@ IllegalNumber = {Number}+{Identifier}+
 IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 
 %eofval{
-    // return toSymbol(Symbol.EOF);
-    return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1, yycolumn+1), new Location(yyline+1, yycolumn+1));
+    return TokenType.tok_eof;
 %eofval}
 
 %%
@@ -82,166 +41,163 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 }
 
 "boolean" { 
-    return symbol("boolean", BOOLEAN);
+    return TokenType.tok_boolean; 
 }
 "integer" { 
-    return symbol("integer", INTEGER);
+    return TokenType.tok_integer; 
 }
 "write" { 
-    return symbol("write", WRITE);
+    return TokenType.tok_write; 
 }
 "read" { 
-    return symbol("read", READ);
+    return TokenType.tok_read; 
 }
 "writeln" { 
-    return symbol("writeln", WRITELN);
+    return TokenType.tok_writeln; 
 }
 
 "array" { 
-    return symbol("array", ARRAY);
+    return TokenType.tok_array; 
 }
 "of" { 
-    return symbol("of", OF);
+    return TokenType.tok_of; 
 }
 "record" { 
-    return symbol("record", RECORD);
+    return TokenType.tok_record; 
 }
 "var" { 
-    return symbol("var", VAR);
+    return TokenType.tok_var; 
 }
 "procedure" { 
-    return symbol("procedure", PROCEDURE);
+    return TokenType.tok_procedure; 
 }
 "begin" { 
-    return symbol("begin", BEGIN);
+    return TokenType.tok_begin; 
 }
 "end" { 
-    return symbol("end", END);
+    return TokenType.tok_end; 
 }
 "if" { 
-    return symbol("if", IF);
+    return TokenType.tok_if; 
 }
 "then" { 
-    return symbol("then", THEN);
+    return TokenType.tok_then; 
 }
 "else" { 
-    return symbol("else", ELSE);
+    return TokenType.tok_else; 
 }
 "while" { 
-    return symbol("while", WHILE);
+    return TokenType.tok_while; 
 }
 "do" { 
-    return symbol("do", DO);
+    return TokenType.tok_do; 
 }
 "elsif" { 
-    return symbol("elsif", ELSIF);
+    return TokenType.tok_elsif; 
 }
 "const" { 
-    return symbol("const", CONST);
+    return TokenType.tok_const; 
 }
 "module" { 
-    return symbol("module", MODULE);
+    return TokenType.tok_module; 
 }
 "type" { 
-    return symbol("type", TYPE);
+    return TokenType.tok_type; 
 }
 
 ":=" { 
-    return symbol(":=", ASSIGN);
+    return TokenType.tok_assign; 
 }
 
 "," { 
-    return symbol(",", COMMA);
+    return TokenType.tok_comma; 
 }
-"." {
-    return symbol(".", DOT);
+"." { 
+    return TokenType.tok_dot; 
 }
 ":" { 
-    return symbol(":", COLON);
+    return TokenType.tok_colon; 
 }
 ";" { 
-    return symbol(";", SEMICOLON);
+    return TokenType.tok_semicolon; 
 }
 "(" { 
-    return symbol("(", LPAREN);
+    return TokenType.tok_lparen; 
 }
 ")" { 
-    return symbol(")", RPAREN);
+    return TokenType.tok_rparen; 
 }
 "[" { 
-    return symbol("[", LBRACKET);
+    return TokenType.tok_lbracket; 
 }
 "]" { 
-    return symbol("]", RBRACKET);
+    return TokenType.tok_rbracket; 
 }
 
 "=" { 
-    return symbol("=", EQUAL);   
+    return TokenType.tok_equal; 
 }
 "#" { 
-    return symbol("#", NOT_EQUAL);
-}
-"<=" { 
-    return symbol("<=", LESS_EQUAL);
-}
-"<" { 
-    return symbol("<", LESS);
-}
-">=" { 
-    return symbol(">=", GREATER_EQUAL);
-}
-">" { 
-    return symbol(">", GREATER);
-}
-"+" { 
-    return symbol("+", ADD);
-}
-"-" { 
-    return symbol("-", MINUS);
-}
-"*" { 
-    return symbol("*", MUL);
-}
-"div" { 
-    return symbol("div", DIV);
-}
-"mod" { 
-    return symbol("mod", MOD);
-}
-"&" { 
-    return symbol("&", AND);
-}
-"or" { 
-    return symbol("or", OR);
-}
-"~" { 
-    return symbol("~", NOT);
+    return TokenType.tok_not_equal; 
 }
 
-{Decimal} {
-    if (yylength() > 12)
-        throw new IllegalIntegerRangeException();
-    Integer value = Integer.parseInt(yytext());
-    return symbol("number", NUMBER, value);
+"<=" { 
+    return TokenType.tok_less_equal; 
 }
-{Octal} {
+"<" { 
+    return TokenType.tok_less; 
+}
+">=" { 
+    return TokenType.tok_greater_equal; 
+}
+">" { 
+    return TokenType.tok_greater; 
+}
+"+" { 
+    return TokenType.tok_plus; 
+}
+"-" { 
+    return TokenType.tok_minus; 
+}
+"*" { 
+    return TokenType.tok_multiply; 
+}
+"div" { 
+    return TokenType.tok_divide; 
+}
+"mod" { 
+    return TokenType.tok_mod; 
+}
+"&" { 
+    return TokenType.tok_and; 
+}
+"or" { 
+    return TokenType.tok_or; 
+}
+"~" { 
+    return TokenType.tok_not; 
+}
+
+{Octal} { 
     if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    Integer value = Integer.parseInt(yytext(), 8);
-    return symbol("number", NUMBER, value);
+    return TokenType.tok_octal; 
+}
+{Decimal} { 
+    if (yylength() > 12)
+        throw new IllegalIntegerRangeException();
+    return TokenType.tok_decimal; 
 }
 {IllegalNumber} { throw new IllegalIntegerException(); }
 {IllegalOctal} { throw new IllegalOctalException(); }
 
-{WhiteSpace} { 
+{Ignore} { 
 }
 
 {Identifier} { 
     if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    return symbol("identifier", IDENTIFIER, yytext());
+    return TokenType.tok_identifier; 
 }
 
-. { 
-    throw new IllegalSymbolException(); 
-}
+. { throw new IllegalSymbolException(); }
