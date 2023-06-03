@@ -540,6 +540,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     fpMap = new HashMap<>();
     callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
+    callStmtsPos = new HashMap<>();
 
     }
 
@@ -576,6 +577,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, typeAST> unsolvedTypes;
 
     private ArrayList<callStmt> callStmts;
+    public HashMap<callStmt, String> callStmtsPos;
 
     public moduleBlock getAST() {
         return root;
@@ -1153,7 +1155,9 @@ class CUP$Parser$actions {
         throw new SemanticException("procedure name mismatch");
     RESULT = new procedureDec(h, b);
     RESULT.body.calls = callStmts;
+    RESULT.body.callsPos = callStmtsPos;
     callStmts = new ArrayList<>();
+    callStmtsPos = new HashMap<>();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declaration",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1862,6 +1866,7 @@ class CUP$Parser$actions {
 		  
     RESULT = new callStmt(id.toUpperCase(), pct);
     callStmts.add(RESULT);
+    callStmtsPos.put(RESULT, String.format("<%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

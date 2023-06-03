@@ -1,3 +1,4 @@
 testcases/fib.030:
-Exception in thread "main" exceptions.SyntacticException: Procedure: FIB9 is not defined.
-	at Main.main(Main.java:108)
+Exception in thread "main" exceptions.SyntacticException: Exception occured when parsing near by <50:8>: 
+Procedure: FIB9 is not defined.
+	at Main.main(Main.java:109)

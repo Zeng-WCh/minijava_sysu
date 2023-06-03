@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,6 +15,7 @@ public class procedureBody implements ast {
     public stmts stmts;
     public String name;
     public ArrayList<callStmt> calls;
+    public HashMap<callStmt, String> callsPos;
 
     public procedureBody() {
         this(null, null, "");
@@ -32,10 +34,15 @@ public class procedureBody implements ast {
     }
 
     public procedureBody(declarations declarations, stmts stmts, String name, ArrayList<callStmt> calls) {
+        this(declarations, stmts, name, calls, new HashMap<>());
+    }
+
+    public procedureBody(declarations declarations, stmts stmts, String name, ArrayList<callStmt> calls, HashMap<callStmt, String> callsPos) {
         this.declarations = declarations;
         this.stmts = stmts;
         this.name = name;
         this.calls = calls;
+        this.callsPos = callsPos;
     }
 
     public void convert() {

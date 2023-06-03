@@ -100,18 +100,26 @@ public class Main {
 
 				for (procedureDec func : mb.declarations.procDecs) {
 					ArrayList<callStmt> calls = func.body.calls;
+					HashMap<callStmt, String> callPos = func.body.callsPos;
 					Collections.reverse(calls);
 					Integer begin = 1;
 					for (callStmt call : calls) {
 						Integer idx = mb.declarations.pros.get(call.name.toUpperCase());
 						if (idx == null) {
-							throw new SyntacticException(String.format("Procedure: %s is not defined.", call.name));
+							throw new SyntacticException(String.format("Exception occured when parsing near by %s: \nProcedure: %s is not defined.", callPos.get(call), call.name));
 						}
 
 						// parameters check
 						ArrayList<fp> formalParam = mb.declarations.procDecs.get(idx).head.fp.fps;
 						ArrayList<expr> actualParam = call.params.exprs;
-						checkArgs(formalParam, actualParam);
+						
+						try {
+							checkArgs(formalParam, actualParam);
+						} catch (SemanticException ex) {
+							System.err.println(String.format("Exception occured when parsing near by %s: ", callPos.get(call)));
+							throw ex;
+						}
+						
 
 						StringBuilder actuaP = new StringBuilder(call.name);
 						actuaP.append('(');

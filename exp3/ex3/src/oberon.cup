@@ -28,6 +28,7 @@ parser code {:
     private HashMap<String, typeAST> unsolvedTypes;
 
     private ArrayList<callStmt> callStmts;
+    public HashMap<callStmt, String> callStmtsPos;
 
     public moduleBlock getAST() {
         return root;
@@ -52,6 +53,7 @@ init with {:
     fpMap = new HashMap<>();
     callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
+    callStmtsPos = new HashMap<>();
 :}
 
 scan with {:
@@ -423,7 +425,9 @@ procedure_declaration ::= procedure_head:h SEMICOLON procedure_body:b
         throw new SemanticException("procedure name mismatch");
     RESULT = new procedureDec(h, b);
     RESULT.body.calls = callStmts;
+    RESULT.body.callsPos = callStmtsPos;
     callStmts = new ArrayList<>();
+    callStmtsPos = new HashMap<>();
 :};
 
 procedure_body ::= declaration:d procedure_body_tail:pbd END IDENTIFIER:id
@@ -670,6 +674,7 @@ procedure_call ::= IDENTIFIER:id procedure_call_tail:pct
 {:  
     RESULT = new callStmt(id.toUpperCase(), pct);
     callStmts.add(RESULT);
+    callStmtsPos.put(RESULT, String.format("<%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
 :}
 | WRITE:w procedure_call_tail:pct
 {:
