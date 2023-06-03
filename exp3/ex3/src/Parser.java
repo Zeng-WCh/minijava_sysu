@@ -537,7 +537,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     localConstantsMap = null;
     localVarMap = null;
     localVars = null;
-    fpMap = null;
+    fpMap = new HashMap<>();
     callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
 
@@ -693,7 +693,7 @@ class CUP$Parser$actions {
           case 5: // modules_tail ::= 
             {
               stmts RESULT =null;
-		 RESULT = null; 
+		 RESULT = new stmts(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("modules_tail",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -776,7 +776,7 @@ class CUP$Parser$actions {
         localConstants = new ArrayList<>();
         localConstantsMap = new HashMap<>();
     }
-    RESULT = null; 
+    RESULT = new ArrayList<constDec>(); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_declaration",27, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -832,7 +832,7 @@ class CUP$Parser$actions {
           case 11: // const_dectail ::= 
             {
               ArrayList<constDec> RESULT =null;
-		 RESULT = null; 
+		 RESULT = new ArrayList<constDec>(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_dectail",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -935,7 +935,7 @@ class CUP$Parser$actions {
         localTypesMap = new HashMap<>();
     }
 
-    RESULT = null; 
+    RESULT = new ArrayList<typeDec>(); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_declaration",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -990,7 +990,7 @@ class CUP$Parser$actions {
           case 16: // type_dectail ::= 
             {
               ArrayList<typeDec> RESULT =null;
-		 RESULT = null; 
+		 RESULT = new ArrayList<typeDec>(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_dectail",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1052,7 +1052,7 @@ class CUP$Parser$actions {
         localVars = new ArrayList<>();
         localVarMap = new HashMap<>();
     }
-    RESULT = null; 
+    RESULT = new ArrayList<varDec>(); 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_declaration",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1101,7 +1101,7 @@ class CUP$Parser$actions {
           case 21: // var_dectail ::= 
             {
               ArrayList<varDec> RESULT =null;
-		 RESULT = null; 
+		 RESULT = new ArrayList<varDec>();; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_dectail",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1131,7 +1131,7 @@ class CUP$Parser$actions {
           case 23: // procedure_declarations ::= 
             {
               ArrayList<procedureDec> RESULT =null;
-		 RESULT = null; 
+		 RESULT = new ArrayList<procedureDec>(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declarations",30, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1193,7 +1193,7 @@ class CUP$Parser$actions {
           case 27: // procedure_body_tail ::= 
             {
               stmts RESULT =null;
-		 RESULT = null; 
+		 RESULT = new stmts(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_body_tail",34, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1245,7 +1245,7 @@ class CUP$Parser$actions {
           case 30: // procedure_head_tail ::= 
             {
               formalParameters RESULT =null;
-		 RESULT = null; 
+		 RESULT = new formalParameters(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head_tail",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1772,7 +1772,19 @@ class CUP$Parser$actions {
 		int endpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		stmts endp = (stmts)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
-    RESULT = new ifStmt(e, ss, el.elseIfs, endp);
+    if (el != null && endp != null)
+        RESULT = new ifStmt(e, ss, el.elseIfs, endp);
+    else if (el != null) {
+        RESULT = new ifStmt(e, ss);
+        RESULT.elseIfs = el.elseIfs;
+    }
+    else if (endp != null) {
+        RESULT = new ifStmt(e, ss);
+        RESULT.elseBody = endp;
+    }
+    else {
+        RESULT = new ifStmt(e, ss);
+    }
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("if_statement",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1952,7 +1964,7 @@ class CUP$Parser$actions {
           case 77: // actual_parameters ::= 
             {
               actualParameters RESULT =null;
-		 RESULT = null; 
+		 RESULT = new actualParameters(); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("actual_parameters",19, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

@@ -38,6 +38,10 @@ GNU Bison 也是之前曾经有使用过，对其稍有了解，其和 JavaCUP �
 
 JavaCUP, GNU Bison 这两者和 JavaCC 一个最明显的差别，就是支持的文法的差别，如上面所说，JavaCUP, GNU Bison 都是一个自底向上的语法分析器生成，而 JavaCC 采取的是自顶向下的分析，其默认生成的是 LL(1) 的语法分析器，当然，在某些情况下也会生成 LL(k) 的分析，具体的情况可以参考文档；总之，最明显的差别就是在语法分析器的生成上，JavaCC 生成的是 LL(1) 的语法分析器，而 JavaCUP, GNU Bison 生成的是 LALR(1) 的语法分析器，自然所接受的输入文件也是有差别的，JavaCC 所能接受的最多为 LL(k) 的文法，而 JavaCUP, GNU Bison 所能接受的包括 LALR(1) 的文法，这也是为什么 JavaCC 生成的语法分析器比较简单，而 JavaCUP, GNU Bison 生成的语法分析器比较复杂的原因，这和理论课上所学的相一致
 
+### 个人想法
+
+这次实验可以说是为 `EX4` 打下了一个较好的基础，因为基础的语法树 `AST` 类已经被实现，虽然在这个实验中暂时不是很需要
+
 ### 参考文档
 
 1. GNU Bison Introduction: https://www.gnu.org/software/bison/manual/html_node/Introduction.html

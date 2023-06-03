@@ -49,7 +49,7 @@ init with {:
     localConstantsMap = null;
     localVarMap = null;
     localVars = null;
-    fpMap = null;
+    fpMap = new HashMap<>();
     callStmts = new ArrayList<>();
     unsolvedTypes = new HashMap<>();
 :}
@@ -177,7 +177,7 @@ modules ::= MODULE IDENTIFIER:id SEMICOLON declaration:d modules_tail:s END IDEN
 
 modules_tail ::= BEGIN statement_sequence:s 
 {: RESULT = s; :}
-| {: RESULT = null; :};
+| {: RESULT = new stmts(); :};
 
 declaration ::= const_declaration:c type_declaration:t var_declaration:v procedure_declarations:p
 {:
@@ -225,7 +225,7 @@ const_declaration ::= CONST const_dectail:ct
         localConstants = new ArrayList<>();
         localConstantsMap = new HashMap<>();
     }
-    RESULT = null; 
+    RESULT = new ArrayList<constDec>(); 
 :};
 const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
 {:
@@ -241,7 +241,7 @@ const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
     if (true)
         throw new MissingOperatorException("Missing '=' for const declaration.");
 :}
-| {: RESULT = null; :};
+| {: RESULT = new ArrayList<constDec>(); :};
 
 type_declaration ::= TYPE type_dectail:tt
 {:
@@ -327,7 +327,7 @@ type_declaration ::= TYPE type_dectail:tt
         localTypesMap = new HashMap<>();
     }
 
-    RESULT = null; 
+    RESULT = new ArrayList<typeDec>(); 
 :};
 type_dectail ::= IDENTIFIER:id EQUAL type:t SEMICOLON type_dectail:tt
 {:
@@ -342,7 +342,7 @@ type_dectail ::= IDENTIFIER:id EQUAL type:t SEMICOLON type_dectail:tt
     if (true)
         throw new MissingOperatorException("Missing '=' for type declaration.");
 :} 
-| {: RESULT = null; :};
+| {: RESULT = new ArrayList<typeDec>(); :};
 
 var_declaration ::= VAR var_dectail:vt
 {: 
@@ -387,7 +387,7 @@ var_declaration ::= VAR var_dectail:vt
         localVars = new ArrayList<>();
         localVarMap = new HashMap<>();
     }
-    RESULT = null; 
+    RESULT = new ArrayList<varDec>(); 
 :};
 
 var_dectail ::= identifier_list:il COLON type:t SEMICOLON var_dectail:vt
@@ -403,7 +403,7 @@ var_dectail ::= identifier_list:il COLON type:t SEMICOLON var_dectail:vt
     if(true)
         throw new SyntacticException("Type Missed for variable declaration.");
 :}
-| {: RESULT = null; :};
+| {: RESULT = new ArrayList<varDec>();; :};
 
 procedure_declarations ::= procedure_declaration:p SEMICOLON procedure_declarations:pd
 {:
@@ -413,7 +413,7 @@ procedure_declarations ::= procedure_declaration:p SEMICOLON procedure_declarati
         RESULT = pd;
     RESULT.add(p);
 :}
-| {: RESULT = null; :};
+| {: RESULT = new ArrayList<procedureDec>(); :};
 
 procedure_declaration ::= procedure_head:h SEMICOLON procedure_body:b
 {:
@@ -431,7 +431,7 @@ procedure_body ::= declaration:d procedure_body_tail:pbd END IDENTIFIER:id
 
 procedure_body_tail ::= BEGIN statement_sequence:s 
 {: RESULT = s; :}
-| {: RESULT = null; :};
+| {: RESULT = new stmts(); :};
 
 procedure_head ::= PROCEDURE IDENTIFIER:id procedure_head_tail:fp
 {:
@@ -454,7 +454,7 @@ procedure_head_tail ::= formal_parameters:fp
 
     RESULT = fp; 
 :}
-| {: RESULT = null; :};
+| {: RESULT = new formalParameters(); :};
 
 formal_parameters ::= LPAREN fp_section:fp fp_section_tail:fpt RPAREN
 {:
@@ -632,7 +632,19 @@ while_statement ::= WHILE expression:e DO statement_sequence:ss END
 
 if_statement ::= IF expression:e THEN statement_sequence:ss elsif_part:el else_part:endp END
 {:
-    RESULT = new ifStmt(e, ss, el.elseIfs, endp);
+    if (el != null && endp != null)
+        RESULT = new ifStmt(e, ss, el.elseIfs, endp);
+    else if (el != null) {
+        RESULT = new ifStmt(e, ss);
+        RESULT.elseIfs = el.elseIfs;
+    }
+    else if (endp != null) {
+        RESULT = new ifStmt(e, ss);
+        RESULT.elseBody = endp;
+    }
+    else {
+        RESULT = new ifStmt(e, ss);
+    }
 :};
 
 elsif_part ::= ELSIF expression:e THEN statement_sequence:ss elsif_part:el
@@ -685,7 +697,7 @@ actual_parameters ::= LPAREN RPAREN
         RESULT = new actualParameters(apt);
     RESULT.exprs.add(e);
 :}
-| {: RESULT = null; :}
+| {: RESULT = new actualParameters(); :}
 | LPAREN expression:e actual_parameters_tail:apt {: if(true) throw new MissingRightParenthesisException(); :}
 | expression:e actual_parameters_tail:apt RPAREN {: if (true) throw new MissingLeftParenthesisException(); :};
 

@@ -2,7 +2,7 @@
 
 MODULE CallGraph;
     VAR x, y: INTEGER;
-    PROCEDURE a();
+    PROCEDURE a;
     BEGIN
         b(x, 1);
         c(y, 2)
