@@ -14,12 +14,14 @@ public class simpleExpr implements ast {
     public termAST lhs;
     public ArrayList<String> op;
     public ArrayList<termAST> rhs;
+    public boolean isConstant;
 
     public simpleExpr() {
         this.signed = null;
         this.lhs = null;
         this.op = new ArrayList<>();
         this.rhs = new ArrayList<>();
+        this.isConstant = false;
     }
 
     public simpleExpr(String signed, termAST lhs) {
@@ -27,6 +29,7 @@ public class simpleExpr implements ast {
         this.lhs = lhs;
         this.op = new ArrayList<>();
         this.rhs = new ArrayList<>();
+        this.isConstant = lhs.isConstant;
     }
 
     public simpleExpr(String signed, termAST lhs, ArrayList<String> op, ArrayList<termAST> rhs) {
@@ -34,9 +37,12 @@ public class simpleExpr implements ast {
         this.lhs = lhs;
         this.op = op;
         this.rhs = rhs;
+        this.isConstant = false;
     }
 
     public boolean isVar() {
+        if (isConstant)
+            return false;
         if (!op.isEmpty() || !rhs.isEmpty()) {
             return false;
         }

@@ -234,7 +234,9 @@ const_dectail ::= IDENTIFIER:id EQUAL expression:e SEMICOLON const_dectail:ct
         RESULT = new ArrayList<>();
     else
         RESULT = ct;
-    RESULT.add(new constDec(id, e));
+    constDec tmp = new constDec(id, e);
+    tmp.value.isConstant = true;
+    RESULT.add(tmp);
 :}
 | IDENTIFIER:id expression:e SEMICOLON const_dectail:ct
 {:
@@ -1156,6 +1158,9 @@ factor ::= IDENTIFIER:id selector:select
     }
 
     RESULT = new factorAST(id, select, false);
+
+    if (constant != null)
+        RESULT.isConstant = true;
 
     if (type.name.equals("INTEGER")) {
         if (select != null) {

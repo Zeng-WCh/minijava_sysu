@@ -801,7 +801,9 @@ class CUP$Parser$actions {
         RESULT = new ArrayList<>();
     else
         RESULT = ct;
-    RESULT.add(new constDec(id, e));
+    constDec tmp = new constDec(id, e);
+    tmp.value.isConstant = true;
+    RESULT.add(tmp);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("const_dectail",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2788,6 +2790,9 @@ class CUP$Parser$actions {
     }
 
     RESULT = new factorAST(id, select, false);
+
+    if (constant != null)
+        RESULT.isConstant = true;
 
     if (type.name.equals("INTEGER")) {
         if (select != null) {

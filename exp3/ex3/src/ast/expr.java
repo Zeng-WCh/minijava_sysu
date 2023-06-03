@@ -15,6 +15,10 @@ public class expr implements ast {
      * the operator of the expression
      */
     public String op;
+    /**
+     * the constant flag
+     */
+    public boolean isConstant;
 
     public expr() {
         this(null, "", null);
@@ -22,15 +26,24 @@ public class expr implements ast {
 
     public expr(simpleExpr lhs) {
         this(lhs, "", null);
+        this.isConstant = lhs.isConstant;
     }
 
     public expr(simpleExpr lhs, String op, simpleExpr rhs) {
         this.lhs = lhs;
         this.op = op;
         this.rhs = rhs;
+        this.isConstant = false;
     }
 
+    /**
+     * check if the expression is variable
+     * 
+     * @return true if the expression is variable, false otherwise
+     */
     public boolean isVar() {
+        if (isConstant) 
+            return false;
         if (rhs != null && op != "") {
             return false;
         }

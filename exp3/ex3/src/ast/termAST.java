@@ -13,26 +13,32 @@ public class termAST implements ast {
     public factorAST lhs;
     public ArrayList<String> op;
     public ArrayList<factorAST> rhs;
+    public boolean isConstant;
 
     public termAST() {
         this.lhs = null;
         this.op = new ArrayList<>();
         this.rhs = new ArrayList<>();
+        this.isConstant = false;
     }
 
     public termAST(factorAST lhs) {
         this.lhs = lhs;
         this.op = new ArrayList<>();
         this.rhs = new ArrayList<>();
+        this.isConstant = lhs.isConstant;
     }
 
     public termAST(factorAST lhs, ArrayList<String> op, ArrayList<factorAST> rhs) {
         this.lhs = lhs;
         this.op = op;
         this.rhs = rhs;
+        this.isConstant = false;
     }
 
     public boolean isVar() {
+        if (isConstant)
+            return false;
         if (!op.isEmpty() || !rhs.isEmpty()) {
             return false;
         }

@@ -45,7 +45,7 @@ public class Main {
 			throw new ParameterMismatchedException();
 		for (int i = 0; i < formal.size(); ++i) {
 			if (!checkArg(formal.get(i), actual.get(i)))
-				throw new TypeMismatchedException(String.format("actual parameter: %s does not match formal parameter: %s", actual.get(i).getType().name, formal.get(i).type.name));
+				throw new TypeMismatchedException(String.format("actual parameter: %s(%s) does not match formal parameter: %s(%s)", actual.get(i).getType().name, (actual.get(i).isVar()?"VAR": "NON-VAR/CONSTANT"), formal.get(i).type.name, (formal.get(i).isVar?"VAR":"NON-VAR/CONSTANT")));
 		}
 		return true;
 	}

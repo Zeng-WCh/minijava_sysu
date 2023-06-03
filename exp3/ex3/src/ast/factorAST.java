@@ -33,6 +33,11 @@ public class factorAST implements ast {
      */
     public typeAST typeGenerate;
 
+    /**
+     * if the factor is constant
+     */
+    public boolean isConstant;
+
     public factorAST(String identifier, selectorAST sel, boolean negated) {
         this.identifier = identifier;
         this.sel = sel;
@@ -40,6 +45,7 @@ public class factorAST implements ast {
         this.exp = null;
         this.negated = negated;
         this.typeGenerate = null;
+        this.isConstant = false;
     }
 
     public factorAST(numberAST number, boolean negated) {
@@ -49,6 +55,7 @@ public class factorAST implements ast {
         this.exp = null;
         this.negated = negated;
         this.typeGenerate = null;
+        this.isConstant = false;
     }
 
     public factorAST(expr exp, boolean negated) {
@@ -58,9 +65,12 @@ public class factorAST implements ast {
         this.exp = exp;
         this.negated = negated;
         this.typeGenerate = null;
+        this.isConstant = false;
     }
 
     public boolean isVar() {
+        if (this.isConstant)
+            return false;
         return identifier != null || (exp != null && exp.isVar());
     }
 
