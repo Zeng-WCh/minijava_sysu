@@ -1,9 +1,22 @@
 import exceptions.*;
 
-
 %%
 
-%type TokenType
+%{
+    public int getLine() {
+        return yyline;
+    }
+
+    public int getCol() {
+        return yycolumn;
+    }
+
+    public String getPos() {
+        return String.format("<%d:%d>", getLine() + 1, getCol() + 1);
+    }
+%}
+
+%type Token
 %line
 %column
 %ignorecase
@@ -28,7 +41,7 @@ IllegalNumber = {Number}+{Identifier}+
 IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 
 %eofval{
-    return TokenType.tok_eof;
+    return new Token(TokenType.tok_eof);
 %eofval}
 
 %%
@@ -41,152 +54,152 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 }
 
 "boolean" { 
-    return TokenType.tok_boolean; 
+    return new Token(TokenType.tok_boolean);
 }
 "integer" { 
-    return TokenType.tok_integer; 
+    return new Token(TokenType.tok_integer); 
 }
 "write" { 
-    return TokenType.tok_write; 
+    return new Token(TokenType.tok_write); 
 }
 "read" { 
-    return TokenType.tok_read; 
+    return new Token(TokenType.tok_read);
 }
 "writeln" { 
-    return TokenType.tok_writeln; 
+    return new Token(TokenType.tok_writeln); 
 }
 
 "array" { 
-    return TokenType.tok_array; 
+    return new Token(TokenType.tok_array); 
 }
 "of" { 
-    return TokenType.tok_of; 
+    return new Token(TokenType.tok_of);
 }
 "record" { 
-    return TokenType.tok_record; 
+    return new Token(TokenType.tok_record); 
 }
 "var" { 
-    return TokenType.tok_var; 
+    return new Token(TokenType.tok_var); 
 }
 "procedure" { 
-    return TokenType.tok_procedure; 
+    return new Token(TokenType.tok_procedure); 
 }
 "begin" { 
-    return TokenType.tok_begin; 
+    return new Token(TokenType.tok_begin); 
 }
 "end" { 
-    return TokenType.tok_end; 
+    return new Token(TokenType.tok_end); 
 }
 "if" { 
-    return TokenType.tok_if; 
+    return new Token(TokenType.tok_if); 
 }
 "then" { 
-    return TokenType.tok_then; 
+    return new Token(TokenType.tok_then); 
 }
 "else" { 
-    return TokenType.tok_else; 
+    return new Token(TokenType.tok_else); 
 }
 "while" { 
-    return TokenType.tok_while; 
+    return new Token(TokenType.tok_while); 
 }
 "do" { 
-    return TokenType.tok_do; 
+    return new Token(TokenType.tok_do); 
 }
 "elsif" { 
-    return TokenType.tok_elsif; 
+    return new Token(TokenType.tok_elsif); 
 }
 "const" { 
-    return TokenType.tok_const; 
+    return new Token(TokenType.tok_const); 
 }
 "module" { 
-    return TokenType.tok_module; 
+    return new Token(TokenType.tok_module); 
 }
 "type" { 
-    return TokenType.tok_type; 
+    return new Token(TokenType.tok_type); 
 }
 
 ":=" { 
-    return TokenType.tok_assign; 
+    return new Token(TokenType.tok_assign); 
 }
 
 "," { 
-    return TokenType.tok_comma; 
+    return new Token(TokenType.tok_comma); 
 }
 "." { 
-    return TokenType.tok_dot; 
+    return new Token(TokenType.tok_dot); 
 }
 ":" { 
-    return TokenType.tok_colon; 
+    return new Token(TokenType.tok_colon); 
 }
 ";" { 
-    return TokenType.tok_semicolon; 
+    return new Token(TokenType.tok_semicolon); 
 }
 "(" { 
-    return TokenType.tok_lparen; 
+    return new Token(TokenType.tok_lparen); 
 }
 ")" { 
-    return TokenType.tok_rparen; 
+    return new Token(TokenType.tok_rparen); 
 }
 "[" { 
-    return TokenType.tok_lbracket; 
+    return new Token(TokenType.tok_lbracket); 
 }
 "]" { 
-    return TokenType.tok_rbracket; 
+    return new Token(TokenType.tok_rbracket); 
 }
 
 "=" { 
-    return TokenType.tok_equal; 
+    return new Token(TokenType.tok_equal); 
 }
 "#" { 
-    return TokenType.tok_not_equal; 
+    return new Token(TokenType.tok_not_equal); 
 }
 
 "<=" { 
-    return TokenType.tok_less_equal; 
+    return new Token(TokenType.tok_less_equal); 
 }
 "<" { 
-    return TokenType.tok_less; 
+    return new Token(TokenType.tok_less); 
 }
 ">=" { 
-    return TokenType.tok_greater_equal; 
+    return new Token(TokenType.tok_greater_equal); 
 }
 ">" { 
-    return TokenType.tok_greater; 
+    return new Token(TokenType.tok_greater); 
 }
 "+" { 
-    return TokenType.tok_plus; 
+    return new Token(TokenType.tok_plus); 
 }
 "-" { 
-    return TokenType.tok_minus; 
+    return new Token(TokenType.tok_minus); 
 }
 "*" { 
-    return TokenType.tok_multiply; 
+    return new Token(TokenType.tok_multiply); 
 }
 "div" { 
-    return TokenType.tok_divide; 
+    return new Token(TokenType.tok_divide); 
 }
 "mod" { 
-    return TokenType.tok_mod; 
+    return new Token(TokenType.tok_mod); 
 }
 "&" { 
-    return TokenType.tok_and; 
+    return new Token(TokenType.tok_and); 
 }
 "or" { 
-    return TokenType.tok_or; 
+    return new Token(TokenType.tok_or); 
 }
 "~" { 
-    return TokenType.tok_not; 
+    return new Token(TokenType.tok_not); 
 }
 
 {Octal} { 
     if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    return TokenType.tok_octal; 
+    return new Token(TokenType.tok_number, Integer.parseInt(yytext(), 8)); 
 }
 {Decimal} { 
     if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    return TokenType.tok_decimal; 
+    return new Token(TokenType.tok_number, Integer.parseInt(yytext())); 
 }
 {IllegalNumber} { throw new IllegalIntegerException(); }
 {IllegalOctal} { throw new IllegalOctalException(); }
@@ -197,7 +210,7 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 {Identifier} { 
     if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    return TokenType.tok_identifier; 
+    return new Token(TokenType.tok_identifier, yytext()); 
 }
 
 . { throw new IllegalSymbolException(); }

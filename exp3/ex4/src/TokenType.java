@@ -9,8 +9,7 @@ public enum TokenType {
     tok_eof,
 
     // NUMBERS
-    tok_decimal,
-    tok_octal,
+    tok_number,
 
     // IDENTIFIER
     tok_identifier,

@@ -5,7 +5,6 @@
 import exceptions.*;
 
 
-
 @SuppressWarnings("fallthrough")
 public class OberonScanner {
 
@@ -454,6 +453,19 @@ public class OberonScanner {
   @SuppressWarnings("unused")
   private boolean zzEOFDone;
 
+  /* user code: */
+    public int getLine() {
+        return yyline;
+    }
+
+    public int getCol() {
+        return yycolumn;
+    }
+
+    public String getPos() {
+        return String.format("<%d:%d>", getLine() + 1, getCol() + 1);
+    }
+
 
   /**
    * Creates a new scanner
@@ -724,7 +736,7 @@ public class OberonScanner {
    * @return the next token.
    * @exception java.io.IOException if any I/O-Error occurs.
    */
-  public TokenType yylex() throws java.io.IOException
+  public Token yylex() throws java.io.IOException
     , LexicalException
   {
     int zzInput;
@@ -862,7 +874,7 @@ public class OberonScanner {
 
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
-          {     return TokenType.tok_eof;
+          {     return new Token(TokenType.tok_eof);
  }
       }
       else {
@@ -883,108 +895,108 @@ public class OberonScanner {
           // fall through
           case 56: break;
           case 4:
-            { return TokenType.tok_not_equal;
+            { return new Token(TokenType.tok_not_equal);
             }
           // fall through
           case 57: break;
           case 5:
-            { return TokenType.tok_and;
+            { return new Token(TokenType.tok_and);
             }
           // fall through
           case 58: break;
           case 6:
-            { return TokenType.tok_lparen;
+            { return new Token(TokenType.tok_lparen);
             }
           // fall through
           case 59: break;
           case 7:
-            { return TokenType.tok_rparen;
+            { return new Token(TokenType.tok_rparen);
             }
           // fall through
           case 60: break;
           case 8:
-            { return TokenType.tok_multiply;
+            { return new Token(TokenType.tok_multiply);
             }
           // fall through
           case 61: break;
           case 9:
-            { return TokenType.tok_plus;
+            { return new Token(TokenType.tok_plus);
             }
           // fall through
           case 62: break;
           case 10:
-            { return TokenType.tok_comma;
+            { return new Token(TokenType.tok_comma);
             }
           // fall through
           case 63: break;
           case 11:
-            { return TokenType.tok_minus;
+            { return new Token(TokenType.tok_minus);
             }
           // fall through
           case 64: break;
           case 12:
-            { return TokenType.tok_dot;
+            { return new Token(TokenType.tok_dot);
             }
           // fall through
           case 65: break;
           case 13:
             { if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    return TokenType.tok_octal;
+    return new Token(TokenType.tok_number, Integer.parseInt(yytext(), 8));
             }
           // fall through
           case 66: break;
           case 14:
             { if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    return TokenType.tok_decimal;
+    return new Token(TokenType.tok_number, Integer.parseInt(yytext()));
             }
           // fall through
           case 67: break;
           case 15:
-            { return TokenType.tok_colon;
+            { return new Token(TokenType.tok_colon);
             }
           // fall through
           case 68: break;
           case 16:
-            { return TokenType.tok_semicolon;
+            { return new Token(TokenType.tok_semicolon);
             }
           // fall through
           case 69: break;
           case 17:
-            { return TokenType.tok_less;
+            { return new Token(TokenType.tok_less);
             }
           // fall through
           case 70: break;
           case 18:
-            { return TokenType.tok_equal;
+            { return new Token(TokenType.tok_equal);
             }
           // fall through
           case 71: break;
           case 19:
-            { return TokenType.tok_greater;
+            { return new Token(TokenType.tok_greater);
             }
           // fall through
           case 72: break;
           case 20:
             { if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    return TokenType.tok_identifier;
+    return new Token(TokenType.tok_identifier, yytext());
             }
           // fall through
           case 73: break;
           case 21:
-            { return TokenType.tok_lbracket;
+            { return new Token(TokenType.tok_lbracket);
             }
           // fall through
           case 74: break;
           case 22:
-            { return TokenType.tok_rbracket;
+            { return new Token(TokenType.tok_rbracket);
             }
           // fall through
           case 75: break;
           case 23:
-            { return TokenType.tok_not;
+            { return new Token(TokenType.tok_not);
             }
           // fall through
           case 76: break;
@@ -1004,137 +1016,137 @@ public class OberonScanner {
           // fall through
           case 79: break;
           case 27:
-            { return TokenType.tok_assign;
+            { return new Token(TokenType.tok_assign);
             }
           // fall through
           case 80: break;
           case 28:
-            { return TokenType.tok_less_equal;
+            { return new Token(TokenType.tok_less_equal);
             }
           // fall through
           case 81: break;
           case 29:
-            { return TokenType.tok_greater_equal;
+            { return new Token(TokenType.tok_greater_equal);
             }
           // fall through
           case 82: break;
           case 30:
-            { return TokenType.tok_do;
+            { return new Token(TokenType.tok_do);
             }
           // fall through
           case 83: break;
           case 31:
-            { return TokenType.tok_if;
+            { return new Token(TokenType.tok_if);
             }
           // fall through
           case 84: break;
           case 32:
-            { return TokenType.tok_of;
+            { return new Token(TokenType.tok_of);
             }
           // fall through
           case 85: break;
           case 33:
-            { return TokenType.tok_or;
+            { return new Token(TokenType.tok_or);
             }
           // fall through
           case 86: break;
           case 34:
-            { return TokenType.tok_divide;
+            { return new Token(TokenType.tok_divide);
             }
           // fall through
           case 87: break;
           case 35:
-            { return TokenType.tok_end;
+            { return new Token(TokenType.tok_end);
             }
           // fall through
           case 88: break;
           case 36:
-            { return TokenType.tok_mod;
+            { return new Token(TokenType.tok_mod);
             }
           // fall through
           case 89: break;
           case 37:
-            { return TokenType.tok_var;
+            { return new Token(TokenType.tok_var);
             }
           // fall through
           case 90: break;
           case 38:
-            { return TokenType.tok_else;
+            { return new Token(TokenType.tok_else);
             }
           // fall through
           case 91: break;
           case 39:
-            { return TokenType.tok_read;
+            { return new Token(TokenType.tok_read);
             }
           // fall through
           case 92: break;
           case 40:
-            { return TokenType.tok_then;
+            { return new Token(TokenType.tok_then);
             }
           // fall through
           case 93: break;
           case 41:
-            { return TokenType.tok_type;
+            { return new Token(TokenType.tok_type);
             }
           // fall through
           case 94: break;
           case 42:
-            { return TokenType.tok_array;
+            { return new Token(TokenType.tok_array);
             }
           // fall through
           case 95: break;
           case 43:
-            { return TokenType.tok_begin;
+            { return new Token(TokenType.tok_begin);
             }
           // fall through
           case 96: break;
           case 44:
-            { return TokenType.tok_const;
+            { return new Token(TokenType.tok_const);
             }
           // fall through
           case 97: break;
           case 45:
-            { return TokenType.tok_elsif;
+            { return new Token(TokenType.tok_elsif);
             }
           // fall through
           case 98: break;
           case 46:
-            { return TokenType.tok_while;
+            { return new Token(TokenType.tok_while);
             }
           // fall through
           case 99: break;
           case 47:
-            { return TokenType.tok_write;
+            { return new Token(TokenType.tok_write);
             }
           // fall through
           case 100: break;
           case 48:
-            { return TokenType.tok_module;
+            { return new Token(TokenType.tok_module);
             }
           // fall through
           case 101: break;
           case 49:
-            { return TokenType.tok_record;
+            { return new Token(TokenType.tok_record);
             }
           // fall through
           case 102: break;
           case 50:
-            { return TokenType.tok_boolean;
+            { return new Token(TokenType.tok_boolean);
             }
           // fall through
           case 103: break;
           case 51:
-            { return TokenType.tok_integer;
+            { return new Token(TokenType.tok_integer);
             }
           // fall through
           case 104: break;
           case 52:
-            { return TokenType.tok_writeln;
+            { return new Token(TokenType.tok_writeln);
             }
           // fall through
           case 105: break;
           case 53:
-            { return TokenType.tok_procedure;
+            { return new Token(TokenType.tok_procedure);
             }
           // fall through
           case 106: break;

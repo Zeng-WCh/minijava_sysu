@@ -1,6 +1,7 @@
 import java.io.*;
 import exceptions.*;
 import ast.*;
+import flowchart.*;
 
 public class Main {
     public static void main(String[] argv) throws Exception {
@@ -11,7 +12,15 @@ public class Main {
 
         for (int i = 0; i < argv.length; ++i) {
             OberonScanner scanner = new OberonScanner(new FileReader(argv[i]));
+            Parser parser = new Parser(scanner);
 
+            try {
+                parser.parse();
+            } catch (Exception e) {
+                System.err.println(String.format("Exception occured when parse near by %s", scanner.getPos()));
+                System.err.println(e.getMessage());
+                System.exit(1);
+            }
         }
     }
 }
