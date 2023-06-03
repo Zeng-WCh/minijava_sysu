@@ -1,0 +1,3 @@
+testcases/fib.031:
+Exception occured when parsing near by <24:5>: 
+Constant Exception: N+1 is not a constant expression.

@@ -108,12 +108,12 @@ public class OberonScanner {
     "\1\34\1\35\5\24\1\36\1\0\2\24\1\37\2\24"+
     "\1\40\1\41\7\24\1\37\2\0\2\31\4\24\2\42"+
     "\1\24\1\0\1\43\1\24\1\44\5\24\1\45\1\24"+
-    "\1\0\1\24\2\0\1\46\1\30\2\24\1\0\2\24"+
-    "\1\0\1\47\1\24\1\0\1\47\3\24\1\50\1\24"+
-    "\1\51\1\52\1\24\1\0\1\24\2\0\1\46\1\53"+
-    "\2\54\1\24\2\55\2\56\4\24\2\57\2\60\1\0"+
-    "\1\30\1\0\2\24\1\61\1\24\1\62\1\24\2\0"+
-    "\1\30\1\63\1\64\1\24\2\65\1\64\1\24\1\66";
+    "\1\0\1\24\2\0\1\2\1\30\2\24\1\0\2\24"+
+    "\1\0\1\46\1\24\1\0\1\46\3\24\1\47\1\24"+
+    "\1\50\1\51\1\24\1\0\1\24\2\0\1\2\1\52"+
+    "\2\53\1\24\2\54\2\55\4\24\2\56\2\57\1\0"+
+    "\1\30\1\0\2\24\1\60\1\24\1\61\1\24\2\0"+
+    "\1\30\1\62\1\63\1\24\2\64\1\63\1\24\1\65";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[160];
@@ -862,7 +862,7 @@ public class OberonScanner {
 
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
-          { return TokenType.tok_eof;
+          {     return TokenType.tok_eof;
  }
       }
       else {
@@ -871,326 +871,273 @@ public class OberonScanner {
             { throw new IllegalSymbolException();
             }
           // fall through
-          case 55: break;
+          case 54: break;
           case 2:
             { 
             }
           // fall through
-          case 56: break;
+          case 55: break;
           case 3:
             { System.out.print(yytext());
             }
           // fall through
-          case 57: break;
+          case 56: break;
           case 4:
-            { System.out.printf("notequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_not_equal;
+            { return TokenType.tok_not_equal;
+            }
+          // fall through
+          case 57: break;
+          case 5:
+            { return TokenType.tok_and;
             }
           // fall through
           case 58: break;
-          case 5:
-            { System.out.printf("and: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_and;
+          case 6:
+            { return TokenType.tok_lparen;
             }
           // fall through
           case 59: break;
-          case 6:
-            { System.out.printf("lparen: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_lparen;
+          case 7:
+            { return TokenType.tok_rparen;
             }
           // fall through
           case 60: break;
-          case 7:
-            { System.out.printf("rparen: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_rparen;
+          case 8:
+            { return TokenType.tok_multiply;
             }
           // fall through
           case 61: break;
-          case 8:
-            { System.out.printf("multiply: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_multiply;
+          case 9:
+            { return TokenType.tok_plus;
             }
           // fall through
           case 62: break;
-          case 9:
-            { System.out.printf("plus: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_plus;
+          case 10:
+            { return TokenType.tok_comma;
             }
           // fall through
           case 63: break;
-          case 10:
-            { System.out.printf("comma: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_comma;
+          case 11:
+            { return TokenType.tok_minus;
             }
           // fall through
           case 64: break;
-          case 11:
-            { System.out.printf("minus: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_minus;
+          case 12:
+            { return TokenType.tok_dot;
             }
           // fall through
           case 65: break;
-          case 12:
-            { System.out.printf("dot: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_dot;
-            }
-          // fall through
-          case 66: break;
           case 13:
             { if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    System.out.printf("Octal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
     return TokenType.tok_octal;
             }
           // fall through
-          case 67: break;
+          case 66: break;
           case 14:
             { if (yylength() > 12)
         throw new IllegalIntegerRangeException();
-    System.out.printf("decimal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
     return TokenType.tok_decimal;
             }
           // fall through
-          case 68: break;
+          case 67: break;
           case 15:
-            { System.out.printf("colon: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_colon;
+            { return TokenType.tok_colon;
+            }
+          // fall through
+          case 68: break;
+          case 16:
+            { return TokenType.tok_semicolon;
             }
           // fall through
           case 69: break;
-          case 16:
-            { System.out.printf("semicolon: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_semicolon;
+          case 17:
+            { return TokenType.tok_less;
             }
           // fall through
           case 70: break;
-          case 17:
-            { System.out.printf("less: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_less;
+          case 18:
+            { return TokenType.tok_equal;
             }
           // fall through
           case 71: break;
-          case 18:
-            { System.out.printf("equal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_equal;
+          case 19:
+            { return TokenType.tok_greater;
             }
           // fall through
           case 72: break;
-          case 19:
-            { System.out.printf("greater: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_greater;
-            }
-          // fall through
-          case 73: break;
           case 20:
             { if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    System.out.printf("identifier: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
     return TokenType.tok_identifier;
             }
           // fall through
-          case 74: break;
+          case 73: break;
           case 21:
-            { System.out.printf("lbracket: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_lbracket;
+            { return TokenType.tok_lbracket;
+            }
+          // fall through
+          case 74: break;
+          case 22:
+            { return TokenType.tok_rbracket;
             }
           // fall through
           case 75: break;
-          case 22:
-            { System.out.printf("rbracket: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_rbracket;
+          case 23:
+            { return TokenType.tok_not;
             }
           // fall through
           case 76: break;
-          case 23:
-            { System.out.printf("not: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_not;
-            }
-          // fall through
-          case 77: break;
           case 24:
             { throw new MismatchedCommentException();
             }
           // fall through
-          case 78: break;
+          case 77: break;
           case 25:
             { throw new IllegalOctalException();
             }
           // fall through
-          case 79: break;
+          case 78: break;
           case 26:
             { throw new IllegalIntegerException();
             }
           // fall through
-          case 80: break;
+          case 79: break;
           case 27:
-            { System.out.printf("assign: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_assign;
+            { return TokenType.tok_assign;
+            }
+          // fall through
+          case 80: break;
+          case 28:
+            { return TokenType.tok_less_equal;
             }
           // fall through
           case 81: break;
-          case 28:
-            { System.out.printf("lessequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_less_equal;
+          case 29:
+            { return TokenType.tok_greater_equal;
             }
           // fall through
           case 82: break;
-          case 29:
-            { System.out.printf("greaterequal: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_greater_equal;
+          case 30:
+            { return TokenType.tok_do;
             }
           // fall through
           case 83: break;
-          case 30:
-            { System.out.printf("do: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_do;
+          case 31:
+            { return TokenType.tok_if;
             }
           // fall through
           case 84: break;
-          case 31:
-            { System.out.printf("if: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_if;
+          case 32:
+            { return TokenType.tok_of;
             }
           // fall through
           case 85: break;
-          case 32:
-            { System.out.printf("of: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_of;
+          case 33:
+            { return TokenType.tok_or;
             }
           // fall through
           case 86: break;
-          case 33:
-            { System.out.printf("or: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_or;
+          case 34:
+            { return TokenType.tok_divide;
             }
           // fall through
           case 87: break;
-          case 34:
-            { System.out.printf("divide: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_divide;
+          case 35:
+            { return TokenType.tok_end;
             }
           // fall through
           case 88: break;
-          case 35:
-            { System.out.printf("end: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_end;
+          case 36:
+            { return TokenType.tok_mod;
             }
           // fall through
           case 89: break;
-          case 36:
-            { System.out.printf("mod: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_mod;
+          case 37:
+            { return TokenType.tok_var;
             }
           // fall through
           case 90: break;
-          case 37:
-            { System.out.printf("var: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_var;
+          case 38:
+            { return TokenType.tok_else;
             }
           // fall through
           case 91: break;
-          case 38:
-            { System.out.printf("comment: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_comment;
+          case 39:
+            { return TokenType.tok_read;
             }
           // fall through
           case 92: break;
-          case 39:
-            { System.out.printf("else: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_else;
+          case 40:
+            { return TokenType.tok_then;
             }
           // fall through
           case 93: break;
-          case 40:
-            { System.out.printf("read: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_read;
+          case 41:
+            { return TokenType.tok_type;
             }
           // fall through
           case 94: break;
-          case 41:
-            { System.out.printf("then: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_then;
+          case 42:
+            { return TokenType.tok_array;
             }
           // fall through
           case 95: break;
-          case 42:
-            { System.out.printf("type: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_type;
+          case 43:
+            { return TokenType.tok_begin;
             }
           // fall through
           case 96: break;
-          case 43:
-            { System.out.printf("array: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_array;
+          case 44:
+            { return TokenType.tok_const;
             }
           // fall through
           case 97: break;
-          case 44:
-            { System.out.printf("begin: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_begin;
+          case 45:
+            { return TokenType.tok_elsif;
             }
           // fall through
           case 98: break;
-          case 45:
-            { System.out.printf("const: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_const;
+          case 46:
+            { return TokenType.tok_while;
             }
           // fall through
           case 99: break;
-          case 46:
-            { System.out.printf("elsif: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_elsif;
+          case 47:
+            { return TokenType.tok_write;
             }
           // fall through
           case 100: break;
-          case 47:
-            { System.out.printf("while: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_while;
+          case 48:
+            { return TokenType.tok_module;
             }
           // fall through
           case 101: break;
-          case 48:
-            { System.out.printf("write: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_write;
+          case 49:
+            { return TokenType.tok_record;
             }
           // fall through
           case 102: break;
-          case 49:
-            { System.out.printf("module: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_module;
+          case 50:
+            { return TokenType.tok_boolean;
             }
           // fall through
           case 103: break;
-          case 50:
-            { System.out.printf("record: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_record;
+          case 51:
+            { return TokenType.tok_integer;
             }
           // fall through
           case 104: break;
-          case 51:
-            { System.out.printf("boolean: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_boolean;
+          case 52:
+            { return TokenType.tok_writeln;
             }
           // fall through
           case 105: break;
-          case 52:
-            { System.out.printf("integer: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_integer;
+          case 53:
+            { return TokenType.tok_procedure;
             }
           // fall through
           case 106: break;
-          case 53:
-            { System.out.printf("writeln: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_writeln;
-            }
-          // fall through
-          case 107: break;
-          case 54:
-            { System.out.printf("procedure: '%s'\t\tLoc=<%d:%d>\n", yytext(), yyline, yycolumn);
-    return TokenType.tok_procedure;
-            }
-          // fall through
-          case 108: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
