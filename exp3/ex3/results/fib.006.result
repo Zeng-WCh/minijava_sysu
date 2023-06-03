@@ -1,4 +1,4 @@
 testcases/fib.006:
 Exception in thread "main" exceptions.TypeMismatchedException: actual parameter: INTEGER does not match formal parameter: INTEGER
-	at Main.checkArgs(Main.java:47)
-	at Main.main(Main.java:112)
+	at Main.checkArgs(Main.java:48)
+	at Main.main(Main.java:114)

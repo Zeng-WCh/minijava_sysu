@@ -2,6 +2,7 @@ import java_cup.runtime.*;
 import ast.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collections;
 import callgraph.*;
 import exceptions.*;
 import java.io.*;
@@ -99,7 +100,8 @@ public class Main {
 
 				for (procedureDec func : mb.declarations.procDecs) {
 					ArrayList<callStmt> calls = func.body.calls;
-					Integer begin = 0;
+					Collections.reverse(calls);
+					Integer begin = 1;
 					for (callStmt call : calls) {
 						Integer idx = mb.declarations.pros.get(call.name.toUpperCase());
 						if (idx == null) {

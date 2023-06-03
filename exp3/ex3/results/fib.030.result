@@ -1,3 +1,3 @@
 testcases/fib.030:
 Exception in thread "main" exceptions.SyntacticException: Procedure: FIB9 is not defined.
-	at Main.main(Main.java:106)
+	at Main.main(Main.java:108)
