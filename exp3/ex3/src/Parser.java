@@ -1944,6 +1944,9 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (pct.exprs.size() != 1) {
+        throw new ParameterMismatchedException(String.format("WRITE accepts 1 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("WRITE", pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1961,7 +1964,11 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (pct.exprs.size() != 1) {
+        throw new ParameterMismatchedException(String.format("READ accepts 1 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("READ", pct);
+    
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1978,6 +1985,9 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    if (pct.exprs.size() != 0) {
+        throw new ParameterMismatchedException(String.format("WRITELN accepts 0 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("WRITELN", pct);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_call",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

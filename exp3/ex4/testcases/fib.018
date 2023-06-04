@@ -1,0 +1,71 @@
+(* Missing type info for field list *)
+
+MODULE Fib;
+    VAR 
+        n: INTEGER;
+    PROCEDURE Fib1(n: INTEGER; var result: INTEGER);
+    VAR i, j: INTEGER;
+    BEGIN
+        IF n = 0 THEN
+            result := 0
+        ELSIF n = 1 THEN
+            result := n
+        ELSE
+            Fib1(n-1, i);
+            Fib1(n-2, j);
+            result := i + j
+        END
+    END Fib1;
+
+    PROCEDURE Fib2(VAR n: INTEGER);
+    CONST 
+        c = 012; (* OCT 012 MEANS 10 IN DEC *)
+    TYPE
+        int = INTEGER;
+        rec = RECORD
+            val, useless: int;
+            flag: ;
+        END;
+    VAR 
+        tmp: ARRAY 10 OF REC;
+        i1: INTEGER;
+    BEGIN
+        tmp[0].val := 1;
+        tmp[1].val := 1;
+        
+        i1 := 2;
+
+        WHILE i1 < c DO
+            tmp[i1].val := tmp[i1-1].val + tmp[i1-2].val;
+            i1 := i1 + 1
+        END;
+
+        IF n < c THEN
+            n := tmp[n].val
+        ELSIF (n >= c) & (n < c + 1) THEN
+            n := tmp[c-1].val + tmp[c-2].val
+        ELSIF n <= c + 1 THEN
+            n := tmp[c-1].val + tmp[c-2].val + tmp[c-3].val
+        ELSE
+            Fib1(n-1, n)
+        END
+    END Fib2;
+
+    PROCEDURE Main();
+    BEGIN
+        read(n);
+        IF n # 0 THEN
+            Fib1(n, n);
+            Fib2(n);
+            write(n);
+            writeln
+        ELSIF n > 0 THEN
+            write(n);
+            writeln
+        ELSE
+            write(n);
+            writeln
+        END
+    END Main;
+   
+END Fib.

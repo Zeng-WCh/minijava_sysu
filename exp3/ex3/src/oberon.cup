@@ -739,14 +739,24 @@ procedure_call ::= IDENTIFIER:id procedure_call_tail:pct
 :}
 | WRITE:w procedure_call_tail:pct
 {:
+    if (pct.exprs.size() != 1) {
+        throw new ParameterMismatchedException(String.format("WRITE accepts 1 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("WRITE", pct);
 :}
 | READ:r procedure_call_tail:pct 
 {:
+    if (pct.exprs.size() != 1) {
+        throw new ParameterMismatchedException(String.format("READ accepts 1 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("READ", pct);
+    
 :}
 | WRITELN:wl procedure_call_tail:pct
 {:
+    if (pct.exprs.size() != 0) {
+        throw new ParameterMismatchedException(String.format("WRITELN accepts 0 params, but get %d.", pct.exprs.size()));
+    }
     RESULT = new callStmt("WRITELN", pct);
 :};
 

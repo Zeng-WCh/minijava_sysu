@@ -10,7 +10,7 @@ public class Token {
      */
     private TokenType type;
     /**
-     * The lex val in String form
+     * The lex val in String form/Integer form
      */
     private Object value;
 
