@@ -60,13 +60,13 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
     return new Token(TokenType.tok_integer); 
 }
 "write" { 
-    return new Token(TokenType.tok_write); 
+    return new Token(TokenType.tok_write, "WRITE"); 
 }
 "read" { 
-    return new Token(TokenType.tok_read);
+    return new Token(TokenType.tok_read, "READ");
 }
 "writeln" { 
-    return new Token(TokenType.tok_writeln); 
+    return new Token(TokenType.tok_writeln, "WRITELN"); 
 }
 
 "array" { 
@@ -148,47 +148,47 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 }
 
 "=" { 
-    return new Token(TokenType.tok_equal); 
+    return new Token(TokenType.tok_equal, "="); 
 }
 "#" { 
-    return new Token(TokenType.tok_not_equal); 
+    return new Token(TokenType.tok_not_equal, "#"); 
 }
 
 "<=" { 
-    return new Token(TokenType.tok_less_equal); 
+    return new Token(TokenType.tok_less_equal, "<="); 
 }
 "<" { 
-    return new Token(TokenType.tok_less); 
+    return new Token(TokenType.tok_less, "<"); 
 }
 ">=" { 
-    return new Token(TokenType.tok_greater_equal); 
+    return new Token(TokenType.tok_greater_equal, ">="); 
 }
 ">" { 
-    return new Token(TokenType.tok_greater); 
+    return new Token(TokenType.tok_greater, ">"); 
 }
 "+" { 
-    return new Token(TokenType.tok_plus); 
+    return new Token(TokenType.tok_plus, "+"); 
 }
 "-" { 
-    return new Token(TokenType.tok_minus); 
+    return new Token(TokenType.tok_minus, "-"); 
 }
 "*" { 
-    return new Token(TokenType.tok_multiply); 
+    return new Token(TokenType.tok_multiply, "*"); 
 }
 "div" { 
-    return new Token(TokenType.tok_divide); 
+    return new Token(TokenType.tok_divide, "DIV"); 
 }
 "mod" { 
-    return new Token(TokenType.tok_mod); 
+    return new Token(TokenType.tok_mod, "MOD"); 
 }
 "&" { 
-    return new Token(TokenType.tok_and); 
+    return new Token(TokenType.tok_and, "&"); 
 }
 "or" { 
-    return new Token(TokenType.tok_or); 
+    return new Token(TokenType.tok_or, "OR"); 
 }
 "~" { 
-    return new Token(TokenType.tok_not); 
+    return new Token(TokenType.tok_not, "~"); 
 }
 
 {Octal} { 
@@ -210,7 +210,7 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 {Identifier} { 
     if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    return new Token(TokenType.tok_identifier, yytext()); 
+    return new Token(TokenType.tok_identifier, yytext().toUpperCase()); 
 }
 
 . { throw new IllegalSymbolException(); }

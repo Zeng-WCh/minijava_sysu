@@ -35,4 +35,16 @@ public class formalParameters implements ast {
         }
         Collections.reverse(fps);
     }
+
+    public void trans() {
+        if (fpList.isEmpty()) return;
+        for (fpSection f : fpList) {
+            identifierList list = f.identifierList;
+            boolean isVar = f.isVar;
+            typeAST type = f.type;
+            for (String s : list.identifiers) {
+                fps.add(new fp(s, isVar, type));
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-(* Type Mismatched in expression(i1 & c) *)
+(* A Fib Calculate Program which is used to show how to write program in Oberon0 *)
 
 MODULE Fib;
     VAR 
@@ -24,7 +24,7 @@ MODULE Fib;
         int = INTEGER;
         rec = RECORD
             val, useless: int;
-            flag: BOOLEAN;
+            flag: BOOLEAN
         END;
     VAR 
         tmp: ARRAY 10 OF REC;
@@ -67,5 +67,5 @@ MODULE Fib;
             writeln
         END
     END Main;
-   
+    
 END Fib.

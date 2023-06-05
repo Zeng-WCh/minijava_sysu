@@ -895,12 +895,12 @@ public class OberonScanner {
           // fall through
           case 56: break;
           case 4:
-            { return new Token(TokenType.tok_not_equal);
+            { return new Token(TokenType.tok_not_equal, "#");
             }
           // fall through
           case 57: break;
           case 5:
-            { return new Token(TokenType.tok_and);
+            { return new Token(TokenType.tok_and, "&");
             }
           // fall through
           case 58: break;
@@ -915,12 +915,12 @@ public class OberonScanner {
           // fall through
           case 60: break;
           case 8:
-            { return new Token(TokenType.tok_multiply);
+            { return new Token(TokenType.tok_multiply, "*");
             }
           // fall through
           case 61: break;
           case 9:
-            { return new Token(TokenType.tok_plus);
+            { return new Token(TokenType.tok_plus, "+");
             }
           // fall through
           case 62: break;
@@ -930,7 +930,7 @@ public class OberonScanner {
           // fall through
           case 63: break;
           case 11:
-            { return new Token(TokenType.tok_minus);
+            { return new Token(TokenType.tok_minus, "-");
             }
           // fall through
           case 64: break;
@@ -964,24 +964,24 @@ public class OberonScanner {
           // fall through
           case 69: break;
           case 17:
-            { return new Token(TokenType.tok_less);
+            { return new Token(TokenType.tok_less, "<");
             }
           // fall through
           case 70: break;
           case 18:
-            { return new Token(TokenType.tok_equal);
+            { return new Token(TokenType.tok_equal, "=");
             }
           // fall through
           case 71: break;
           case 19:
-            { return new Token(TokenType.tok_greater);
+            { return new Token(TokenType.tok_greater, ">");
             }
           // fall through
           case 72: break;
           case 20:
             { if (yylength() > 24)
         throw new IllegalIdentifierLengthException();
-    return new Token(TokenType.tok_identifier, yytext());
+    return new Token(TokenType.tok_identifier, yytext().toUpperCase());
             }
           // fall through
           case 73: break;
@@ -996,7 +996,7 @@ public class OberonScanner {
           // fall through
           case 75: break;
           case 23:
-            { return new Token(TokenType.tok_not);
+            { return new Token(TokenType.tok_not, "~");
             }
           // fall through
           case 76: break;
@@ -1021,12 +1021,12 @@ public class OberonScanner {
           // fall through
           case 80: break;
           case 28:
-            { return new Token(TokenType.tok_less_equal);
+            { return new Token(TokenType.tok_less_equal, "<=");
             }
           // fall through
           case 81: break;
           case 29:
-            { return new Token(TokenType.tok_greater_equal);
+            { return new Token(TokenType.tok_greater_equal, ">=");
             }
           // fall through
           case 82: break;
@@ -1046,12 +1046,12 @@ public class OberonScanner {
           // fall through
           case 85: break;
           case 33:
-            { return new Token(TokenType.tok_or);
+            { return new Token(TokenType.tok_or, "OR");
             }
           // fall through
           case 86: break;
           case 34:
-            { return new Token(TokenType.tok_divide);
+            { return new Token(TokenType.tok_divide, "DIV");
             }
           // fall through
           case 87: break;
@@ -1061,7 +1061,7 @@ public class OberonScanner {
           // fall through
           case 88: break;
           case 36:
-            { return new Token(TokenType.tok_mod);
+            { return new Token(TokenType.tok_mod, "MOD");
             }
           // fall through
           case 89: break;
@@ -1076,7 +1076,7 @@ public class OberonScanner {
           // fall through
           case 91: break;
           case 39:
-            { return new Token(TokenType.tok_read);
+            { return new Token(TokenType.tok_read, "READ");
             }
           // fall through
           case 92: break;
@@ -1116,7 +1116,7 @@ public class OberonScanner {
           // fall through
           case 99: break;
           case 47:
-            { return new Token(TokenType.tok_write);
+            { return new Token(TokenType.tok_write, "WRITE");
             }
           // fall through
           case 100: break;
@@ -1141,7 +1141,7 @@ public class OberonScanner {
           // fall through
           case 104: break;
           case 52:
-            { return new Token(TokenType.tok_writeln);
+            { return new Token(TokenType.tok_writeln, "WRITELN");
             }
           // fall through
           case 105: break;

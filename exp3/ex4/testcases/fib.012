@@ -26,7 +26,7 @@ MODULE Fib;
         int = INTEGER;
         rec = RECORD
             val, useless: int;
-            flag: BOOLEAN;
+            flag: BOOLEAN
         END;
     VAR 
         tmp: ARRAY 10 OF REC;

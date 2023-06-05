@@ -33,7 +33,17 @@ public class expr implements ast {
         this.lhs = lhs;
         this.op = op;
         this.rhs = rhs;
-        this.isConstant = false;
+        if (lhs == null && rhs == null)
+            this.isConstant = false;
+        else if (rhs == null) {
+            this.isConstant = lhs.isConstant;
+        }
+        else {
+            if (lhs.isConstant && rhs.isConstant)
+                this.isConstant = true;
+            else
+                this.isConstant = false;
+        }
     }
 
     /**
