@@ -544,6 +544,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     callStmtsPos = new HashMap<>();
     unsolvedConstants = new ArrayList<>();
     unsolvedConstantsPos = new HashMap<>();
+    globalProceMap = new HashMap<>();
+    fieldMap = new HashMap<>();
 
     }
 
@@ -567,6 +569,10 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, Integer> globalVarsMap;
     private HashMap<String, Integer> globalConstantsMap;
     private HashMap<String, Integer> globalTypesMap;
+
+    private HashMap<String, Integer> globalProceMap;
+
+    private HashMap<String, Integer> fieldMap;
 
     private ArrayList<varDec> localVars;
     private ArrayList<constDec> localConstants;
@@ -762,6 +768,8 @@ class CUP$Parser$actions {
             globalConstantsMap = new HashMap<>();
 
             for (int i = 0; i < globalConstants.size(); ++i) {
+                if (globalConstantsMap.get(globalConstants.get(i).name) != null)
+                    throw new SyntacticException(String.format("Constant: %s is already defined.", globalConstants.get(i).name));
                 globalConstantsMap.put(globalConstants.get(i).name, i);
             }
         }
@@ -776,6 +784,8 @@ class CUP$Parser$actions {
             localConstantsMap = new HashMap<>();
 
             for (int i = 0; i < localConstants.size(); ++i) {
+                if (localConstantsMap.get(localConstants.get(i).name) != null)
+                    throw new SyntacticException(String.format("Constant: %s is already defined.", localConstants.get(i).name));
                 localConstantsMap.put(localConstants.get(i).name, i);
             }
         }
@@ -912,6 +922,8 @@ class CUP$Parser$actions {
             globalTypesMap = new HashMap<>();
 
             for (int i = 0; i < globalTypes.size(); ++i) {
+                if (globalTypesMap.get(globalTypes.get(i).name) != null)
+                    throw new SyntacticException(String.format("Type: %s is already defined.", globalTypes.get(i).name));
                 globalTypesMap.put(globalTypes.get(i).name, i);
             }
         }
@@ -927,6 +939,8 @@ class CUP$Parser$actions {
             localTypesMap = new HashMap<>();
 
             for (int i = 0; i < localTypes.size(); ++i) {
+                if (localTypesMap.get(localTypes.get(i).name) != null)
+                    throw new SyntacticException(String.format("Type: %s is already defined.", localTypes.get(i).name));
                 localTypesMap.put(localTypes.get(i).name, i);
             }
         }
@@ -1073,6 +1087,8 @@ class CUP$Parser$actions {
             globalVarsMap = new HashMap<>();
             for (int i = 0; i < globalVars.size(); ++i) {
                 for (String ident : globalVars.get(i).idList.identifiers) {
+                    if (globalVarsMap.get(ident) != null)
+                        throw new SyntacticException(String.format("Variable: %s is already defined.", ident));
                     globalVarsMap.put(ident, i);
                 }
             }
@@ -1088,6 +1104,8 @@ class CUP$Parser$actions {
             localVarMap = new HashMap<>();
             for (int i = 0; i < localVars.size(); ++i) {
                 for (String ident : localVars.get(i).idList.identifiers) {
+                    if (localVarMap.get(ident) != null)
+                        throw new SyntacticException(String.format("Variable: %s is already defined.", ident));
                     localVarMap.put(ident, i);
                 }
             }
@@ -1275,9 +1293,13 @@ class CUP$Parser$actions {
 		int fpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		formalParameters fp = (formalParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    id = id.toUpperCase();
     if (isGlobal)
         isGlobal = false;
-    RESULT = new procedureHead(id.toUpperCase(), fp);
+    if (globalProceMap.get(id) != null)
+        throw new SyntacticException(String.format("Procedure: %s is already defined.", id));
+    globalProceMap.put(id, 0);
+    RESULT = new procedureHead(id, fp);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1531,6 +1553,7 @@ class CUP$Parser$actions {
 		recordType r = (recordType)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
     RESULT = new typeAST("RECORD", r);
+    fieldMap = new HashMap<>();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1599,6 +1622,11 @@ class CUP$Parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		typeAST t = (typeAST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+    for (String id : il.identifiers) {
+        if (fieldMap.get(id) != null)
+            throw new SyntacticException(String.format("Field: %s is already defined.", id));
+        fieldMap.put(id, 0);
+    }
     RESULT = new fieldList(il, t);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("field_list",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

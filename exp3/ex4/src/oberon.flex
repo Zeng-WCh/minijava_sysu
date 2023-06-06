@@ -151,7 +151,7 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
     return new Token(TokenType.tok_equal, "="); 
 }
 "#" { 
-    return new Token(TokenType.tok_not_equal, "#"); 
+    return new Token(TokenType.tok_not_equal, "&ne"); 
 }
 
 "<=" { 

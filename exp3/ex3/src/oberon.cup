@@ -16,6 +16,10 @@ parser code {:
     private HashMap<String, Integer> globalConstantsMap;
     private HashMap<String, Integer> globalTypesMap;
 
+    private HashMap<String, Integer> globalProceMap;
+
+    private HashMap<String, Integer> fieldMap;
+
     private ArrayList<varDec> localVars;
     private ArrayList<constDec> localConstants;
     private ArrayList<typeDec> localTypes;
@@ -61,6 +65,8 @@ init with {:
     callStmtsPos = new HashMap<>();
     unsolvedConstants = new ArrayList<>();
     unsolvedConstantsPos = new HashMap<>();
+    globalProceMap = new HashMap<>();
+    fieldMap = new HashMap<>();
 :}
 
 scan with {:
@@ -219,6 +225,8 @@ const_declaration ::= CONST const_dectail:ct
             globalConstantsMap = new HashMap<>();
 
             for (int i = 0; i < globalConstants.size(); ++i) {
+                if (globalConstantsMap.get(globalConstants.get(i).name) != null)
+                    throw new SyntacticException(String.format("Constant: %s is already defined.", globalConstants.get(i).name));
                 globalConstantsMap.put(globalConstants.get(i).name, i);
             }
         }
@@ -233,6 +241,8 @@ const_declaration ::= CONST const_dectail:ct
             localConstantsMap = new HashMap<>();
 
             for (int i = 0; i < localConstants.size(); ++i) {
+                if (localConstantsMap.get(localConstants.get(i).name) != null)
+                    throw new SyntacticException(String.format("Constant: %s is already defined.", localConstants.get(i).name));
                 localConstantsMap.put(localConstants.get(i).name, i);
             }
         }
@@ -312,6 +322,8 @@ type_declaration ::= TYPE type_dectail:tt
             globalTypesMap = new HashMap<>();
 
             for (int i = 0; i < globalTypes.size(); ++i) {
+                if (globalTypesMap.get(globalTypes.get(i).name) != null)
+                    throw new SyntacticException(String.format("Type: %s is already defined.", globalTypes.get(i).name));
                 globalTypesMap.put(globalTypes.get(i).name, i);
             }
         }
@@ -327,6 +339,8 @@ type_declaration ::= TYPE type_dectail:tt
             localTypesMap = new HashMap<>();
 
             for (int i = 0; i < localTypes.size(); ++i) {
+                if (localTypesMap.get(localTypes.get(i).name) != null)
+                    throw new SyntacticException(String.format("Type: %s is already defined.", localTypes.get(i).name));
                 localTypesMap.put(localTypes.get(i).name, i);
             }
         }
@@ -416,6 +430,8 @@ var_declaration ::= VAR var_dectail:vt
             globalVarsMap = new HashMap<>();
             for (int i = 0; i < globalVars.size(); ++i) {
                 for (String ident : globalVars.get(i).idList.identifiers) {
+                    if (globalVarsMap.get(ident) != null)
+                        throw new SyntacticException(String.format("Variable: %s is already defined.", ident));
                     globalVarsMap.put(ident, i);
                 }
             }
@@ -431,6 +447,8 @@ var_declaration ::= VAR var_dectail:vt
             localVarMap = new HashMap<>();
             for (int i = 0; i < localVars.size(); ++i) {
                 for (String ident : localVars.get(i).idList.identifiers) {
+                    if (localVarMap.get(ident) != null)
+                        throw new SyntacticException(String.format("Variable: %s is already defined.", ident));
                     localVarMap.put(ident, i);
                 }
             }
@@ -501,9 +519,13 @@ procedure_body_tail ::= BEGIN statement_sequence:s
 
 procedure_head ::= PROCEDURE IDENTIFIER:id procedure_head_tail:fp
 {:
+    id = id.toUpperCase();
     if (isGlobal)
         isGlobal = false;
-    RESULT = new procedureHead(id.toUpperCase(), fp);
+    if (globalProceMap.get(id) != null)
+        throw new SyntacticException(String.format("Procedure: %s is already defined.", id));
+    globalProceMap.put(id, 0);
+    RESULT = new procedureHead(id, fp);
 :};
 
 procedure_head_tail ::= formal_parameters:fp
@@ -605,6 +627,7 @@ type ::= IDENTIFIER:id
 | record_type:r
 {:
     RESULT = new typeAST("RECORD", r);
+    fieldMap = new HashMap<>();
 :};
 
 record_type ::= RECORD field_list:f record_tail:rt END
@@ -629,6 +652,11 @@ record_tail ::= SEMICOLON field_list:f record_tail:rt
 
 field_list ::= identifier_list:il COLON type:t
 {:
+    for (String id : il.identifiers) {
+        if (fieldMap.get(id) != null)
+            throw new SyntacticException(String.format("Field: %s is already defined.", id));
+        fieldMap.put(id, 0);
+    }
     RESULT = new fieldList(il, t);
 :}
 | identifier_list COLON 

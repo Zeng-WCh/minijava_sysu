@@ -895,7 +895,7 @@ public class OberonScanner {
           // fall through
           case 56: break;
           case 4:
-            { return new Token(TokenType.tok_not_equal, "#");
+            { return new Token(TokenType.tok_not_equal, "&ne");
             }
           // fall through
           case 57: break;

@@ -55,6 +55,8 @@ public class Parser {
 
     private HashMap<String, typeAST> params;
 
+    private HashMap<String, Integer> fieldMap;
+
     private typeAST selectTypes;
 
     private ifStmt currentIf;
@@ -140,6 +142,7 @@ public class Parser {
         this.currentIf = null;
         this.unsolvedProcCalling = new HashMap<>();
         this.unsolvedProcPos = new HashMap<>();
+        this.fieldMap = new HashMap<>();
     }
 
     /**
@@ -300,10 +303,16 @@ public class Parser {
         }
         constDec constDec = new constDec((String) ident.getVal(), constExpr);
         if (isGlobal) {
+            if (this.globalConstMap.get((String) ident.getVal()) != null) {
+                throw new SyntacticException(String.format("Const declaration should not have duplicate names(%s).", (String) ident.getVal()));
+            }
             this.globalConstList.add(constDec);
             this.globalConstMap.put((String) ident.getVal(), this.globalConstList.size() - 1);
         }
         else {
+            if (this.localConstMap.get((String) ident.getVal()) != null) {
+                throw new SyntacticException(String.format("Const declaration should not have duplicate names(%s).", (String) ident.getVal()));
+            }
             this.localConstList.add(constDec);
             this.localConstMap.put((String) ident.getVal(), this.localConstList.size() - 1);
         }
@@ -347,10 +356,16 @@ public class Parser {
         }
         typeDec types = new typeDec((String) ident.getVal(), t);
         if (isGlobal) {
+            if (this.globalTypeMap.get((String) ident.getVal()) != null) {
+                throw new SyntacticException(String.format("Duplicate type(%s) identifier.", (String) ident.getVal()));
+            }
             this.globalTypeList.add(types);
             this.globalTypeMap.put((String) ident.getVal(), this.globalTypeList.size() - 1);
         }
         else {
+            if (this.localTypeMap.get((String) ident.getVal()) != null) {
+                throw new SyntacticException(String.format("Duplicate type(%s) identifier.", (String) ident.getVal()));
+            }
             this.localTypeList.add(types);
             this.localTypeMap.put((String) ident.getVal(), this.localTypeList.size() - 1);
         }
@@ -379,6 +394,7 @@ public class Parser {
     private ArrayList<varDec> parseVarDecl() throws Exception {
         ArrayList<varDec> ret = new ArrayList<>();
         identifierList idList = this.parseIdentifierList();
+
         Token colon = this.next();
         if (colon.getType() != TokenType.tok_colon) {
             throw new SyntacticException("Missing ':' for var declarations.");
@@ -477,6 +493,10 @@ public class Parser {
         Token isSemiToken = this.next();
         if (isSemiToken.getType() != TokenType.tok_semicolon) {
             throw new SyntacticException("Procedure declaration should end with a semicolon.");
+        }
+
+        if (this.globalProcMap.get(head.name) != null) {
+            throw new SyntacticException(String.format("%s declarated duplicated.", head.name));
         }
 
         
@@ -1344,6 +1364,7 @@ public class Parser {
      * @throws Exception if syntax error
      */
     private recordType parseRecordType() throws Exception {
+        this.fieldMap = new HashMap<>();
         Token record = this.next();
         if (record.getType() != TokenType.tok_record) {
             throw new SyntacticException("Expected 'record' when declarated a record type.");
@@ -1353,6 +1374,12 @@ public class Parser {
         ArrayList<fieldList> fieldList = new ArrayList<>();
         do {
             fieldList fl = this.parseFieldList();
+            for (String id : fl.ids.identifiers) {
+                if (this.fieldMap.get(id) != null) {
+                    throw new SyntacticException(String.format("Field %s has been declarated.", id));
+                }
+                this.fieldMap.put(id, 0);
+            }
             fieldList.add(fl);
             isEnd = this.next();
             if (isEnd.getType() == TokenType.tok_end) {
