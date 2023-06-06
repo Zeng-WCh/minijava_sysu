@@ -50,7 +50,27 @@ public class actualParameters implements ast {
         StringBuilder sb = new StringBuilder();
         if (exprs != null && !exprs.isEmpty()) {
             for (expr e : exprs) {
-                boolean isVar = e.isVar();
+                sb.append(e.toString());
+                sb.append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * build the string representation of the actual parameters
+     * 
+     * @param formal, the formal parameters
+     * @return the String representation of the actual parameters
+     */
+    public String buildStr(formalParameters formal) {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<fp> fps = formal.fps;
+        if (exprs != null && !exprs.isEmpty()) {
+            for (int i = 0; i < exprs.size(); ++i) {
+                expr e = exprs.get(i);
+                boolean isVar = fps.get(i).isVar;
                 if (isVar) {
                     sb.append("var ");
                 }

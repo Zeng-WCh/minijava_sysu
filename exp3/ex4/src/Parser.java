@@ -63,6 +63,7 @@ public class Parser {
 
     private HashMap<String, ArrayList<actualParameters>> unsolvedProcCalling;
     private HashMap<String, ArrayList<String>> unsolvedProcPos;
+    private HashMap<String, ArrayList<callStmt>> unsolveCallStmts;
 
 
     /**
@@ -143,6 +144,7 @@ public class Parser {
         this.unsolvedProcCalling = new HashMap<>();
         this.unsolvedProcPos = new HashMap<>();
         this.fieldMap = new HashMap<>();
+        this.unsolveCallStmts = new HashMap<>();
     }
 
     /**
@@ -172,6 +174,11 @@ public class Parser {
                 else if (result == 2) {
                     throw new SyntacticException(String.format("Procedure " + ident + " is called with wrong type of arguments. (%s)", this.unsolvedProcPos.get(ident).get(i).toString()));
                 }
+            }
+
+            for (int i = 0; i < this.unsolveCallStmts.get(ident).size(); ++i) {
+                callStmt call = this.unsolveCallStmts.get(ident).get(i);
+                call.fps = head.fp;
             }
         }
     }
@@ -524,8 +531,6 @@ public class Parser {
         ArrayList<procedureDec> procDecTail = this.parseProcDecTail();
         ret.addAll(procDecTail);
         
-        
-        
         return ret;
     }
 
@@ -746,7 +751,12 @@ public class Parser {
             }
             this.unsolvedProcCalling.get(ident).add(params);
             this.unsolvedProcPos.get(ident).add(String.format("<%d:%d>", this.scanner.getLine(), this.scanner.getCol()));
-            return new callStmt(ident, params);
+            callStmt c =  new callStmt(ident, params, null);
+            if (this.unsolveCallStmts.get(ident) == null) {
+                this.unsolveCallStmts.put(ident, new ArrayList<>());
+            }
+            this.unsolveCallStmts.get(ident).add(c);
+            return c;
         }
 
         procedureHead proc = this.globalProcList.get(idx);
@@ -758,7 +768,7 @@ public class Parser {
         else if (flag == 2) {
             throw new TypeMismatchedException(String.format("Type mismatched in %s call.", ident));
         }
-        return new callStmt(ident, params);
+        return new callStmt(ident, params, fp);
 
     }
 
@@ -852,7 +862,7 @@ public class Parser {
             if (params.exprs.size() != 1) {
                 throw new ParameterMismatchedException(String.format("Invalid %s call.", (String) IOType.getVal()));
             }
-            return new callStmt((String) IOType.getVal(), params);
+            return new callStmt((String) IOType.getVal(), params, new formalParameters());
         }
         // writeln, just judge it specially
         Token isLparen = this.next();
@@ -862,13 +872,13 @@ public class Parser {
             }
             // then now '()' part
             this.freeze = true;
-            return new callStmt((String) IOType.getVal(), new actualParameters());
+            return new callStmt((String) IOType.getVal(), new actualParameters(), new formalParameters());
         }
         Token isRparen = this.next();
         if (isRparen.getType() != TokenType.tok_rparen) {
             throw new MissingRightParenthesisException("Invalid Writeln func call.");
         }
-        return new callStmt((String) IOType.getVal(), new actualParameters());
+        return new callStmt((String) IOType.getVal(), new actualParameters(), new formalParameters());
     }
 
     /**

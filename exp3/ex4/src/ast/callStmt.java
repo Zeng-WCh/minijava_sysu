@@ -17,10 +17,15 @@ public class callStmt implements ast {
     public actualParameters params;
 
     /**
+     * formal parameters
+     */
+    public formalParameters fps;
+
+    /**
      * constructor for callStmt
      */
     public callStmt() {
-        this(null, null);
+        this(null, null, null);
     }
 
     /**
@@ -29,7 +34,7 @@ public class callStmt implements ast {
      * @param name, name of the procedure being called
      */
     public callStmt(String name) {
-        this(name, null);
+        this(name, null, null);
     }
 
     /**
@@ -37,10 +42,12 @@ public class callStmt implements ast {
      * 
      * @param name,  name of the procedure being called
      * @param params, actual parameters
+     * @param fps,    formal parameters
      */
-    public callStmt(String name, actualParameters params) {
+    public callStmt(String name, actualParameters params, formalParameters fps) {
         this.name = name;
         this.params = params;
+        this.fps = fps;
     }
 
     /**
@@ -56,6 +63,16 @@ public class callStmt implements ast {
      */
     @Override
     public String toString() {
-        return name + "(" + (params != null ? params.toString() : "") + ")";
+        // special case for built-in func
+        if (name.equals("READ")) {
+            return String.format("READ(VAR %s)", params != null ? params.toString() : "");
+        }
+        else if (name.equals("WRITE")) {
+            return String.format("WRITE(%s)", params != null ? params.toString() : "");
+        }
+        else if (name.equals("WRITELN")) {
+            return name;
+        }
+        return name + "(" + (params != null ? params.buildStr(fps) : "") + ")";
     }
 }
