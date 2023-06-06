@@ -1,5 +1,9 @@
 package ast;
 
+import flowchart.IfStatement;
+import flowchart.WhileStatement;
+import flowchart.PrimitiveStatement;
+
 /**
  * while statement AST
  * 
@@ -33,5 +37,24 @@ public class whileStmt implements ast {
     @Override
     public String toString() {
         return "whileStmt(" +condition.toString() + ")\n{\n" + (body != null ? body.toString()+"\n}" : "\n}");
+    }
+
+    public WhileStatement eval() {
+        WhileStatement wstmt = new WhileStatement(condition.toString());
+
+        for (stmt s : this.body.statements) {
+            Object val = s.eval();
+
+            if (val instanceof WhileStatement) {
+                wstmt.getLoopBody().add((WhileStatement) val);
+            }
+            else if (val instanceof PrimitiveStatement) {
+                wstmt.getLoopBody().add((PrimitiveStatement) val);
+            }
+            else if (val instanceof IfStatement) {
+                wstmt.getLoopBody().add((IfStatement) val);
+            }
+        }
+        return wstmt;
     }
 }

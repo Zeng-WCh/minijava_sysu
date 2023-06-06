@@ -1,4 +1,8 @@
 package ast;
+import flowchart.Procedure;
+import flowchart.PrimitiveStatement;
+import flowchart.IfStatement;
+import flowchart.WhileStatement;
 
 /**
  * procedure declaration AST
@@ -28,5 +32,20 @@ public class procedureDec implements ast {
             head.convert();
         if (body != null)
             body.convert();
+    }
+
+    public void eval(Procedure proc) {
+        for (stmt s : this.body.stmts.statements) {
+            Object val = s.eval();
+            if (val instanceof PrimitiveStatement) {
+                proc.add((PrimitiveStatement) val);
+            }
+            else if (val instanceof WhileStatement) {
+                proc.add((WhileStatement) val);
+            }
+            else if (val instanceof IfStatement) {
+                proc.add((IfStatement) val);
+            }
+        }
     }
 }

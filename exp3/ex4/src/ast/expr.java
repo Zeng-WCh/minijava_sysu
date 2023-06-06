@@ -68,7 +68,7 @@ public class expr implements ast {
         if (op == null || op == "") {
             return lhs.toString();
         }
-        return lhs.toString() + op + rhs.toString();
+        return String.format("%s %s %s", lhs.toString(), op, rhs.toString());
     }
 
     public void convert() {

@@ -81,7 +81,9 @@ public class simpleExpr implements ast {
             strbd.append(lhs.toString());
         }
         for (int i = 0; i < rhs.size(); ++i) {
+            strbd.append(" ");
             strbd.append(op.get(i));
+            strbd.append(" ");
             strbd.append(rhs.get(i).toString());
         }
         return strbd.toString();

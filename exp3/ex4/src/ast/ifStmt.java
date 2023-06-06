@@ -3,6 +3,10 @@ package ast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import flowchart.IfStatement;
+import flowchart.WhileStatement;
+import flowchart.PrimitiveStatement;
+
 /**
  * the if statement class
  * 
@@ -107,5 +111,67 @@ public class ifStmt implements ast {
             }
             return sb.toString();
         }
+    }
+
+    public IfStatement eval() {
+        String condition = this.condition.toString();
+        IfStatement ifs = new IfStatement(condition);
+
+        for (stmt s : this.body.statements) {
+            Object val = s.eval();
+
+            if (val instanceof WhileStatement) {
+                ifs.getTrueBody().add((WhileStatement) val);
+            }
+            else if (val instanceof IfStatement) {
+                ifs.getTrueBody().add((IfStatement) val);
+            }
+            else if (val instanceof PrimitiveStatement) {
+                ifs.getTrueBody().add((PrimitiveStatement) val);
+            }
+        }
+
+        IfStatement entryPart = ifs;
+        
+        if (this.elseIfs != null) {
+            for (ifStmt elseif : this.elseIfs) {
+                IfStatement elsi = new IfStatement(elseif.condition.toString());
+                
+                for (stmt s : elseif.body.statements) {
+                    Object val = s.eval();
+        
+                    if (val instanceof WhileStatement) {
+                        elsi.getTrueBody().add((WhileStatement) val);
+                    }
+                    else if (val instanceof IfStatement) {
+                        elsi.getTrueBody().add((IfStatement) val);
+                    }
+                    else if (val instanceof PrimitiveStatement) {
+                        elsi.getTrueBody().add((PrimitiveStatement) val);
+                    }
+                }
+                
+                entryPart.getFalseBody().add(elsi);
+                entryPart = elsi;
+            }
+        }
+
+        if (this.elseBody != null) {
+            for (stmt s : this.elseBody.statements) {
+                Object val = s.eval();
+    
+                if (val instanceof WhileStatement) {
+                    entryPart.getFalseBody().add((WhileStatement) val);
+                }
+                else if (val instanceof IfStatement) {
+                    entryPart.getFalseBody().add((IfStatement) val);
+                }
+                else if (val instanceof PrimitiveStatement) {
+                    entryPart.getFalseBody().add((PrimitiveStatement) val);
+                }
+            }
+        }
+
+        return ifs;
     }
 }

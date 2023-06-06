@@ -1,7 +1,7 @@
 import java.io.*;
-import exceptions.*;
-import ast.*;
-import flowchart.*;
+
+import ast.moduleBlock;
+import flowchart.Module;
 
 public class Main {
     public static void main(String[] argv) throws Exception {
@@ -13,7 +13,7 @@ public class Main {
         for (int i = 0; i < argv.length; ++i) {
             OberonScanner scanner = new OberonScanner(new FileReader(argv[i]));
             Parser parser = new Parser(scanner);
-            System.out.println(argv[i] + ":");
+            System.out.printf(argv[i] + ": ");
             try {
                 parser.parse();
             } catch (Exception e) {
@@ -24,7 +24,10 @@ public class Main {
             }
             System.out.println("Parse successfully");
 
+            moduleBlock mb = parser.getResult();
 
+            Module m = mb.eval();
+            m.show();
         }
     }
 }

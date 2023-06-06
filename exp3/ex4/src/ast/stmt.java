@@ -1,5 +1,6 @@
 package ast;
 
+import flowchart.PrimitiveStatement;
 
 /**
  * statement AST
@@ -74,5 +75,21 @@ public class stmt implements ast {
         if (whileSt != null)
             return whileSt.toString();
         return "";
+    }
+
+    public Object eval() {
+        if (asg != null) {
+            return new PrimitiveStatement(asg.toString());
+        }
+        if (call != null) {
+            return new PrimitiveStatement(call.toString());
+        }
+        if (ifSt != null) {
+            return ifSt.eval();
+        } 
+        if (whileSt != null) {
+            return whileSt.eval();
+        }
+        return null;
     }
 }

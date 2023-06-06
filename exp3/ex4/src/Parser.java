@@ -491,10 +491,20 @@ public class Parser {
         if (semi.getType() != TokenType.tok_semicolon) {
             throw new SyntacticException("Procedure declaration should end with a semicolon.");
         }
+        this.localConstList = new ArrayList<>();
+        this.localConstMap = new HashMap<>();
+        this.localVarList = new ArrayList<>();
+        this.localVarMap = new HashMap<>();
+        this.localTypeList = new ArrayList<>();
+        this.localTypeMap = new HashMap<>();
+
         procedureDec proc = new procedureDec(head, body);
         ret.add(proc);
         ArrayList<procedureDec> procDecTail = this.parseProcDecTail();
         ret.addAll(procDecTail);
+        
+        
+        
         return ret;
     }
 
@@ -543,6 +553,7 @@ public class Parser {
     }
 
     private procedureBody parseProBody() throws Exception {
+        this.isGlobal = false;
         declarations localDec = this.parseDeclaration();
         Token isBegin = this.next();
         stmts s = null;
@@ -920,6 +931,8 @@ public class Parser {
             this.freeze = true;
             return new expr(left);
         }
+
+        opString = (String) op.getVal();
 
         simpleExpr right = this.parseSimpleExpr();
 

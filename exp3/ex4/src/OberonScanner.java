@@ -964,7 +964,7 @@ public class OberonScanner {
           // fall through
           case 69: break;
           case 17:
-            { return new Token(TokenType.tok_less, "<");
+            { return new Token(TokenType.tok_less, "&lt");
             }
           // fall through
           case 70: break;
@@ -974,7 +974,7 @@ public class OberonScanner {
           // fall through
           case 71: break;
           case 19:
-            { return new Token(TokenType.tok_greater, ">");
+            { return new Token(TokenType.tok_greater, "&gt");
             }
           // fall through
           case 72: break;
@@ -1021,12 +1021,12 @@ public class OberonScanner {
           // fall through
           case 80: break;
           case 28:
-            { return new Token(TokenType.tok_less_equal, "<=");
+            { return new Token(TokenType.tok_less_equal, "&le");
             }
           // fall through
           case 81: break;
           case 29:
-            { return new Token(TokenType.tok_greater_equal, ">=");
+            { return new Token(TokenType.tok_greater_equal, "&ge");
             }
           // fall through
           case 82: break;

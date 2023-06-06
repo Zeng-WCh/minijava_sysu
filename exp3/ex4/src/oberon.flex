@@ -155,16 +155,16 @@ IllegalOctal = 0[0-7]*[8|9]+[0-9]*
 }
 
 "<=" { 
-    return new Token(TokenType.tok_less_equal, "<="); 
+    return new Token(TokenType.tok_less_equal, "&le"); 
 }
 "<" { 
-    return new Token(TokenType.tok_less, "<"); 
+    return new Token(TokenType.tok_less, "&lt"); 
 }
 ">=" { 
-    return new Token(TokenType.tok_greater_equal, ">="); 
+    return new Token(TokenType.tok_greater_equal, "&ge"); 
 }
 ">" { 
-    return new Token(TokenType.tok_greater, ">"); 
+    return new Token(TokenType.tok_greater, "&gt"); 
 }
 "+" { 
     return new Token(TokenType.tok_plus, "+"); 

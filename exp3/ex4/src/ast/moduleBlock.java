@@ -1,5 +1,8 @@
 package ast;
 
+import flowchart.Module;
+import flowchart.Procedure;
+
 /**
  * moduleBlock class
  * 
@@ -36,5 +39,16 @@ public class moduleBlock implements ast {
         if (stmts != null) {
             stmts.convert();
         }
+    }
+
+    public Module eval() {
+        Module module = new Module(name);
+
+        for (procedureDec pd : this.declarations.procDecs) {
+            Procedure proc = module.add(pd.head.name);
+            pd.eval(proc);
+        }
+
+        return module;
     }
 }
