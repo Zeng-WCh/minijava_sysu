@@ -1,0 +1,3 @@
+testcases/fib.032:
+Exception occured when parsing near by <33:5>: 
+Variable: TMP is already defined.
