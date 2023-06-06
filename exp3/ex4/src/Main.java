@@ -17,7 +17,6 @@ public class Main {
             try {
                 parser.parse();
             } catch (Exception e) {
-                e.printStackTrace(System.err);
                 System.err.println(String.format("Exception occured when parse near by %s", scanner.getPos()));
                 System.err.println(e.getMessage());
                 System.exit(1);

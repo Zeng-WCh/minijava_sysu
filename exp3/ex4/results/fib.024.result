@@ -1,0 +1,2 @@
+testcases/fib.024: Exception occured when parse near by <45:21>
+Expected 'then' when declarated a elsif statement.

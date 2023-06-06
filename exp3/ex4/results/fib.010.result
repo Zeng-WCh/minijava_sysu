@@ -1,0 +1,2 @@
+testcases/fib.010: Exception occured when parse near by <63:20>
+Expected a ')' when declarated a formal parameters.

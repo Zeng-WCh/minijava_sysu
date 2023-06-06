@@ -1,0 +1,2 @@
+testcases/fib.008: Exception occured when parse near by <22:13>
+Missing '=' for const declarations.

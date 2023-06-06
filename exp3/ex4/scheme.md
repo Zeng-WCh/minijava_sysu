@@ -3,7 +3,81 @@
 
 ## 改写文法
 
+首先注意到的是，文法本身是带有一定的运算符优先次序的，意味着我们并不需要为此专门为运算符次序重新改写文法，改写如下
 
+这里使用 `EMPTY` 作为表达 $\epsilon$ 的意思
+
+```
+start ::= module
+module ::= MODULE IDENTIFIER SEMICOLON declarations module_state END IDENTIFIER DOT
+module_state ::= BEGIN statements | EMPTY
+declarations ::= const_dec type_dec var_dec proc_decs
+const_dec ::= CONST const_dec_tail | EMPTY
+const_dec_tail ::= IDENTIFIER EQUAL expression SEMICOLON const_dec_tail | EMPTY
+type_dec ::= TYPE type_dec_tail | EMPTY
+type_dec_tail ::= IDENTIFIER EQUAL type SEMICOLON type_dec_tail | EMPTY
+var_dec ::= VAR var_dec_tail | EMPTY
+var_dec_tail ::= identifier_list COLON type SEMICOLON var_dec_tail | EMPTY
+proc_decs ::= proc_dec SEMICOLON proc_decs | EMPTY
+proc_dec ::= proc_head SEMICOLON proc_body
+proc_head ::= PROCEDURE IDENTIFIER if_formal
+proc_body ::= declarations if_begin END IDENTIFIER
+if_formal ::= LPAREN formalParameters RPAREN | EMPTY
+formalParameters ::= fp_section formalParameters_tail | EMPTY
+formalParameters_tail ::= SEMICOLON fp_section formalParameters_tail | EMPTY
+if_begin ::= BEGIN statements | EMPTY
+fp_section ::= if_var identifier_list COLON type
+if_var ::= VAR | EMPTY
+type ::= IDENTIFIER | INTEGER | BOOLEAN | array_type | record_type
+array_type ::= ARRAY expression OF type
+record_type ::= RECORD field_list record_field_tail END
+record_field_tail ::= SEMICOLON field_list record_field_tail | EMPTY
+field_list ::= identifier_list COLON type | EMPTY
+identifier_list ::= IDENTIFIER identifier_list_tail
+identifier_list_tail ::= COMMA identifier identifier_list_tail | EMPTY
+statements ::= statement statements_tail
+statements_tail ::= SEMICOLON statement statements_tail | EMPTY
+statement ::= assignment | procedure_call | if_statement | while_statement
+if_statement ::= IF expression THEN statements else_ifs elses END
+else_ifs ::= ELSIF expression THEN statements else_ifs | EMPTY
+elses ::= ELSE statements | EMPTY
+while_statement ::= WHILE expression DO statements END
+procedure_call ::= identifier actual_parameters;
+actual_parameters ::= LPAREN actualParameters RPAREN | EMPTY
+actualParameters ::= expression actualParameters_tail | EMPTY
+actualParameters_tail ::= COMMA expression actualParamters_tail | EMPTY
+assignment ::= IDENTIFIER selector ASSIGN expression
+expression ::= simple_expression expression_tail
+expression_tail ::= expop simple_expression | EMPTY
+expop ::= EQUAL | NOT_EQUAL | LESS | LESS_EQUAL | GREATER | GREATER_EQUAL
+simple_expresion ::= head_op term simple_expression_tail
+head_op ::= PLUS | MINUS | EMPTY
+simple_expression_tail ::= sop term simple_expression_tail | EMPTY
+sop ::= PLUS | MINUS | OR
+term ::= factor term_tail
+term_tail ::= termop factor term_tail | EMPTY
+termop ::= MULTI | DIV | MOD | AND
+factor ::= IDENTIFIER SELCTOR | NUMBER | LPAREN expression RPAREN | NOT factor
+selector ::= DOT IDENTIFIER selector | LBRACKET expression RBRACKET selector | EMPTY
+```
+
+具体的语义动作实际上较为复杂，这里没有具体给出，在实际编写过程中，部分的尾递归改写为了循环的方式
+
+## 测试情况
+
+自行编写的用例测试结果如下
+
+![](./img/2.png)
+
+![](./img/3.png)
+
+其中 `FIB2` 的部分图过大，这里没有给出
+
+实验文档中的用例如下
+
+![](./img/1.png)
+
+可以看到，所有的流程图都正确的给出，对于报错的情况，也都正确的在 `result` 目录下给出
 
 ## 和自底向上的对比
 

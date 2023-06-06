@@ -123,3 +123,17 @@ tok_identifier
 line: 6 col: 20 match: --@--
 action [103] { throw new IllegalSymbolException(); }
 Unexpected exception:
+comment: '(* Illegal Identifier(n@) *)'		Loc=<0:0>
+module: 'MODULE'		Loc=<2:0>
+identifier: 'Fib'		Loc=<2:7>
+semicolon: ';'		Loc=<2:10>
+var: 'VAR'		Loc=<3:4>
+identifier: 'n'		Loc=<4:8>
+colon: ':'		Loc=<4:9>
+integer: 'INTEGER'		Loc=<4:11>
+semicolon: ';'		Loc=<4:18>
+procedure: 'PROCEDURE'		Loc=<5:4>
+identifier: 'Fib1'		Loc=<5:14>
+lparen: '('		Loc=<5:18>
+identifier: 'n'		Loc=<5:19>
+Unexpected exception:

@@ -113,6 +113,11 @@ public class ifStmt implements ast {
         }
     }
 
+    /**
+     * eval the if statement and return in CFG form.
+     * 
+     * @return the CFG node
+     */
     public IfStatement eval() {
         String condition = this.condition.toString();
         IfStatement ifs = new IfStatement(condition);

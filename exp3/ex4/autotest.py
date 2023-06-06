@@ -6,7 +6,6 @@ TEST_DIR = "testcases"
 RESULT_DIT = "results"
 
 def main():
-    os.system("./gen.sh")
     os.system("./build.sh")
     if not os.path.exists(RESULT_DIT):
         os.system("mkdir {}".format(RESULT_DIT))

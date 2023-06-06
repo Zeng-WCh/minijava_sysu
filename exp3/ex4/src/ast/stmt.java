@@ -6,7 +6,7 @@ import flowchart.PrimitiveStatement;
  * statement AST
  * 
  * @author Weichao Zeng
- * @version 1.0 (Last updated: 2023/06/03)
+ * @version 2.0 (Last updated: 2023/06/06)
  */
 public class stmt implements ast {
     public assignmentStmt asg;
@@ -77,6 +77,11 @@ public class stmt implements ast {
         return "";
     }
 
+    /**
+     * eval the statement and return in a CFG form
+     * 
+     * @return eval result
+     */
     public Object eval() {
         if (asg != null) {
             return new PrimitiveStatement(asg.toString());

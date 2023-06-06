@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 /**
  * the Oberon Parser Class
+ * 
+ * @author Weichao Zeng
+ * @version 1.0 (Last Update: 2023/06/06)
  */
 public class Parser {
     /**
@@ -24,6 +27,9 @@ public class Parser {
      */
     private boolean freeze;
 
+    /**
+     * to determine whether current part is global
+     */
     private boolean isGlobal;
 
     private HashMap<String, Integer> globalConstMap;
@@ -240,10 +246,6 @@ public class Parser {
         }
         else {
             constList = this.parseConstDecl();
-            // Token semi = this.next();
-            // if (semi.getType() != TokenType.tok_semicolon) {
-            //     throw new SyntacticException("Const declaration should end with a semicolon.");
-            // }
         }
         Token isType = this.next();
         if (isType.getType() != TokenType.tok_type) {
@@ -272,7 +274,10 @@ public class Parser {
     }
 
     /**
+     * Used to parse the constant declarations.
      * 
+     * @return the const declaration in Array List form
+     * @throws Exception if syntax error
      */
     private ArrayList<constDec> parseConstDecl() throws Exception {
         ArrayList<constDec> ret = new ArrayList<>();
@@ -308,30 +313,22 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the constant declarations tail part, which basically used recursion to do this.
+     * 
+     * @return the const declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<constDec> parseConstDecTail() throws Exception {
-        // ArrayList<constDec> ret = new ArrayList<>();
-        // Token ident = this.next();
-        // if (ident.getType() != TokenType.tok_identifier) {
-        //     this.freeze = true;
-        //     return ret;
-        // }
-        // Token equal = this.next();
-        // if (equal.getType() != TokenType.tok_equal) {
-        //     throw new MissingOperatorException("Missing '=' for const declarations.");
-        // }
-        // expr constExpr = this.parseExpression();
-        // Token semi = this.next();
-        // if (semi.getType() != TokenType.tok_semicolon) {
-        //     throw new SyntacticException("Const declaration should end with a semicolon.");
-        // }
-        // constDec constDec = new constDec((String) ident.getVal(), constExpr);
-        // ArrayList<constDec> constDecTail = this.parseConstDecTail();
-        // ret.add(constDec);
-        // ret.addAll(constDecTail);
-        // return ret;
         return this.parseConstDecl();
     }
 
+    /**
+     * Used to parse the type declarations.
+     * 
+     * @return the type declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<typeDec> parseTypeDecl() throws Exception {
         ArrayList<typeDec> ret = new ArrayList<>();
         Token ident = this.next();
@@ -363,30 +360,22 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the type declarations tail part, which basically used recursion to do this.
+     * 
+     * @return the type declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<typeDec> parseTypeDecTail() throws Exception {
-        // ArrayList<typeDec> ret = new ArrayList<>();
-        // Token ident = this.next();
-        // if (ident.getType() != TokenType.tok_identifier) {
-        //     this.freeze = true;
-        //     return ret;
-        // }
-        // Token equal = this.next();
-        // if (equal.getType() != TokenType.tok_equal) {
-        //     throw new SyntacticException("Missing '=' for type declarations.");
-        // }
-        // typeAST t = this.parseType();
-        // Token semi = this.next();
-        // if (semi.getType() != TokenType.tok_semicolon) {
-        //     throw new SyntacticException("Type declaration should end with a semicolon.");
-        // }
-        // typeDec types = new typeDec((String) ident.getVal(), t);
-        // ret.add(types);
-        // ArrayList<typeDec> typeDecTail = this.parseTypeDecTail();
-        // ret.addAll(typeDecTail);
-        // return ret;
         return parseTypeDecl();
     }
 
+    /**
+     * Used to parse the var declarations.
+     * 
+     * @return the var declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<varDec> parseVarDecl() throws Exception {
         ArrayList<varDec> ret = new ArrayList<>();
         identifierList idList = this.parseIdentifierList();
@@ -429,6 +418,12 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the var declarations tail part.
+     * 
+     * @return the var declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<varDec> parseVarDecTail() throws Exception {
         Token ident = this.next();
         ArrayList<varDec> ret = new ArrayList<>();
@@ -466,6 +461,12 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the procedure declarations tail part.
+     * 
+     * @return the procedure declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<procedureDec> parseProcDecl() throws Exception {
         ArrayList<procedureDec> ret = new ArrayList<>();
         procedureHead head = this.parseProHead();
@@ -508,32 +509,22 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the procedure declarations tail part, which basically used recursion to do this.
+     * 
+     * @return the procedure declaration in Array List form
+     * @throws Exception if syntax error
+     */
     private ArrayList<procedureDec> parseProcDecTail() throws Exception {
-        // ArrayList<procedureDec> ret = new ArrayList<>();
-        // procedureHead head = this.parseProHead();
-        // if (head == null) {
-        //     this.freeze = true;
-        //     return ret;
-        // }
-        // this.isGlobal = false;
-        // procedureBody body = this.parseProBody();
-        // if (!head.name.equals(body.name)) {
-        //     throw new SyntacticException("Procedure name mismatch.");
-        // }
-        // Token semi = this.next();
-        // if (semi.getType() != TokenType.tok_semicolon) {
-        //     throw new SyntacticException("Procedure declaration should end with a semicolon.");
-        // }
-        // procedureDec proc = new procedureDec(head, body);
-        // this.globalProcList.add(head);
-        // this.globalProcMap.put(head.name, this.globalProcList.size() - 1);
-        // ret.add(proc);
-        // ArrayList<procedureDec> procDecTail = this.parseProcDecTail();
-        // ret.addAll(procDecTail);
-        // return ret;
         return this.parseProcDecl();
     }
 
+    /**
+     * Used to parse the procedure head declarations part.
+     * 
+     * @return the procedure head AST
+     * @throws Exception if syntax error
+     */
     private procedureHead parseProHead() throws Exception {
         Token proc = this.next();
         if (proc.getType() != TokenType.tok_procedure) {
@@ -552,6 +543,12 @@ public class Parser {
         return new procedureHead((String) ident.getVal(), params);
     }
 
+    /**
+     * Used to parse the procedure body declarations part.
+     * 
+     * @return the procedure body AST
+     * @throws Exception if syntax error
+     */
     private procedureBody parseProBody() throws Exception {
         this.isGlobal = false;
         declarations localDec = this.parseDeclaration();
@@ -576,6 +573,12 @@ public class Parser {
         return new procedureBody(localDec, s, (String) ident.getVal());
     }
 
+    /**
+     * Used to parse the statements part.
+     * 
+     * @return the statements AST (stmts)
+     * @throws Exception if syntax error
+     */
     private stmts parseStatements() throws Exception {
         ArrayList<stmt> stmtList = new ArrayList<>();
         Token semi = null;
@@ -588,6 +591,12 @@ public class Parser {
         return new stmts(stmtList);
     }
 
+    /**
+     * Used to parse the statement part.
+     * 
+     * @return the statement AST
+     * @throws Exception if syntax error
+     */
     private stmt parseStatement() throws Exception {
         Token nextFlag = this.next();
         if(nextFlag.getType() == TokenType.tok_while) {
@@ -617,6 +626,13 @@ public class Parser {
         throw new SyntacticException("Invalid statement.");
     }
 
+    /**
+     * Used to parse the assignment statement part.
+     * 
+     * @param ident, the value to be assigned
+     * @return the assignment statement AST
+     * @throws Exception if syntax error
+     */
     private assignmentStmt parseAssignmentStmt(String ident) throws Exception {
         Integer idx = null;
         typeAST type = null;
@@ -688,6 +704,13 @@ public class Parser {
         return new assignmentStmt(ident, select, e);
     }
 
+    /**
+     * to parse the call statements.
+     * 
+     * @param ident the function to be called
+     * @return the call AST node.
+     * @throws Exception if syntax error
+     */
     private callStmt parseCallStmt(String ident) throws Exception {        
         Integer idx = globalProcMap.get(ident);
         boolean unfound = false;
@@ -719,6 +742,12 @@ public class Parser {
 
     }
 
+    /**
+     * Used to parse the if statement part.
+     * 
+     * @return the if statement AST
+     * @throws Exception if syntax error
+     */
     private ifStmt parseIfStmt() throws Exception {
         Token ifF = this.next();
         if (ifF.getType() != TokenType.tok_if) {
@@ -760,6 +789,12 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the while statement part.
+     * 
+     * @return the while statement AST
+     * @throws Exception if syntax error
+     */
     private whileStmt parseWhileStmt() throws Exception {
         Token whileFlag = this.next();
         if (whileFlag.getType() != TokenType.tok_while) {
@@ -781,6 +816,12 @@ public class Parser {
         return new whileStmt(condition, body);
     }
 
+    /**
+     * Used to parse the built-in funciton part. (WRITE, READ, WRITELN)
+     * 
+     * @return the call Statement AST
+     * @throws Exception if syntax error
+     */
     private callStmt parseIOStmt() throws Exception {
         Token IOType = this.next();
         if (IOType.getType() != TokenType.tok_write && IOType.getType() != TokenType.tok_read && IOType.getType() != TokenType.tok_writeln) {
@@ -810,6 +851,14 @@ public class Parser {
         return new callStmt((String) IOType.getVal(), new actualParameters());
     }
 
+    /**
+     * Used to parse the selector part.
+     * 
+     * @param ident, the variable the selector applied to 
+     * @param var, the varDec AST part, if ident is a params or CONST, then var is null
+     * @return the selector AST
+     * @throws Exception if syntax error
+     */
     private selectorAST parseSelect(String ident, varDec var) throws Exception {
         this.selectTypes = null;
         Token next = this.next();
@@ -896,6 +945,12 @@ public class Parser {
         return sel;
     }
 
+    /**
+     * Used to parse the expression part.
+     * 
+     * @return the expression AST
+     * @throws Exception if syntax error
+     */
     private expr parseExpression() throws Exception {
         simpleExpr left = this.parseSimpleExpr();
         Token op = this.next();
@@ -943,6 +998,12 @@ public class Parser {
         return new expr(left, opString, right);
     }
 
+    /**
+     * Used to parse the simple expression part.
+     * 
+     * @return the simple expression AST
+     * @throws Exception if syntax error
+     */
     private simpleExpr parseSimpleExpr() throws Exception {
         Token sign = this.next();
         String signed = null;
@@ -1013,6 +1074,12 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the term part.
+     * 
+     * @return the term AST
+     * @throws Exception if syntax error
+     */
     private termAST parseTerm() throws Exception {
         factorAST lhs = this.parseFactor();
         Token op = this.next();
@@ -1064,6 +1131,12 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Used to parse the factor part.
+     * 
+     * @return the factor AST
+     * @throws Exception if syntax error
+     */
     private factorAST parseFactor() throws Exception {
         Token flag = this.next();
 
@@ -1189,6 +1262,12 @@ public class Parser {
         }
     }
     
+    /**
+     * Used to parse the type part.
+     * 
+     * @return the type AST
+     * @throws Exception if syntax error
+     */
     private typeAST parseType() throws Exception {
         Token next = this.next();
         if (next.getType() == TokenType.tok_identifier) {
@@ -1234,6 +1313,12 @@ public class Parser {
         }
     }
     
+    /**
+     * Used to parse the array type part.
+     * 
+     * @return the array type AST
+     * @throws Exception if syntax error
+     */
     private arrayType parseArrayType() throws Exception {
         Token array = this.next();
 
@@ -1252,6 +1337,12 @@ public class Parser {
         return new arrayType(length, type);
     }
 
+    /**
+     * Used to parse the record type part.
+     * 
+     * @return the record type AST
+     * @throws Exception if syntax error
+     */
     private recordType parseRecordType() throws Exception {
         Token record = this.next();
         if (record.getType() != TokenType.tok_record) {
@@ -1275,6 +1366,12 @@ public class Parser {
         return new recordType(fieldList);
     }
 
+    /**
+     * Used to parse the field list part.
+     * 
+     * @return the field list AST
+     * @throws Exception if syntax error
+     */
     private fieldList parseFieldList() throws Exception {
         identifierList idList = this.parseIdentifierList();
         Token colon = this.next();
@@ -1285,6 +1382,12 @@ public class Parser {
         return new fieldList(idList, type);
     }
 
+    /**
+     * Used to parse the identifier list part.
+     * 
+     * @return the identifier list AST
+     * @throws Exception if syntax error
+     */
     private identifierList parseIdentifierList() throws Exception {
         Token Id = this.next();
         ArrayList<String> idList = new ArrayList<>();
@@ -1311,6 +1414,12 @@ public class Parser {
         return new identifierList(idList);
     }
 
+    /**
+     * Used to parse the formal parameters part.
+     * 
+     * @return the formal parameters AST
+     * @throws Exception if syntax error
+     */
     private formalParameters parseFormalParam() throws Exception {
         this.params = new HashMap<>();
         Token lparen = this.next();
@@ -1358,6 +1467,12 @@ public class Parser {
         return new formalParameters(fpList);
     }
 
+    /**
+     * Used to parse the formal parameters section part.
+     * 
+     * @return the formal parameters section AST
+     * @throws Exception if syntax error
+     */
     private fpSection parseFpSection() throws Exception {
         Token isVar = this.next();
         boolean var = false;
@@ -1385,6 +1500,12 @@ public class Parser {
         return new fpSection(var, idList, type);
     }
 
+    /**
+     * Used to parse the actual parameters part.
+     * 
+     * @return the actual parameters AST
+     * @throws Exception if syntax error
+     */
     private actualParameters parseActualParam() throws Exception {
         Token lparen = this.next();
         ArrayList<expr> acList = new ArrayList<>();
@@ -1413,6 +1534,11 @@ public class Parser {
         return new actualParameters(acList);
     }
 
+    /**
+     * Used to parse the else if part, add to current if Node
+     * 
+     * @throws Exception if syntax error
+     */
     private void parseElseIf() throws Exception {
         if (currentIf == null) {
             throw new SyntacticException("Expected a if statement when declarated a elsif statement.");
@@ -1443,6 +1569,11 @@ public class Parser {
         this.freeze = true;
     }
 
+    /**
+     * Used to parse the else part, add it to current if node
+     * 
+     * @throws Exception if syntax error
+     */
     private void parseElse() throws Exception {
         if (currentIf == null) {
             throw new SyntacticException("Expected a if statement when declarated a else statement.");

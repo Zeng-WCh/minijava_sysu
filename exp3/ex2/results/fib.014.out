@@ -280,3 +280,45 @@ action [88] { if (yylength() > 12)
             throw new IllegalIntegerRangeException();
             return TokenType.tok_decimal; }
 Unexpected exception:
+comment: '(* Illegal Integer Range *)'		Loc=<0:0>
+module: 'MODULE'		Loc=<2:0>
+identifier: 'Fib'		Loc=<2:7>
+semicolon: ';'		Loc=<2:10>
+var: 'VAR'		Loc=<3:4>
+identifier: 'n'		Loc=<4:8>
+colon: ':'		Loc=<4:9>
+integer: 'INTEGER'		Loc=<4:11>
+semicolon: ';'		Loc=<4:18>
+procedure: 'PROCEDURE'		Loc=<5:4>
+identifier: 'Fib1'		Loc=<5:14>
+lparen: '('		Loc=<5:18>
+identifier: 'n'		Loc=<5:19>
+colon: ':'		Loc=<5:20>
+integer: 'INTEGER'		Loc=<5:22>
+semicolon: ';'		Loc=<5:29>
+var: 'var'		Loc=<5:31>
+identifier: 'result'		Loc=<5:35>
+colon: ':'		Loc=<5:41>
+integer: 'INTEGER'		Loc=<5:43>
+rparen: ')'		Loc=<5:50>
+semicolon: ';'		Loc=<5:51>
+var: 'VAR'		Loc=<6:4>
+identifier: 'i'		Loc=<6:8>
+comma: ','		Loc=<6:9>
+identifier: 'j'		Loc=<6:11>
+colon: ':'		Loc=<6:12>
+integer: 'INTEGER'		Loc=<6:14>
+semicolon: ';'		Loc=<6:21>
+begin: 'BEGIN'		Loc=<7:4>
+if: 'IF'		Loc=<8:8>
+identifier: 'n'		Loc=<8:11>
+equal: '='		Loc=<8:13>
+Octal: '0'		Loc=<8:15>
+then: 'THEN'		Loc=<8:17>
+identifier: 'result'		Loc=<9:12>
+assign: ':='		Loc=<9:19>
+Octal: '0'		Loc=<9:22>
+elsif: 'ELSIF'		Loc=<10:8>
+identifier: 'n'		Loc=<10:14>
+equal: '='		Loc=<10:16>
+Unexpected exception:

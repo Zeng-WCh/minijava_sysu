@@ -1,0 +1,2 @@
+testcases/fib.027: Exception occured when parse near by <26:27>
+Type INT1 is not declarated.

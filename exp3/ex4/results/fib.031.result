@@ -1,0 +1,2 @@
+testcases/fib.031: Exception occured when parse near by <23:18>
+Const declaration should be a constant expression.

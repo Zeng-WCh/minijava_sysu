@@ -8,7 +8,7 @@ import flowchart.PrimitiveStatement;
  * while statement AST
  * 
  * @author Weichao Zeng
- * @version 1.0 (Last updated: 2023/06/03)
+ * @version 2.0 (Last updated: 2023/06/06)
  */
 public class whileStmt implements ast {
     public expr condition;
@@ -39,6 +39,11 @@ public class whileStmt implements ast {
         return "whileStmt(" +condition.toString() + ")\n{\n" + (body != null ? body.toString()+"\n}" : "\n}");
     }
 
+    /**
+     * to eval the while state and return a CFG node
+     * 
+     * @return the eval result that can be used in CFG
+     */
     public WhileStatement eval() {
         WhileStatement wstmt = new WhileStatement(condition.toString());
 

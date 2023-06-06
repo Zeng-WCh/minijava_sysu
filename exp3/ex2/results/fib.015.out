@@ -112,3 +112,6 @@ action [99] { if (yylength() > 24)
                 throw new IllegalIdentifierLengthException();
                 return TokenType.tok_identifier; }
 Unexpected exception:
+comment: '(* Illegal Identifier Length *)'		Loc=<0:0>
+module: 'MODULE'		Loc=<2:0>
+Unexpected exception:
