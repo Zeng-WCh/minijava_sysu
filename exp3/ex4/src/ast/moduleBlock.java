@@ -46,7 +46,7 @@ public class moduleBlock implements ast {
 
         for (procedureDec pd : this.declarations.procDecs) {
             Procedure proc = module.add(pd.head.name);
-            pd.eval(proc);
+            pd.eval(proc, module);
         }
 
         return module;

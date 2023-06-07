@@ -9,6 +9,7 @@ package ast;
 public class procedureHead implements ast {
     public String name;
     public formalParameters fp;
+    public String belongsTo;
 
     public procedureHead() {
         this("", null);
@@ -21,6 +22,7 @@ public class procedureHead implements ast {
     public procedureHead(String name, formalParameters fp) {
         this.name = name;
         this.fp = fp;
+        this.belongsTo = null;
     }
 
     public void convert() {

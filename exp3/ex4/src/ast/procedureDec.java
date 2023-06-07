@@ -1,4 +1,5 @@
 package ast;
+import flowchart.Module;
 import flowchart.Procedure;
 import flowchart.PrimitiveStatement;
 import flowchart.IfStatement;
@@ -34,7 +35,13 @@ public class procedureDec implements ast {
             body.convert();
     }
 
-    public void eval(Procedure proc) {
+    public void eval(Procedure proc, Module module) {
+        for (procedureDec pd : this.body.declarations.procDecs) {
+            String name = String.format("%s.%s", this.head.name, pd.head.name);
+            Procedure p = module.add(name);
+            pd.eval(p, module);
+        }
+
         for (stmt s : this.body.stmts.statements) {
             Object val = s.eval();
             if (val instanceof PrimitiveStatement) {

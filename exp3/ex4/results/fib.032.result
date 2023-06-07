@@ -1,2 +1,2 @@
-testcases/fib.032: Exception occured when parse near by <34:12>
-ARRAY selector([]) can only be applied to array type.
+testcases/fib.032: Exception occured when parse near by <31:21>
+Duplicate identifier 'TMP' in current scope.

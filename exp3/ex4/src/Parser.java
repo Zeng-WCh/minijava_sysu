@@ -2,6 +2,7 @@ import ast.*;
 import exceptions.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * the Oberon Parser Class
@@ -27,31 +28,38 @@ public class Parser {
      */
     private boolean freeze;
 
-    /**
-     * to determine whether current part is global
-     */
-    private boolean isGlobal;
-
     private HashMap<String, Integer> globalConstMap;
     private ArrayList<constDec> globalConstList;
 
-    private HashMap<String, Integer> localConstMap;
-    private ArrayList<constDec> localConstList;
+    private HashMap<String, Integer> currentConstMap;
+    private ArrayList<constDec> currentConstList;
+    private Stack<HashMap<String, Integer>> constMapStack;
+    private Stack<ArrayList<constDec>> constListStack;
+
 
     private HashMap<String, Integer> globalVarMap;
     private ArrayList<varDec> globalVarList;
 
-    private HashMap<String, Integer> localVarMap;
-    private ArrayList<varDec> localVarList;
+    private HashMap<String, Integer> currentVarMap;
+    private ArrayList<varDec> currentVarList;
+    private Stack<HashMap<String, Integer>> varMapStack;
+    private Stack<ArrayList<varDec>> varListStack;
 
     private HashMap<String, Integer> globalTypeMap;
     private ArrayList<typeDec> globalTypeList;
 
-    private HashMap<String, Integer> localTypeMap;
-    private ArrayList<typeDec> localTypeList;
+    private HashMap<String, Integer> currentTypeMap;
+    private ArrayList<typeDec> currentTypeList;
+    private Stack<HashMap<String, Integer>> typeMapStack;
+    private Stack<ArrayList<typeDec>> typeListStack;
 
     private HashMap<String, Integer> globalProcMap;
     private ArrayList<procedureHead> globalProcList;
+
+    private HashMap<String, Integer> currentProcMap;
+    private ArrayList<procedureHead> currentProcList;
+    private Stack<HashMap<String, Integer>> procMapStack;
+    private Stack<ArrayList<procedureHead>> procListStack;
 
     private HashMap<String, typeAST> params;
 
@@ -64,6 +72,8 @@ public class Parser {
     private HashMap<String, ArrayList<actualParameters>> unsolvedProcCalling;
     private HashMap<String, ArrayList<String>> unsolvedProcPos;
     private HashMap<String, ArrayList<callStmt>> unsolveCallStmts;
+
+    private Stack<String> currentProcNameStack;
 
 
     /**
@@ -97,6 +107,7 @@ public class Parser {
     private int checkArgs(actualParameters actual, formalParameters formal) throws Exception {
         ArrayList<fp> fps = formal.fps;
         ArrayList<expr> exprs = actual.exprs;
+
         if (fps.size() != exprs.size()) {
             return 1;
         }
@@ -125,26 +136,82 @@ public class Parser {
         this.freeze = false;
         this.globalConstList = new ArrayList<>();
         this.globalConstMap = new HashMap<>();
-        this.localConstList = new ArrayList<>();
-        this.localConstMap = new HashMap<>();
+        this.currentConstList = this.globalConstList;
+        this.currentConstMap = this.globalConstMap;
         this.globalVarList = new ArrayList<>();
         this.globalVarMap = new HashMap<>();
-        this.localVarList = new ArrayList<>();
-        this.localVarMap = new HashMap<>();
+        this.currentVarList = this.globalVarList;
+        this.currentVarMap = this.globalVarMap;
         this.globalTypeList = new ArrayList<>();
         this.globalTypeMap = new HashMap<>();
-        this.localTypeList = new ArrayList<>();
-        this.localTypeMap = new HashMap<>();
+        this.currentTypeList = this.globalTypeList;
+        this.currentTypeMap = this.globalTypeMap;
         this.globalProcList = new ArrayList<>();
         this.globalProcMap = new HashMap<>();
+        this.currentProcMap = this.globalProcMap;
+        this.currentProcList = this.globalProcList;
         this.params = null;
-        this.isGlobal = true;
         this.selectTypes = null;
         this.currentIf = null;
         this.unsolvedProcCalling = new HashMap<>();
         this.unsolvedProcPos = new HashMap<>();
         this.fieldMap = new HashMap<>();
         this.unsolveCallStmts = new HashMap<>();
+        this.constMapStack = new Stack<>();
+        this.constListStack = new Stack<>();
+        this.varMapStack = new Stack<>();
+        this.varListStack = new Stack<>();
+        this.typeMapStack = new Stack<>();
+        this.typeListStack = new Stack<>();
+        this.procMapStack = new Stack<>();
+        this.procListStack = new Stack<>();
+        this.constListStack.push(this.globalConstList);
+        this.constMapStack.push(this.globalConstMap);
+        this.varListStack.push(this.globalVarList);
+        this.varMapStack.push(this.globalVarMap);
+        this.typeListStack.push(this.globalTypeList);
+        this.typeMapStack.push(this.globalTypeMap);
+        this.procListStack.push(this.globalProcList);
+        this.procMapStack.push(this.globalProcMap);
+        this.currentProcNameStack = new Stack<>();
+    }
+
+    /**
+     * add a new scope for procedure
+     */
+    private void createNewScope(String name) {
+        this.constListStack.push(this.currentConstList);
+        this.constMapStack.push(this.currentConstMap);
+        this.varListStack.push(this.currentVarList);
+        this.varMapStack.push(this.currentVarMap);
+        this.typeListStack.push(this.currentTypeList);
+        this.typeMapStack.push(this.currentTypeMap);
+        this.procListStack.push(this.currentProcList);
+        this.procMapStack.push(this.currentProcMap);
+        this.currentProcNameStack.push(name);
+        this.currentConstList = new ArrayList<>();
+        this.currentConstMap = new HashMap<>();
+        this.currentVarList = new ArrayList<>();
+        this.currentVarMap = new HashMap<>();
+        this.currentTypeList = new ArrayList<>();
+        this.currentTypeMap = new HashMap<>();
+        this.currentProcList = new ArrayList<>();
+        this.currentProcMap = new HashMap<>();
+    }
+
+    /**
+     * exit the current scope
+     */
+    private void exitScope() {
+        this.currentConstList = this.constListStack.pop();
+        this.currentConstMap = this.constMapStack.pop();
+        this.currentVarList = this.varListStack.pop();
+        this.currentVarMap = this.varMapStack.pop();
+        this.currentTypeList = this.typeListStack.pop();
+        this.currentTypeMap = this.typeMapStack.pop();
+        this.currentProcList = this.procListStack.pop();
+        this.currentProcMap = this.procMapStack.pop();
+        this.currentProcNameStack.pop();
     }
 
     /**
@@ -309,20 +376,14 @@ public class Parser {
             throw new SyntacticException("Const declaration should end with a semicolon.");
         }
         constDec constDec = new constDec((String) ident.getVal(), constExpr);
-        if (isGlobal) {
-            if (this.globalConstMap.get((String) ident.getVal()) != null) {
-                throw new SyntacticException(String.format("Const declaration should not have duplicate names(%s).", (String) ident.getVal()));
-            }
-            this.globalConstList.add(constDec);
-            this.globalConstMap.put((String) ident.getVal(), this.globalConstList.size() - 1);
+
+        if (this.currentConstMap.get((String) ident.getVal()) != null) {
+            throw new SyntacticException(String.format("Const declaration should not have duplicate names(%s).", (String) ident.getVal()));
         }
-        else {
-            if (this.localConstMap.get((String) ident.getVal()) != null) {
-                throw new SyntacticException(String.format("Const declaration should not have duplicate names(%s).", (String) ident.getVal()));
-            }
-            this.localConstList.add(constDec);
-            this.localConstMap.put((String) ident.getVal(), this.localConstList.size() - 1);
-        }
+
+        this.currentConstMap.put((String) ident.getVal(), this.currentConstList.size());
+        this.currentConstList.add(constDec);
+
         ArrayList<constDec> constDecTail = this.parseConstDecTail();
         ret.add(constDec);
         ret.addAll(constDecTail);
@@ -362,20 +423,14 @@ public class Parser {
             throw new SyntacticException("Type declaration should end with a semicolon.");
         }
         typeDec types = new typeDec((String) ident.getVal(), t);
-        if (isGlobal) {
-            if (this.globalTypeMap.get((String) ident.getVal()) != null) {
-                throw new SyntacticException(String.format("Duplicate type(%s) identifier.", (String) ident.getVal()));
-            }
-            this.globalTypeList.add(types);
-            this.globalTypeMap.put((String) ident.getVal(), this.globalTypeList.size() - 1);
+
+        if (this.currentTypeMap.get((String) ident.getVal()) != null) {
+            throw new SyntacticException(String.format("Duplicate type(%s) identifier.", (String) ident.getVal()));
         }
-        else {
-            if (this.localTypeMap.get((String) ident.getVal()) != null) {
-                throw new SyntacticException(String.format("Duplicate type(%s) identifier.", (String) ident.getVal()));
-            }
-            this.localTypeList.add(types);
-            this.localTypeMap.put((String) ident.getVal(), this.localTypeList.size() - 1);
-        }
+
+        this.currentTypeMap.put((String) ident.getVal(), this.currentTypeList.size());
+        this.currentTypeList.add(types);
+
         ret.add(types);
         ArrayList<typeDec> typeDecTail = this.parseTypeDecTail();
         ret.addAll(typeDecTail);
@@ -412,29 +467,17 @@ public class Parser {
             throw new SyntacticException("Var declaration should end with a semicolon.");
         }
         varDec var = new varDec(idList, t);
-        if (isGlobal) {
-            int size = this.globalVarList.size();
-            for (String id : idList.identifiers) {
-                Integer idx = this.globalVarMap.get(id);
-                if (idx != null) {
-                    throw new SyntacticException("Duplicate identifier '" + id + "' in global scope.");
-                }
-                this.globalVarMap.put(id, size);
+        
+        int size = this.currentVarList.size();
+        for (String id : idList.identifiers) {
+            Integer idx = this.currentVarMap.get(id);
+            if (idx != null) {
+                throw new SyntacticException("Duplicate identifier '" + id + "' in current scope.");
             }
-            this.globalVarList.add(var);
+            this.currentVarMap.put(id, size);
+        }
+        this.currentVarList.add(var);
 
-        }
-        else {
-            int size = this.localVarList.size();
-            for (String id : idList.identifiers) {
-                Integer idx = this.localVarMap.get(id);
-                if (idx != null) {
-                    throw new SyntacticException("Duplicate identifier '" + id + "' in local scope.");
-                }
-                this.localVarMap.put(id, size);
-            }
-            this.localVarList.add(var);
-        }
         ret.add(var);
         ArrayList<varDec> varDecTail = this.parseVarDecTail();
         ret.addAll(varDecTail);
@@ -466,18 +509,15 @@ public class Parser {
             throw new SyntacticException("Var declaration should end with a semicolon.");
         }
         varDec var = new varDec(idList, t);
-        if (isGlobal) {
-            this.globalVarList.add(var);
-            for (String id : idList.identifiers) {
-                this.globalVarMap.put(id, this.globalVarList.size() - 1);
+        int size = this.currentVarList.size();
+        for (String id : idList.identifiers) {
+            Integer idx = this.currentVarMap.get(id);
+            if (idx != null) {
+                throw new SyntacticException("Duplicate identifier '" + id + "' in current scope.");
             }
+            this.currentVarMap.put(id, size);
         }
-        else {
-            this.localVarList.add(var);
-            for (String id : idList.identifiers) {
-                this.localVarMap.put(id, this.localVarList.size() - 1);
-            }
-        }
+        this.currentVarList.add(var);
         ret.add(var);
         ArrayList<varDec> varDecTail = this.parseVarDecTail();
         ret.addAll(varDecTail);
@@ -502,15 +542,19 @@ public class Parser {
             throw new SyntacticException("Procedure declaration should end with a semicolon.");
         }
 
-        if (this.globalProcMap.get(head.name) != null) {
+        if (this.currentProcMap.get(head.name) != null) {
             throw new SyntacticException(String.format("%s declarated duplicated.", head.name));
         }
 
-        
-        this.globalProcMap.put(head.name, this.globalProcList.size());
-        this.globalProcList.add(head);
+        this.currentProcMap.put(head.name, this.currentProcList.size());
+        this.currentProcList.add(head);
 
-        this.isGlobal = false;
+        if (currentProcMap != globalProcMap) {
+            head.belongsTo = this.currentProcNameStack.peek();
+        }
+
+
+        this.createNewScope(head.name);
         procedureBody body = this.parseProBody();
         if (!head.name.equals(body.name)) {
             throw new SyntacticException("Procedure name mismatch.");
@@ -519,12 +563,31 @@ public class Parser {
         if (semi.getType() != TokenType.tok_semicolon) {
             throw new SyntacticException("Procedure declaration should end with a semicolon.");
         }
-        this.localConstList = new ArrayList<>();
-        this.localConstMap = new HashMap<>();
-        this.localVarList = new ArrayList<>();
-        this.localVarMap = new HashMap<>();
-        this.localTypeList = new ArrayList<>();
-        this.localTypeMap = new HashMap<>();
+
+        for (String ident : this.unsolvedProcCalling.keySet()) {
+            Integer idx = this.currentProcMap.get(ident);
+            if (idx == null) {
+                continue;
+            }
+            procedureHead _head = this.currentProcList.get(idx);
+            for (int i = 0; i < this.unsolvedProcCalling.get(ident).size(); ++i) {
+                actualParameters actual = this.unsolvedProcCalling.get(ident).get(i);
+                int result = this.checkArgs(actual, _head.fp);
+                if (result == 1) {
+                    throw new SyntacticException(String.format("Procedure " + ident + " is called with wrong number of arguments. (%s)", this.unsolvedProcPos.get(ident).get(i).toString()));
+                }
+                else if (result == 2) {
+                    throw new SyntacticException(String.format("Procedure " + ident + " is called with wrong type of arguments. (%s)", this.unsolvedProcPos.get(ident).get(i).toString()));
+                }
+            }
+
+            for (int i = 0; i < this.unsolveCallStmts.get(ident).size(); ++i) {
+                callStmt call = this.unsolveCallStmts.get(ident).get(i);
+                call.fps = _head.fp;
+            }
+        }
+
+        this.exitScope();
 
         procedureDec proc = new procedureDec(head, body);
         ret.add(proc);
@@ -575,7 +638,6 @@ public class Parser {
      * @throws Exception if syntax error
      */
     private procedureBody parseProBody() throws Exception {
-        this.isGlobal = false;
         declarations localDec = this.parseDeclaration();
         Token isBegin = this.next();
         stmts s = null;
@@ -666,11 +728,11 @@ public class Parser {
         type = this.params.get(ident);
 
         if (type != null) {
-            
+            // parameter
         }
         else {
             // check if it is a local variable
-            idx = localVarMap.get(ident);
+            idx = currentVarMap.get(ident);
             
             if (idx == null) {
                 // global Var
@@ -681,7 +743,7 @@ public class Parser {
                     if (idx != null) {
                         throw new SyntacticException(String.format("Global constant %s cannot be assigned.", ident));
                     }
-                    idx = localConstMap.get(ident);
+                    idx = currentConstMap.get(ident);
                     if (idx != null) {
                         throw new SyntacticException(String.format("Local constant %s cannot be assigned.", ident));
                     }
@@ -690,7 +752,7 @@ public class Parser {
                 var = this.globalVarList.get(idx);
             }
             if (var == null) {
-                var = this.localVarList.get(idx);
+                var = this.currentVarList.get(idx);
             }
         }
         this.selectTypes = null;
@@ -737,13 +799,24 @@ public class Parser {
      * @throws Exception if syntax error
      */
     private callStmt parseCallStmt(String ident) throws Exception {        
-        Integer idx = globalProcMap.get(ident);
+        Integer idx = currentProcMap.get(ident);
         boolean unfound = false;
+        boolean isLocal = true;
+
         if (idx == null) {
-            unfound = true;
+            idx = globalProcMap.get(ident);
+            if (idx != null) {
+                isLocal = false;
+                unfound = false;
+            }
+            else {
+                unfound = true;
+            }
         }
 
+        procedureHead proc = null;
         actualParameters params = this.parseActualParam();
+
         if (unfound) {
             if (this.unsolvedProcCalling.get(ident) == null) {
                 this.unsolvedProcCalling.put(ident, new ArrayList<>());
@@ -758,16 +831,53 @@ public class Parser {
             this.unsolveCallStmts.get(ident).add(c);
             return c;
         }
-
-        procedureHead proc = this.globalProcList.get(idx);
+        else {
+            if (isLocal) {
+                proc = this.currentProcList.get(idx);
+            }
+            else {
+                proc = this.globalProcList.get(idx);
+            }
+        }
         formalParameters fp = proc.fp;
         int flag = checkArgs(params, fp);
         if (flag == 1) {
-            throw new ParameterMismatchedException(String.format("Parameter mismatched in %s call.", ident));
+            if (isLocal) {
+                idx = globalProcMap.get(ident);
+                if (idx != null) {
+                    proc = this.globalProcList.get(idx);
+                    fp = proc.fp;
+                    flag = checkArgs(params, fp);
+                    if (flag == 1)
+                        throw new ParameterMismatchedException(String.format("Parameter mismatched in %s call.", ident));
+                    else if (flag == 2)
+                        throw new TypeMismatchedException(String.format("Type mismatched in %s call.", ident));
+                    isLocal = false;
+                }
+            }
+            else
+                throw new ParameterMismatchedException(String.format("Parameter mismatched in %s call.", ident));
         }
         else if (flag == 2) {
-            throw new TypeMismatchedException(String.format("Type mismatched in %s call.", ident));
+            if (isLocal) {
+                idx = globalProcMap.get(ident);
+                if (idx != null) {
+                    proc = this.globalProcList.get(idx);
+                    fp = proc.fp;
+                    flag = checkArgs(params, fp);
+                    if (flag == 1)
+                        throw new ParameterMismatchedException(String.format("Parameter mismatched in %s call.", ident));
+                    else if (flag == 2)
+                        throw new TypeMismatchedException(String.format("Type mismatched in %s call.", ident));
+                    isLocal = false;
+                }
+            }
+            else
+                throw new TypeMismatchedException(String.format("Type mismatched in %s call.", ident));
         }
+
+        if (isLocal)
+            return new callStmt(String.format("%s.%s", proc.belongsTo, ident), params, fp);
         return new callStmt(ident, params, fp);
 
     }
@@ -1200,7 +1310,7 @@ public class Parser {
             varDec var = null;
             constDec constV = null;
             typeAST generate = null;
-            idx = this.localVarMap.get(id);
+            idx = this.currentVarMap.get(id);
             
             generate = this.params.get(id);
 
@@ -1210,7 +1320,7 @@ public class Parser {
                     idx = this.globalVarMap.get(id);
                     if (idx == null) {
                         // try const
-                        idx = this.localConstMap.get(id);
+                        idx = this.currentConstMap.get(id);
                         if (idx == null) {
                             idx = this.globalConstMap.get(id);
                             if (idx == null) {
@@ -1221,7 +1331,7 @@ public class Parser {
                             }
                         }
                         else {
-                            constV = this.localConstList.get(idx);
+                            constV = this.currentConstList.get(idx);
                         }
                     }
                     else {
@@ -1229,7 +1339,7 @@ public class Parser {
                     }
                 }
                 else {
-                    var = this.localVarList.get(idx);
+                    var = this.currentVarList.get(idx);
                 }
             }
 
@@ -1305,7 +1415,7 @@ public class Parser {
             String ident = (String) next.getVal();
             // check if the type has been declarated
             Integer idx = null;
-            idx = this.localTypeMap.get(ident);
+            idx = this.currentTypeMap.get(ident);
             typeDec type = null;
             if (idx == null) {
                 idx = this.globalTypeMap.get(ident);
@@ -1315,7 +1425,7 @@ public class Parser {
                 type = this.globalTypeList.get(idx);
             }
             else {
-                type = this.localTypeList.get(idx);
+                type = this.currentTypeList.get(idx);
             }
             
             return new typeAST(type.type.name, type.type.type);
@@ -1547,8 +1657,16 @@ public class Parser {
         Token lparen = this.next();
         ArrayList<expr> acList = new ArrayList<>();
         if (lparen.getType() != TokenType.tok_lparen) {
-            throw new MissingLeftParenthesisException("Expected a '(' when declarated a formal parameters.");
+            // throw new MissingLeftParenthesisException("Expected a '(' when declarated a formal parameters.");
+            return new actualParameters(acList);
         }
+
+        Token isrparen = this.next();
+        if (isrparen.getType() == TokenType.tok_rparen) {
+            return new actualParameters(acList);
+        }
+
+        this.freeze = true;
 
         // expr e = this.parseExpression();
 
