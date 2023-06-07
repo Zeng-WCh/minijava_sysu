@@ -2,6 +2,30 @@
 
 <center>20308003 曾伟超</center>
 
+## 实验环境
+
+系统环境
+
+```
+Ubuntu 22.04.2 LTS (Jammy Jellyfish)
+```
+
+Java 有关环境
+
+```
+openjdk 19.0.2 2023-01-17
+OpenJDK Runtime Environment (build 19.0.2+7-Ubuntu-0ubuntu322.04)
+OpenJDK 64-Bit Server VM (build 19.0.2+7-Ubuntu-0ubuntu322.04, mixed mode, sharing)
+```
+
+Javac 环境
+
+```
+javac 19.0.2
+```
+
+实验所有代码均在编写环境可以跑通
+
 ## EX1
 
 EX1 部分的代码在 `ex1` 目录下，EX1 的部分主要为讨论 `Oberon-0` 这个实验语言的一些特性以及编写对应的测试样例，这部分的实验报告在 `ex1/Oberon-0.pdf` 
