@@ -165,14 +165,6 @@ public class Parser {
         this.typeListStack = new Stack<>();
         this.procMapStack = new Stack<>();
         this.procListStack = new Stack<>();
-        this.constListStack.push(this.globalConstList);
-        this.constMapStack.push(this.globalConstMap);
-        this.varListStack.push(this.globalVarList);
-        this.varMapStack.push(this.globalVarMap);
-        this.typeListStack.push(this.globalTypeList);
-        this.typeMapStack.push(this.globalTypeMap);
-        this.procListStack.push(this.globalProcList);
-        this.procMapStack.push(this.globalProcMap);
         this.currentProcNameStack = new Stack<>();
     }
 
@@ -1657,7 +1649,6 @@ public class Parser {
         Token lparen = this.next();
         ArrayList<expr> acList = new ArrayList<>();
         if (lparen.getType() != TokenType.tok_lparen) {
-            // throw new MissingLeftParenthesisException("Expected a '(' when declarated a formal parameters.");
             return new actualParameters(acList);
         }
 
