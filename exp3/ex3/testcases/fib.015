@@ -52,6 +52,11 @@ MODULE Fib11111111111111111111111111111111111111;
     END Fib2;
 
     PROCEDURE Main();
+    PROCEDURE tmp(v: INTEGER);
+    BEGIN
+        write(n);
+        writeln
+    END tmp;
     BEGIN
         read(n);
         IF n # 0 THEN

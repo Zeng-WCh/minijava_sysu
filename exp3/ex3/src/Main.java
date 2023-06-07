@@ -77,7 +77,7 @@ public class Main {
 
 				CallGraph graph = new CallGraph();
 				
-				for (procedureDec func : mb.declarations.procDecs) {
+				for (procedureDec func : p.globalProcedures) {
 					String ident = func.head.name.toLowerCase();
 					ArrayList<fp> formalParam = func.head.fp.fps;
 					StringBuilder strbd = new StringBuilder(ident);
@@ -98,19 +98,21 @@ public class Main {
 					graph.addProcedure(ident.toLowerCase(), strbd.toString());
 				}
 
-				for (procedureDec func : mb.declarations.procDecs) {
+				HashMap<String, Integer> procMap = p.globalProceMap;
+
+				for (procedureDec func : p.globalProcedures) {
 					ArrayList<callStmt> calls = func.body.calls;
 					HashMap<callStmt, String> callPos = func.body.callsPos;
 					Collections.reverse(calls);
 					Integer begin = 1;
 					for (callStmt call : calls) {
-						Integer idx = mb.declarations.pros.get(call.name.toUpperCase());
+						Integer idx = procMap.get(call.name.toUpperCase());
 						if (idx == null) {
 							throw new SyntacticException(String.format("Exception occured when parsing near by %s: \nProcedure: %s is not defined.", callPos.get(call), call.name));
 						}
 
 						// parameters check
-						ArrayList<fp> formalParam = mb.declarations.procDecs.get(idx).head.fp.fps;
+						ArrayList<fp> formalParam = p.globalProcedures.get(idx).head.fp.fps;
 						ArrayList<expr> actualParam = call.params.exprs;
 						
 						try {

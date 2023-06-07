@@ -52,7 +52,13 @@ MODULE Fib;
     END Fib2;
 
     PROCEDURE Main();
+    PROCEDURE tmp(v: INTEGER);
     BEGIN
+        write(n);
+        writeln
+    END tmp;
+    BEGIN
+        tmp(1);
         read(n);
         IF n # 0 THEN
             Fib1(n, n);

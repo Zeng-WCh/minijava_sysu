@@ -2,6 +2,7 @@ import java_cup.runtime.*;
 import exceptions.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import ast.*;
 
 parser code {:
@@ -16,7 +17,8 @@ parser code {:
     private HashMap<String, Integer> globalConstantsMap;
     private HashMap<String, Integer> globalTypesMap;
 
-    private HashMap<String, Integer> globalProceMap;
+    public HashMap<String, Integer> globalProceMap;
+    public ArrayList<procedureDec> globalProcedures;
 
     private HashMap<String, Integer> fieldMap;
 
@@ -37,6 +39,8 @@ parser code {:
 
     private ArrayList<callStmt> callStmts;
     public HashMap<callStmt, String> callStmtsPos;
+
+    private Stack<String> currentProc;
 
     public moduleBlock getAST() {
         return root;
@@ -67,6 +71,8 @@ init with {:
     unsolvedConstantsPos = new HashMap<>();
     globalProceMap = new HashMap<>();
     fieldMap = new HashMap<>();
+    currentProc = new Stack<>();
+    globalProcedures = new ArrayList<>();
 :}
 
 scan with {:
@@ -506,11 +512,17 @@ procedure_declaration ::= procedure_head:h SEMICOLON procedure_body:b
     RESULT.body.callsPos = callStmtsPos;
     callStmts = new ArrayList<>();
     callStmtsPos = new HashMap<>();
+    globalProceMap.put(h.name, globalProcedures.size());
+    globalProcedures.add(RESULT);
 :};
 
 procedure_body ::= declaration:d procedure_body_tail:pbd END IDENTIFIER:id
 {:
     RESULT = new procedureBody(d, pbd, id.toUpperCase());
+    currentProc.pop();
+    if (currentProc.size() > 0) {
+        RESULT.name = String.format("%s.%s", currentProc.peek(), RESULT.name);
+    }
 :};
 
 procedure_body_tail ::= BEGIN statement_sequence:s 
@@ -522,10 +534,14 @@ procedure_head ::= PROCEDURE IDENTIFIER:id procedure_head_tail:fp
     id = id.toUpperCase();
     if (isGlobal)
         isGlobal = false;
+    if (currentProc.size() > 0) {
+        id = String.format("%s.%s", currentProc.peek(), id);
+    }
     if (globalProceMap.get(id) != null)
         throw new SyntacticException(String.format("Procedure: %s is already defined.", id));
-    globalProceMap.put(id, 0);
+    
     RESULT = new procedureHead(id, fp);
+    currentProc.push(id);
 :};
 
 procedure_head_tail ::= formal_parameters:fp
@@ -761,7 +777,15 @@ else_part ::= ELSE statement_sequence:ss
 
 procedure_call ::= IDENTIFIER:id procedure_call_tail:pct
 {:  
-    RESULT = new callStmt(id.toUpperCase(), pct);
+    id = id.toUpperCase();
+    RESULT = new callStmt(id, pct);
+
+    if (currentProc.size() > 0) {
+        String tmpid = String.format("%s.%s", currentProc.peek(), id);
+        if (globalProceMap.get(tmpid) != null) {
+            RESULT.name = tmpid;
+        }
+    }
     callStmts.add(RESULT);
     callStmtsPos.put(RESULT, String.format("<%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
 :}

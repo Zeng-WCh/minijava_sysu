@@ -1,2 +1,2 @@
-testcases/fib.030: Exception occured when parse near by <71:9>
+testcases/fib.030: Exception occured when parse near by <76:9>
 Procedure FIB9 is not declared. (<49:23>)

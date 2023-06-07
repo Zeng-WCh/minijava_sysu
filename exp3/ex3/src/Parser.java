@@ -7,6 +7,7 @@ import java_cup.runtime.*;
 import exceptions.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import ast.*;
 import java_cup.runtime.XMLElement;
 
@@ -546,6 +547,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     unsolvedConstantsPos = new HashMap<>();
     globalProceMap = new HashMap<>();
     fieldMap = new HashMap<>();
+    currentProc = new Stack<>();
+    globalProcedures = new ArrayList<>();
 
     }
 
@@ -570,7 +573,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     private HashMap<String, Integer> globalConstantsMap;
     private HashMap<String, Integer> globalTypesMap;
 
-    private HashMap<String, Integer> globalProceMap;
+    public HashMap<String, Integer> globalProceMap;
+    public ArrayList<procedureDec> globalProcedures;
 
     private HashMap<String, Integer> fieldMap;
 
@@ -591,6 +595,8 @@ public class Parser extends java_cup.runtime.lr_parser {
 
     private ArrayList<callStmt> callStmts;
     public HashMap<callStmt, String> callStmtsPos;
+
+    private Stack<String> currentProc;
 
     public moduleBlock getAST() {
         return root;
@@ -1236,6 +1242,8 @@ class CUP$Parser$actions {
     RESULT.body.callsPos = callStmtsPos;
     callStmts = new ArrayList<>();
     callStmtsPos = new HashMap<>();
+    globalProceMap.put(h.name, globalProcedures.size());
+    globalProcedures.add(RESULT);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declaration",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1256,6 +1264,10 @@ class CUP$Parser$actions {
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
     RESULT = new procedureBody(d, pbd, id.toUpperCase());
+    currentProc.pop();
+    if (currentProc.size() > 0) {
+        RESULT.name = String.format("%s.%s", currentProc.peek(), RESULT.name);
+    }
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_body",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1296,10 +1308,14 @@ class CUP$Parser$actions {
     id = id.toUpperCase();
     if (isGlobal)
         isGlobal = false;
+    if (currentProc.size() > 0) {
+        id = String.format("%s.%s", currentProc.peek(), id);
+    }
     if (globalProceMap.get(id) != null)
         throw new SyntacticException(String.format("Procedure: %s is already defined.", id));
-    globalProceMap.put(id, 0);
+    
     RESULT = new procedureHead(id, fp);
+    currentProc.push(id);
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_head",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1953,7 +1969,15 @@ class CUP$Parser$actions {
 		int pctright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		actualParameters pct = (actualParameters)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		  
-    RESULT = new callStmt(id.toUpperCase(), pct);
+    id = id.toUpperCase();
+    RESULT = new callStmt(id, pct);
+
+    if (currentProc.size() > 0) {
+        String tmpid = String.format("%s.%s", currentProc.peek(), id);
+        if (globalProceMap.get(tmpid) != null) {
+            RESULT.name = tmpid;
+        }
+    }
     callStmts.add(RESULT);
     callStmtsPos.put(RESULT, String.format("<%d:%d>", ((OberonScanner)getScanner()).getLine(), ((OberonScanner)getScanner()).getCol()));
 
