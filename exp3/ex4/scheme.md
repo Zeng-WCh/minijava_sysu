@@ -57,11 +57,176 @@ sop ::= PLUS | MINUS | OR
 term ::= factor term_tail
 term_tail ::= termop factor term_tail | EMPTY
 termop ::= MULTI | DIV | MOD | AND
-factor ::= IDENTIFIER SELCTOR | NUMBER | LPAREN expression RPAREN | NOT factor
+factor ::= IDENTIFIER selector | NUMBER | LPAREN expression RPAREN | NOT factor
 selector ::= DOT IDENTIFIER selector | LBRACKET expression RBRACKET selector | EMPTY
 ```
 
-具体的语义动作实际上较为复杂，这里没有具体给出，在实际编写过程中，部分的尾递归改写为了循环的方式
+具体的翻译模式为，这里采用了建立 AST 的方法，在这里实际做了很多简化，具体的 `AST` 和实际翻译模式的实现见源代码，由于较为庞大，这里简单展示几个，
+
+````
+start ::= module { start.ast = module }
+````
+
+```
+module ::= MODULE IDENTIFIER(id1) SEMICOLON declarations module_state END IDENTIFIER(id2) DOT
+{
+	if (id1.lexval != id2.lexval)
+		error;
+	module.ast = new module(declarations.ast, module_state.ast)
+}
+```
+
+```
+module_state ::= BEGIN statements { module_state.ast = statements.ast } 
+			| EMPTY { module_stata.ast = new stmts(); }
+```
+
+```
+declarations ::= const_dec type_dec var_dec proc_decs {
+	declarations.ast = new declarations(const_dec.ast, type_dec.ast, var_dec.ast, proc_decs.ast)
+}
+```
+
+```
+const_dec ::= CONST const_dec_tail { const_dec.ast = new const_dec(const_dec_tail.ast) }
+		  | EMPTY { const_dec.ast = new const_dec() }
+```
+
+```
+const_dec_tail ::= IDENTIFIER EQUAL expression SEMICOLON const_dec_tail(ct) { 
+	const_dec_tail.ast = ct.ast
+	const_dec_tail.ast.addConstant(IDENTIFIER.lexval, expression.ast) 
+}
+| EMPTY { const_dec_tail.ast = null; }
+```
+
+```
+type_dec ::= TYPE type_dec_tail { type_dec.ast = new type_dec(type_dec_tail.ast) }
+		| EMPTY { type_dec.ast = new type_dec() }
+```
+
+````
+type_dec_tail ::= IDENTIFIER EQUAL type SEMICOLON type_dec_tail(td) {
+	type_dec_tail.ast = td.ast
+	type_dec_tail.ast.addTypeDec(IDENTIFIER, type)
+}
+| EMPTY { type_dec_tail.ast = null; }
+````
+```
+var_dec ::= VAR var_dec_tail { var_dec.ast = new var_dec(var_dec_tail.ast) }
+		| EMPTY { var_dec.ast = new var_dec() }
+```
+
+````
+var_dec_tail ::= identifier_list COLON type SEMICOLON var_dec_tail(vt) {
+	var_dec_tail.ast = vt.ast
+	var_dec_tail.ast.addTypeDec(IDENTIFIER, type)
+}
+| EMPTY { var_dec_tail.ast = null; }
+````
+
+```
+proc_decs ::= proc_dec SEMICOLON proc_decs(pd) {
+	proc_decs.ast = pd.ast
+	proc_decs.ast.addProcedure(proc_dec.ast)
+}
+| EMPTY { proc_decs.ast = null }
+```
+
+```
+proc_dec ::= proc_head SEMICOLON proc_body { 
+	if proc_head.ident != proc_body.ident error;
+	proc_dec.ast = new proc_dec(proc_head.ast, proc_body.ast)
+}
+```
+
+```
+proc_head ::= PROCEDURE IDENTIFIER if_formal {
+	proc_head.ident = IDENTIFIER.lexval
+	proc_head.ast = new proc_head(if_formal.ast)
+}
+```
+
+````
+proc_body ::= declarations if_begin END IDENTIFIER {
+	proc_body.ident = IDENTIFIER.lexval
+	proc_body.ast = new proc_body(declarations.ast, if_begin.ast)
+}
+````
+
+```
+if_formal ::= LPAREN formalParameters RPAREN {
+	if_formal.ast = formalParameters.ast
+}
+| EMPTY { if_formal.ast = null }
+```
+
+````
+formalParameters ::= fp_section formalParameters_tail {
+	formalParameters.ast = new formalParameters(fp_section)
+	formalParameters.ast.addAll(formalParameters_tail.ast)
+}
+| EMPTY { formalParameters.ast = new formalParameters() }
+````
+
+```
+formalParameters_tail ::= SEMICOLON fp_section formalParameters_tail(fpt) {
+	formalParameters_tail.ast = fpt.ast
+	formalParameters_tail.ast.addFormalParams(fp_section.ast)
+}
+| EMPTY { formalParameters_tail.ast = new emptylist }
+```
+
+```
+if_begin ::= BEGIN statements { if_begin.ast = statements.ast }
+| EMPTY { if_begin.ast = null }
+```
+
+```
+fp_section ::= if_var identifier_list COLON type {
+	type.var = if_var.isVar
+	fp_section.ast = new fp(identifier_list.ast, type)
+}
+```
+
+````
+if_var ::= VAR {
+	if_var.var = true;
+}
+| EMPTY {
+	if_var.var = false;
+}
+````
+
+下面的表达式较多，且实际语义动作较为复杂，需要构建一个对应的 typeAST 的树，并尝试找到对应的类型，如果没找到，则报错退出
+
+````
+type ::= IDENTIFIER | INTEGER | BOOLEAN | array_type | record_type
+````
+
+```
+array_type ::= ARRAY expression OF type {
+	array_type = new type("ARRAY", new array_type(expression, type))
+}
+```
+
+后续的众多产生式也实际类似，由于是通过构建 `AST` 的方法来完成语法分析的，实际上语义动作基本就是根据产生式右部构建对应的 `AST`，一个重要的地方就是类型检查，以 `expression` 为例，如下
+
+```
+expression ::= simple_expression expression_tail
+expression_tail ::= expop simple_expression | EMPTY
+expop ::= EQUAL | NOT_EQUAL | LESS | LESS_EQUAL | GREATER | GREATER_EQUAL
+```
+
+通过 `expop` 的产生式我们知道，如果 `expop` 存在，即 `expression_tail` 推导非空，那么 `expression` 的类型为布尔类型，其 LHS, RHS 均为数字类型，从而在这里需要做一个类型的检查，具体的语义动作这里不做展开，因为其涉及到递归的过程，`simple_expression` 的类型取决去其推导的 `term`，而 `term` 又取决于其 `factor`，从而在做类型检查的时候，实际上是需要对整个 `simple_expression` 的 `AST` 进行一次递归的，而 `factor` 的产生式如下
+
+````
+factor ::= IDENTIFIER selector | NUMBER | LPAREN expression RPAREN | NOT factor
+````
+
+可以发现，这里就是所有表达式类型搜索递归的终点，如果是 `NUMBER` 推导，自然是数字类型，如果是 `IDENTIFIER selector` 的话，其还需要结合当前所在区域的变量声明和全局变量声明来获取变量声明时候的类型来返回，如果是 `( expression )` 或者是 `NOT factor` 的话，则会进行递归的检查，同时如果是 `NOT factor` 的话，就会限制 `factor` 必须是一个布尔类型的表达式，否则会报错，具体的报错可以在 `results` 目录下查看，由于语义动作的部分过于复杂，其余的这里就不做展开，以类型检查的这个作为例子，来说明整个的一个翻译情况
+
+最后，关于生成流程图的语义动作，这里实际并没有在语法/语义分析阶段做太多的事情，语法/语义分析我所作的就是简单的做些类型检查，生成一个 `AST`，最终的流程图实际上是通过 `ast.eval` 的方法来实现的，具体见 `src/ast/stmts.java` 
 
 ## 测试情况
 
